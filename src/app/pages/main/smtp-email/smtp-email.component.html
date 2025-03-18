@@ -1,0 +1,412 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">SMTP Settings</h4>
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="table-bordered tabcontent-border triveniBorder ">
+      <br/>
+      <div class="form-group row"  *ngIf="localSmtpSettings?.enabled!=null">
+        <label for="enableSMTPField" class="col-md-2 col-form-label">SMTP Enabled</label>
+        <div class="col-md-1">
+          <div class="custom-control custom-checkbox" >
+            <input [(ngModel)]="localSmtpSettings.enabled" type="checkbox" class="mt10 custom-control custom-checkbox"
+                   id="enableSMTPField"
+                   disabled>
+            <label class="custom-control-label"></label>
+          </div>
+        </div>
+        <div class="col-md-7">
+        </div>
+        <div class="form-group row col-sm-2  actionButtons">
+          <button type="button" (click)="openEditSettingsDialog()"
+                  class="btn btn-info btn-rounded btn-primary btn-dark btnFormat border-thin"
+                  data-toggle="modal" data-target="#editSettingsDialog">
+            <i class="fa fa-edit"></i> Edit
+          </button>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.host!=null">
+        <label for="hostField" class="col-2 col-form-label">SMTP Host</label>
+        <div class="col-7">
+          <input [(ngModel)]="localSmtpSettings.host" class="form-control" type="text" value=""
+                 id="hostField" disabled>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.port">
+        <label for="portField" class="col-2 col-form-label">SMTP Port</label>
+        <div class="col-7">
+          <input [(ngModel)]="localSmtpSettings.port" class="form-control" type="text" value="25"
+                 id="portField" disabled>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.useSSL!=null">
+        <label for="useSSlField" class="col-2 col-form-label">Use Secure Sockets (SSL)</label>
+        <div class="col-1">
+          <div class="custom-control custom-checkbox">
+            <input [(ngModel)]="localSmtpSettings.useSSL" type="checkbox" class="mt10 custom-control custom-checkbox"
+                   id="useSSlField"
+                   disabled>
+            <label class="custom-control-label"></label>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="clearfix"></div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.useAuth!=null">
+        <label for="authenticationRequiredField" class="col-2 col-form-label">Authentication Required</label>
+        <div class="col-1">
+          <div class="custom-control custom-checkbox">
+            <input [(ngModel)]="localSmtpSettings.useAuth" type="checkbox" class="mt10 custom-control custom-checkbox"
+                   id="authenticationRequiredField"
+                   disabled>
+            <label class="custom-control-label"></label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.username!==null">
+        <label for="usernameField" class="col-2 col-form-label">Username</label>
+        <div class="col-7">
+          <input [(ngModel)]="localSmtpSettings.username" class="form-control" type="text"
+                 id="usernameField" disabled>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.password!==null">
+        <label for="passwordField" class="col-2 col-form-label">Password</label>
+        <div class="col-7">
+          <input [(ngModel)]="localSmtpSettings.password" class="form-control" type="password" value=""
+                 id="passwordField" disabled>
+        </div>
+      </div>
+      <div class="form-group  row" *ngIf="localSmtpSettings?.from!==null">
+        <label for="fromField" class="col-2 col-form-label">From</label>
+        <div class="col-7">
+          <input [(ngModel)]="localSmtpSettings.from" class="form-control" type="text" value=""
+                 id="fromField" disabled>
+        </div>
+      </div>
+      <br>
+      <div class="clearfix"></div>
+      <h4 class="card-header">Email Distribution</h4>
+      <div class="form-group m-t-10 row" *ngIf="localSmtpSettings?.to!==null">
+        <label for="toField" class="col-2 col-form-label">To</label>
+        <div class="col-7">
+          <textarea [(ngModel)]="localSmtpSettings.to" class="form-control" id="toField" rows="1" disabled></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- // MODAL FOR EDIT -->
+<div class="modal fade modal-holder" id="editSettingsDialog" tabindex="-1"
+     role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit SMTP / Email Settings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row"  *ngIf="editSmtpSettings?.enabled!==null">
+          <label for="mutableSmtpEnabledField" class="col-3 col-form-label">SMTP Enabled</label>
+          <div class="col-1">
+            <div class="mt10 custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="mutableSmtpEnabledField"
+                     [(ngModel)]="editSmtpSettings.enabled" (change)="toggleSMTPEnabled()">
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.host!==null">
+          <label for="mutableHostField" class="col-3 col-form-label">SMTP Host</label>
+          <div class="col-8">
+            <input type="text" id="mutableHostField" class="form-control"
+                   [disabled]="!editSmtpSettings?.enabled"
+                   [(ngModel)]="editSmtpSettings.host"
+                   (input)="checkValidUpdate()">
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings?.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkHostValid()"></i></span>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.port!==null">
+          <label for="mutablePortField" class="col-3 col-form-label">SMTP Port</label>
+          <div class="col-8">
+            <input id="mutablePortField" class="form-control" type="text" maxlength="5"
+                   [disabled]="!editSmtpSettings?.enabled"
+                   [(ngModel)]="editSmtpSettings.port"
+                   (keydown)="validateNumber($event)"
+                   (input)="checkValidUpdate()">
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings?.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkPortValid()"></i></span>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.useSSL!==null">
+          <label for="mutableUseSSLField" class="col-3 col-form-label">Use Secure Sockets (SSL)</label>
+          <div class="col-1">
+            <div class="mt10 custom-control custom-checkbox">
+              <input type="checkbox" id="mutableUseSSLField"
+                     [disabled]="!editSmtpSettings.enabled"
+                     [(ngModel)]="editSmtpSettings.useSSL"
+                     (change)="toggleSslCheck()">
+              <label class="custom-control-label"></label>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <hr>
+        <div class="clearfix"></div>
+        <!-- ================================================== -->
+        <div class="form-group row" *ngIf="editSmtpSettings?.useAuth!==null">
+          <label for="mutableUseAuthField" class="col-3 col-form-label">Authentication Required</label>
+          <div class="col-1">
+            <div class="mt10 custom-control custom-checkbox">
+              <input type="checkbox" id="mutableUseAuthField"
+                     [disabled]="!editSmtpSettings.enabled"
+                     [(ngModel)]="editSmtpSettings.useAuth"
+                     (change)="toggleAuthReqCheck()">
+              <label class="custom-control-label"></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.username!==null">
+          <label for="mutableUsernameField" class="col-3 col-form-label">Username</label>
+          <div class="col-5">
+            <input type="text" value="" id="mutableUsernameField" class="form-control"
+                   [disabled]="!editSmtpSettings.enabled || !editSmtpSettings.useAuth"
+                   [(ngModel)]="editSmtpSettings.username"
+                   (input)="checkValidUpdate()">
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings.useAuth">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkUsernameValid()"></i></span>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.password!==null">
+          <label for="mutablePasswordField" class="col-3 col-form-label">Password</label>
+          <div class="col-5">
+            <input type="{{showPassword ? 'text' : 'password'}}" value="" id="mutablePasswordField" class="form-control"
+                   [disabled]="!editSmtpSettings.enabled || !editSmtpSettings.useAuth"
+                   [(ngModel)]="editSmtpSettings.password"
+                   (input)="checkValidUpdate()">
+          </div>
+
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings.useAuth">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkPasswordValid()"></i></span>
+
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings.useAuth">
+            <span><i aria-hidden="true"  [ngClass]="this.showPassword ? 'fr fa fa-eye ' : 'fr fa fa-eye-slash' " (click)="togglePasswordVisibility()"></i></span>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.from!==null">
+          <label for="mutableFromField" class="col-3 col-form-label">From</label>
+          <div class="col-8">
+            <input type="text" value="" id="mutableFromField" class="form-control"
+                   [disabled]="!editSmtpSettings.enabled"
+                   [(ngModel)]="editSmtpSettings.from"
+                   (input)="checkValidUpdate()">
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings?.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkFromValid()"></i></span>
+          </div>
+        </div>
+        <div class="form-group row" >
+          <label class="col-3 col-form-label"></label>
+          <div class="col-1">
+            <button class="btn btn-outline-dark" data-toggle="modal" [disabled]="!enableTestButton"
+                    data-target="#myEmailTestModal" (click)="openTestEmailDialog()">Test
+            </button>
+          </div>
+        </div>
+        <!-- ================================================== -->
+        <div class="clearix"></div>
+        <h5>Email Distribution</h5>
+        <div class="form-group row">
+          <label class="col-3 col-form-label"></label>
+          <div class="col-9">
+            <button class="btn btn-info" data-toggle="modal" data-target="#mysmsHelpModal"><i
+              class="fa fa-info-circle btn-info" aria-hidden="true"></i>
+              SMS Help
+            </button>
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="editSmtpSettings?.to!==null">
+          <label for="mutableToField" class="col-3 col-form-label">To</label>
+          <div class="col-8">
+              <textarea id="mutableToField" rows="1" class="form-control"
+                        [disabled]="!editSmtpSettings.enabled"
+                        [(ngModel)]="editSmtpSettings.to"
+                        (input)="checkValidUpdate()">
+              ></textarea>
+          </div>
+          <div class="col-1 text-center" [hidden]="!editSmtpSettings?.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkToValid()"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-dark" style="background-color: #2B2b2b;" data-dismiss="modal"><span
+          style="color:#FFFFFF;">Cancel</span></button>
+        <button class="btn btn-outline-dark" style="background-color: #2B2b2b;" [disabled]="!enableUpdateButton"
+                (click)="doUpdateSettings()" data-dismiss="modal">
+          <span style="color:#FFFFFF;">Update</span></button>
+      </div>
+    </div>
+    <!-- end of modal footer -->
+  </div>
+  <!-- end of modal content -->
+</div>
+
+
+<!-- Modal EMAIL TEST-->
+<div class="modal fade modal-holder " id="myEmailTestModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="emailTestModal">Email Test</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- end of modal header -->
+      <div class="modal-body">
+        <div class="form-group row">
+          <label for="testRecipientField" class="col-3 col-form-label">Recipient</label>
+          <div class="col-6">
+            <input type="text" value="" id="testRecipientField" class="form-control"
+                   (input)="updateValidRecipient()"
+                   [(ngModel)]="testRecipients">
+          </div>
+          <div class="col-1 text-center">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="checkRecipientValid()"></i></span>
+          </div>
+          <div class="col-1">
+            <button class="btn btn-outline-dark" [disabled]="!enableTestEmailButton" (click)="doEmailTest()">Test
+            </button>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <label class="control-label">Status: <span *ngIf="!requestStatusTest"
+                                                       class="{{alertTestMessage}}">{{emailTestMessage}}</span></label>
+            <div class="preloader_requestStatus" *ngIf="requestStatusTest">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="btn btn-outline-dark" data-dismiss="modal">OK</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal SMS HELP-->
+<div class="modal fade mymodal modal-holder " id="mysmsHelpModal" tabindex="-1" role="dialog"
+     data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">SMS HELP </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- end of modal header -->
+
+      <div class="modal-body">
+        <b> SMS </b>
+        <div class="clearfix"></div>
+        <p> Various carriers provide EMail->SMS gateways, which allow systems to send SMS messages bysending
+          email to special addresses,
+          typically of the form MobileNumber&#64;TheCarrierDomain, whereMobileNumber
+          is the telephone number associated with the SMS-receiving device and
+          TheCarrierDomain isthe host or domain that the SMS provider has configured
+          to receive email.</p>
+
+        <p>Carriers often distinguish between types of SMS messages:</p>
+        <ul>
+          <li>'text' messages, which are restricted to a hard limit of 160 total characters (including from,
+            subject, and message body)
+          </li>
+          <li>'MMS' or 'multimedia' messages, which can be much larger and are typically used by individuals
+            to send pictures and such
+          </li>
+        </ul>
+
+        <p> Whenever possible, and if your plan supports it, you should use MMS messages to ensure that you
+          receive
+          the full trigger notification. Otherwise, your carrier may truncate or alter the message, which will
+          likely render any hyperlinks invalid.</p>
+
+        <p> Some of the common forms are provided in the table below, and Wikipedia maintains a list of SMS
+          gateways
+          for various providers. However, you should always check with your cellular/mobile provider for the
+          actual format.</p>
+
+        <div class="table-responsive">
+          <table class="table color-table info-table">
+            <thead>
+            <tr>
+              <td><b>Carried</b></td>
+              <td><b>Address To Use:</b></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>AT&T Wireless</td>
+              <td>number&#64;mms.att.net <br> or<br>
+                number&#64;txt.att.net <br>or<br> number&#64;mobile.mycingular.com
+              </td>
+            </tr>
+            <tr>
+              <td>MetroPCS</td>
+              <td>number&#64;mymetropcs.com</td>
+            </tr>
+            <tr>
+              <td>Nextel</td>
+              <td>number&#64;messaging.nextel.com <br>or<br> number&#64;page.nextel.com</td>
+            </tr>
+            <tr>
+              <td>Rogers Wireless</td>
+              <td>number&#64;mms.rogers.com <br>or<br> number&#64;pcs.rogers.com</td>
+            </tr>
+            <tr>
+              <td>Sprint</td>
+              <td>number&#64;pm.sprint.com <br>or<br> number&#64;messaging.sprintpcs.com</td>
+            </tr>
+            <tr>
+              <td>T-Mobile</td>
+              <td>number&#64;tmomail.net</td>
+            </tr>
+            <tr>
+              <td>Verizon</td>
+              <td>number&#64;vzwpix.com <br>or<br> number&#64;vtext.com</td>
+            </tr>
+            <tr>
+              <td>Virgin Mobile</td>
+              <td>number&#64;vmpix.com <br>or<br> number&#64;vmobl.com</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="btn btn-outline-dark" data-dismiss="modal">OK</span>
+      </div>
+    </div>
+  </div>
+</div>

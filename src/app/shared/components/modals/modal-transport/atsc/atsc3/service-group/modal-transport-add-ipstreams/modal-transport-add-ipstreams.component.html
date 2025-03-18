@@ -1,0 +1,164 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<br/>
+<div class="content-table">
+  <app-modal-dynamic-tb-translate
+    (buttonClicked)="onButtonClicked($event)"
+    (rowClicked)="onRowClicked($event)"
+    [buttonList]="buttonList"
+    [enableScroll]="true"
+    [enableSearch]="true"
+    [multiSelect]="true"
+    [objectTableType]="objectTitle"
+    [tableData]="localIPStreams"
+    [tableHeaders]="tableHeaders">
+  </app-modal-dynamic-tb-translate>
+</div>
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalTransportAddExternalIPStream"
+     role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }}</h5>
+        <button
+          (click)="closeModal()"
+          aria-label="Close"
+          class="close"
+          type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mh-100">
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="nameField">Name</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputIPStream()"
+              [(ngModel)]="localIPStream.name"
+              class="form-control l"
+              id="nameField"
+              placeholder=""
+              type="text"
+            />
+          </div>
+          <div class="mt10 col-sm-1 text-center">
+            <span><i [ngClass]="nameIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="destIpField">SLS Destination IP</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputIPStream()"
+              (keypress)="validateIP($event)"
+              [(ngModel)]="localIPStream.destinationIP"
+              class="form-control l"
+              id="destIpField"
+              placeholder="0.0.0.0"
+              type="text"
+            />
+          </div>
+          <div class="mt10 col-sm-1 text-center">
+                        <span><i [ngClass]="destinationAddressIconText" aria-hidden="true"
+                                 class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="destPortField">SLS Destination Port</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputIPStream()"
+              (keypress)="numberOnly($event)"
+              [(ngModel)]="localIPStream.destinationPort"
+              class="form-control l"
+              id="destPortField"
+              title="Max range 1-65535"
+              type="number"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center">
+            <span><i [ngClass]="destinationPortIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="externalField">External</label>
+          <div class="col-md-6">
+            <div class="custom-control custom-checkbox">
+              <input
+                (change)="inputIPStream()"
+                [(ngModel)]="localIPStream.external"
+                class="mt10 custom-control custom-checkbox"
+                id="externalField"
+                type="checkbox"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="protocolField">Protocol</label>
+          <div class="col-md-6">
+            <select [(ngModel)]="localIPStream.type"
+                    [disabled]="!localIPStream.external"
+                    class="form-control"
+                    id="protocolField">
+              <option *ngFor="let ipStreamType of ipStreamTypes"
+                      [ngValue]="ipStreamType"> {{ ipStreamType }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="serviceIdField">Service Id</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputIPStream()"
+              (keypress)="numberOnly($event)"
+              [(ngModel)]="localIPStream.serviceId"
+              [disabled]="!localIPStream.external"
+              class="form-control l"
+              id="serviceIdField"
+              placeholder=""
+              title="Max range 1-65535"
+              type="number"/>
+          </div>
+          <div [hidden]="!localIPStream.external" class="mt10 col-sm-1 text-center">
+            <span><i [ngClass]="serviceIdIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">SLS Source IP</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputIPStream()"
+              (keypress)="validateIP($event)"
+              [(ngModel)]="localIPStream.sourceIP"
+              [disabled]="!localIPStream.external"
+              class="form-control l"
+              name="form-first-name"
+              placeholder="0.0.0.0"
+              type="text"
+            />
+          </div>
+          <div [hidden]="!localIPStream.external" class="mt10 col-sm-1 text-center">
+                        <span><i [ngClass]="sourceAddressIconText" aria-hidden="true"
+                                 class="fa fa-check-circle"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeModal()" class="btn btn-outline-dark">
+          <i class="fas fa fa-times"></i> Cancel
+        </button>
+        <button (click)="addExternalIPStream()" [disabled]="!okButtonEnabled" class="btn btn-outline-dark">
+          <i class="fas fa fa-check"></i> Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-transport-select-media-stream
+  (mediaStreamsSelected)="mediaStreamsSelected($event)"
+  [mediaStreams]="selectableMediaStreams">
+</app-modal-transport-select-media-stream>

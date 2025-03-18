@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div aria-hidden="true" aria-labelledby="viewScheduleListModal" class="modal fade" data-backdrop="static"
+     data-keyboard="false"
+     id="viewScheduleListModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">View Schedules</h5>
+        <button
+          (click)="closeModal()"
+          class="close"
+          type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-lg">
+        <div class="tab-content tabcontent-border triveniBorder" style="height:auto">
+          <div class="form-group row">
+            <div class="content-table">
+              <app-modal-dynamic-tb-translate
+                [buttonList]="buttonList"
+                [enableScroll]="true"
+                [enableSearch]="true"
+                [modalName]="modalName"
+                [multiSelect]="false"
+                [objectTableType]="objectTableType"
+                [tableData]="scheduleTitles"
+                [tableHeaders]="tableHeaders">
+              </app-modal-dynamic-tb-translate>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+    <span>
+      <button (click)="onViewSchedule()"
+              class="btn waves-effect waves-light btn-default  btn-rounded btnWidth100 "
+              data-target="#viewSchedule" data-toggle="modal"
+              type="button">View</button></span>
+              &nbsp;&nbsp;
+              <span>
+        <button (click)="closeModal()" class="btn waves-effect waves-light btn-default  btn-rounded btnWidth100 "
+                data-target="#viewSchedule" data-toggle="modal"
+                type="button">Close</button>
+      </span>
+            </div>
+            <div class="col-md-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-view-schedule
+  [schedule]="selectedSchedule">
+</app-modal-view-schedule>

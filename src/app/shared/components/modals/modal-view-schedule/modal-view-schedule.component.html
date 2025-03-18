@@ -1,0 +1,182 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div aria-hidden="true" class="modal fade" id="modalViewSched" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button
+            (click)='closeModal()'
+            aria-label="Close"
+            class="close"
+            type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-lg">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <div class="content-table" id="eventDetails">
+                <app-modal-dynamic-tb-translate
+                  (rowClicked)="rowClicked($event)"
+                  [buttonList]="buttonList"
+                  [enableScroll]="true"
+                  [enableSearch]="true"
+                  [objectTableType]="'DTVEvents'"
+                  [objectTitle]="'DTV Events'"
+                  [tableData]="dtvEvents"
+                  [tableHeaders]="tableHeadersVS"
+                  [tableMaxHeight]="'200px'">
+                </app-modal-dynamic-tb-translate>
+              </div>
+            </div>
+            <hr/>
+          </div>
+          <div class="row form-group">
+            <div class="col-md-12">
+              <h4 class="card-title">Event Details</h4>
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="startTimeField">Start Time</label>
+                <div class="col-md-4">
+                  <input value="{{ selectedDTVEvent.startTime  | date: 'MM/dd/yyyy, HH:mm a'}}"
+                         class="form-control l"
+                         disabled
+                         id="startTimeField" type="text">
+                </div>
+                <label class="col-md-2 col-form-label" for="endTimeField">End Time</label>
+                <div class="col-md-4">
+                  <input value="{{selectedDTVEvent.endTime | date: 'MM/dd/yyyy, hh:mm a'}}" class=" form-control l"
+                         disabled
+                         id="endTimeField" type="text">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="durationField">Duration</label>
+                <div class="col-md-4">
+                  <!-- TODO formatted duration -->
+                  <input value="{{selectedDTVEvent.duration}}" class=" form-control l"
+                         disabled
+                         id="durationField" type="text">
+                </div>
+                <label class="col-md-2 col-form-label" for="stationIdField">Station ID</label>
+                <div class="col-md-4">
+                  <input value="{{currentSchedule.listingsId}}" class=" form-control l"
+                         disabled
+                         id="stationIdField" type="text">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="titleField">Title</label>
+                <div class="col-md-4">
+                  <input value="{{selectedDTVEvent.title}}" class=" form-control l"
+                         disabled
+                         id="titleField" type="text">
+                </div>
+                <label class="col-md-2 col-form-label" for="languageField">Language</label>
+                <div class="col-md-4">
+                  <input value="{{selectedDTVEvent.language.readable}}" class=" form-control l"
+                         disabled
+                         id="languageField" type="text">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="genreField">Genre</label>
+                <div class="col-md-4">
+                  <input value="{{selectedDTVEvent.genre}}" class=" form-control l"
+                         disabled
+                         id="genreField" type="text">
+                </div>
+                <label class="col-md-2 col-form-label" for="popularityField">Popularity
+                  Rating</label>
+                <div class="col-md-4">
+                  <input value="{{selectedDTVEvent.popularityRating}}"
+                         class=" form-control l"
+                         disabled
+                         id="popularityField" type="text">
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label"
+                       for="descriptionField">Description</label>
+                <div class="col-md-10">
+                                          <textarea value="{{selectedDTVEvent.description}}" class="form-control"
+                                                    cols="2"
+                                                    disabled id="descriptionField" rows="3"></textarea>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row form-group">
+            <div class="col-md-12">
+              <app-nav-slider
+                [headerTabs]=headerTabs
+                [activeId]=activeId
+                (activeIdChanged)=activeIdChangedHandler($event)
+              >
+              </app-nav-slider>
+              <div class="tab-content tabcontent-border">
+                <div class="content-table" id="atsc"  [hidden]="activeId !== 1" role="tabpanel">
+                  <div class="p-20">
+                    <app-modal-dynamic-tb-translate
+                      [buttonList]="buttonList"
+                      [objectTableType]="'ATSC'"
+                      [tableData]="selectedDTVEvent.atscRatingDescriptions"
+                      [tableHeaders]="tableHeadersATSC">
+                    </app-modal-dynamic-tb-translate>
+                  </div>
+                </div>
+                <div class="content-table" id="dvb"  [hidden]="activeId !== 2" role="tabpanel">
+                  <div class="p-20">
+                    <app-modal-dynamic-tb-translate
+                      [buttonList]="buttonList"
+                      [objectTableType]="'DVB'"
+                      [tableData]="selectedDTVEvent.dvbRatingDescriptions"
+                      [tableHeaders]="tableHeadersDVB">
+                    </app-modal-dynamic-tb-translate>
+                  </div>
+                </div>
+                <div class="content-table" id="caption" [hidden]="activeId !== 3" role="tabpanel">
+                  <div class="p-20">
+                    <app-modal-dynamic-tb-translate
+                      [buttonList]="buttonList"
+                      [objectTableType]="'Captions'"
+                      [tableData]="selectedDTVEvent.captionDescriptions"
+                      [tableHeaders]="tableHeadersCaptions">
+                    </app-modal-dynamic-tb-translate>
+                  </div>
+                </div>
+                <div class="content-table" id="audio" [hidden]="activeId !== 4" role="tabpanel">
+                  <div class="p-20">
+                    <app-modal-dynamic-tb-translate
+                      [buttonList]="buttonList"
+                      [objectTableType]="'Audio'"
+                      [tableData]="selectedDTVEvent.audioDescriptions"
+                      [tableHeaders]="tableHeadersAudio">
+                    </app-modal-dynamic-tb-translate>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)='closeModal()' class="btn btn-outline-dark" type="button">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

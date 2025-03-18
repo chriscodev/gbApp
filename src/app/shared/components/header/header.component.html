@@ -1,0 +1,66 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<header class="topbar">
+  <div class="navbar-header">
+    <div class="form-group row">
+      <a class="navbar-brand col-md-6">
+        <img alt="homepage" class="dark-logo logbar" src="assets/images/gb_logo_trans.png"/>
+      </a>
+      <div class="col-md-4">
+      </div>
+      <div class="rightbar">
+        <div class="alarmLoggedbar form-group col-md-1">
+          <a class="rightIcon headerIcons" href="javascript:void(0);" title="Active Alarms"
+             routerLink="/main/alarm/active-alarms" (click)="doAlarmNotifClick()">
+            <i id="alarmIcon" class="fa fa-bell fa-3x "></i><br/>
+            <span class="userCount rightIcon ">{{ alarmStatus }}</span>
+          </a>
+          <div id="dropdown-content" class="dropdown-content" #dropdownContent>
+            <div>
+              <i class="fa fa-exclamation-triangle" style="color:red"></i> Critical - ({{ critialALarms }})
+            </div>
+            <div>
+              <i class="fa fa-exclamation-triangle" style="color:yellow"></i> Warning - ({{ warningALarms }})
+            </div>
+            <div>
+              <i class="fa fa-info-circle" style="color:#FFFFFF"></i> Information - ({{ infoALarms }})
+            </div>
+          </div>
+
+        </div>
+        <div class="userLoggedbar form-group col-md-1">
+          <a class="rightIcon headerIcons" href="javascript:void(0)" title='{{userToolTip}}'>
+            <i class="fa fa-users fa-3x"></i><br/>
+            <span class="userCount rightIcon ">Users ({{ uniqueUsers.length }})</span>
+          </a>
+        </div>
+        <div class="signoutbar form-group col-md-1">
+          <a (click)="confirmLogout()" href="javascript:void(0);">
+            <i class="fa fa-sign-out-alt fa-2x" style="color:white;padding-left:20px;"></i></a>
+        </div>
+      </div>
+      <hr class="header-seperator"/>
+    </div>
+  </div>
+
+  <!--LOGOUT MODEL-->
+  <div aria-hidden="true" aria-labelledby="logoutDialogLabel" class="modal fade modal-holder" id=logoutDialog
+       role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body modal-container" style=" text-align: center;">
+          <div class="swal-title" style="">Confirmation</div>
+          <div class="swal-text">
+            Are you sure you want to logout?
+          </div>
+        </div>
+        <div class="swal-footer">
+          <span class="btn btn-outline-light" data-dismiss="modal">Cancel</span> &nbsp;
+          <span (click)="handleLogout()" class="btn btn-outline-light" data-dismiss="modal">Ok</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

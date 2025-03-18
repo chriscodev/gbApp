@@ -1,0 +1,79 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div
+  aria-hidden="true"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="onConnectSearchModal"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Schedule Search</h5>
+        <button (click)="clickClose()" class="close" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-md-1">
+            <label class="col-form-label" for="queryField">Query</label>
+          </div>
+          <div class="col-md-7">
+            <input
+              (input)="inputSettings()"
+              [(ngModel)]="queryString"
+              class="form-control l"
+              id="queryField"
+              type="text"
+            />
+          </div>
+          <div class="mt10 col-sm-1 text-center">
+                                <span><i [ngClass]="queryStringIconText" aria-hidden="true"
+                                         class="fa fa-check-circle"></i></span>
+          </div>
+          <div class="col-md-2 text-center">
+            <button
+              (click)="doQuery()"
+              [disabled]="!okEnabled"
+              class="btn btn-default"
+              type="button"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <div class="tab-content tabcontent-border triveniBorder">
+          <h2 class="card-header">Search Results</h2>
+          <div *ngIf="showQueryResults" class="content-table">
+            <app-modal-dynamic-tb-translate
+              [buttonList]="buttonList"
+              [enableSearch]="true"
+              [modalName]="modalName"
+              [multiSelect]="true"
+              [objectTableType]="objectTableType"
+              [tableData]="schedules"
+              [enableScroll]="true"
+              [tableHeaders]="tableHeaders"
+              [tableMaxHeight]="'250px'">
+            </app-modal-dynamic-tb-translate>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="clickClose()" class="btn btn-default" type="button">
+          <i class="fa fas fa-times"></i>
+          Cancel
+        </button>
+        <button (click)="addSelected()" [disabled]="!addSchedulesEnabled" class="btn btn-default" type="button">
+          <i class="fa fas fa-plus"></i>
+          Add Selected
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

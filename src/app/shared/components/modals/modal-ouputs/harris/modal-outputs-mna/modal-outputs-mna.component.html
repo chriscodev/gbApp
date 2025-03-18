@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="ipAddressField">Address</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()"
+           [(ngModel)]="mnaOutput.outputAddress"
+           appIpAddress
+           class="form-control l"
+           id="ipAddressField"
+           placeholder="0.0.0.0"
+           type="text">
+  </div>
+  <div class="col-sm-1 validImage">
+    <span><i [ngClass]="ipAddressIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+  </div>
+  <div class="col-md-4">
+    <button (click)="testConnection()"
+            [disabled]="!okEnabled"
+            class="btn btn-sm"
+            data-target="#test-connection-modal"
+            data-toggle="modal">
+      Test Connection
+    </button>
+  </div>
+</div>
+<div class="row">
+  <label class="col-md-2 col-form-label" for="nicField">ESG NIC</label>
+  <div class="col-md-7">
+    <select [(ngModel)]="mnaOutput.trafficNICName" class="form-control" id="nicField">
+      <option *ngFor="let nic of nics" [ngValue]="nic.interfaceName">{{ nic.verboseName }}</option>
+    </select>
+  </div>
+</div>
+<div class="row form-group">
+  <label class="col-md-2 col-form-label" for="icdVersionField">ICD Version</label>
+  <div class="col-md-2">
+    <select [(ngModel)]="mnaOutput.icdVersion" class="form-control"
+            id="icdVersionField">
+      <option *ngFor="let icdVersion of icdVersions"
+              [ngValue]="icdVersion"> {{ ICDVERSION_TYPES[icdVersion].displayName }}
+      </option>
+    </select>
+  </div>
+</div>
+<div class="row">
+  <label class="col-md-2 col-form-label" for="carouselEncryptedField">Carousel Encrypted</label>
+  <div class="col-md-2">
+    <input [(ngModel)]="mnaOutput.carouselEncrypted" class="mt10 custom-control custom-checkbox"
+           id="carouselEncryptedField" type="checkbox"/>
+  </div>
+</div>
+<app-modal-outputs-transport-select
+  [output]="output"
+  [selectedTransport]="selectedTransport">
+</app-modal-outputs-transport-select>
+
+<app-modal-outputs-test-connection
+  (modalClosed)="closeModalEventHandler()"
+  *ngIf="showTestConnection"
+  [output]="mnaOutput">
+</app-modal-outputs-test-connection>
+

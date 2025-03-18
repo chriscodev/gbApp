@@ -1,0 +1,98 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        data-backdrop="static"
+        data-keyboard="false"
+        id="easSettingsModal"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit EAS Address</h5>
+                <button (click)="closeModal()" class="close" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <fieldset>
+                    <h5 class="card-header">In-bound DVS644 (SCTE-18) EAS Message Settings</h5>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="easPortField">Port</label>
+                        <div class="col-md-4">
+                            <input (input)="inputSettings()"
+                                   [(ngModel)]="easRoute.port"
+                                   class="form-control"
+                                   id="easPortField"
+                                   type="text"/>
+                        </div>
+                        <div class="col-md-1">
+                                <span><i [ngClass]="portIconText" aria-hidden="true"
+                                         class="fa fa-check-circle"></i></span>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="enableMulticastField">Enable Multicast</label>
+                        <div class="col-md-4">
+                            <input (click)="toggleMulticastEnabled()"
+                                   [checked]="enableMulticast"
+                                   class="mt10 custom-control custom-checkbox"
+                                   id="enableMulticastField"
+                                   type="checkbox"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Multicast Address</label>
+                        <div class="col-md-4">
+                            <input (input)="inputSettings()"
+                                   [(ngModel)]="easRoute.multicastAddress"
+                                   [disabled]="!enableMulticast"
+                                   class="form-control"
+                                   id="multicastAddressField"
+                                   placeholder="0.0.0.0"
+                                   type="text"/>
+                        </div>
+                        <div class="col-md-1">
+                            <i *ngIf="enableMulticast" [ngClass]="ipAddressIconText" aria-hidden="true"
+                               class="fa fa-check-circle">
+                            </i>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="nicField">Network Interface</label>
+                        <div class="col-md-6">
+                            <select [(ngModel)]="easRoute.networkInterfaceName"
+                                    [disabled]="!enableMulticast" class="form-control" id="nicField">
+                                <option *ngFor="let nic of nics"
+                                        [ngValue]="nic.interfaceName">{{ nic.verboseName }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <!-- //FOOTER -->
+            <div class="modal-footer">
+                <button
+                        (click)="closeModal()"
+                        class="btn btn-default"
+                        type="button">
+                    <i class="fa fas fa-times"></i>
+                    Close
+                </button>
+                <button
+                        (click)="updateEasAddress()"
+                        [disabled]="!okEnabled"
+                        class="btn btn-default btn-next"
+                        type="button">
+                    <i class="fa fas fa-check"></i>
+                    Ok
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

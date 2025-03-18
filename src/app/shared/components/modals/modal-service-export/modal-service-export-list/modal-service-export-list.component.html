@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div aria-hidden="true"
+     aria-labelledby="addServiceLinkModal"
+     class="modal fade"
+     data-backdrop="static"
+     data-keyboard="false"
+     id="addServiceLinkModal"
+     role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg" style="width:auto">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="titleLabel">Select Services</h5>
+        <button (click)="closeModal()"
+                aria-label="Close"
+                class="close"
+                data-dismiss="modal"
+                type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <h4 class="card-header">Services</h4>
+        <div class="tab-content tabcontent-border triveniBorder">
+          <app-modal-dynamic-tb-translate
+            [objectTableType]="'list-service-links'"
+            [tableData]="serviceLinksList"
+            [tableHeaders]="tableHeaders"
+            [buttonList]="buttonList"
+            [enableScroll]="true"
+            [enableSearch]="true"
+            [multiSelect]="true"
+            [modalName]=modalName>
+          </app-modal-dynamic-tb-translate>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-outline-light" (click)="addServiceLinks()">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>

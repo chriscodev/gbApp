@@ -1,0 +1,126 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<h4 class="card-header" *ngIf="output.outputType === OutputType.UDP">UDP Route</h4>
+<div class="tab-content tabcontent-border triveniBorder">
+  <div *ngIf="output.outputType === OutputType.UDP" class="tab-pane active" id="serviceGroupsTab" role="tabpanel">
+    <div class="p-20">
+      <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          [tableHeaders]="tableHeadersUDPRoutes"
+          [tableData]="udpRoutes"
+          (rowClicked)="selectUDPRoute($event)"
+          [enableSearch]="true"
+          [buttonList]="buttonListUDPR"
+          [objectTableType]="'OutputUdpRouteStatus-'"
+          [translateTableData]="translatedUDPRoutes"
+        >
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf=" selectedUDPRoute?.enabled === false && output?.outputType === OutputType.UDP">
+  <div class="card m-1">
+    <div class="card-header">
+      <h1 class="text-center m-5">
+        Route is Disabled
+      </h1>
+    </div>
+  </div>
+</ng-container>
+  <ng-container *ngIf="output.outputType === OutputType.ASI">
+    <div class="form-group row">
+      <label class="col-md-1 col-form-label" for="transport-name" >Name</label>
+      <div class="col-md-4">
+        <input
+          [value]="transportStatusArray?.transportsStatus[0]?.transport?.name"
+             readonly
+             class="form-control l"
+             id="transport-name"
+             type="text"/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-1 col-form-label" for="transport-type" >Type</label>
+      <div class="col-md-4">
+        <input
+          [value]="getTransportTypeDisplayName(transportStatusArray?.transportsStatus[0]?.transport?.transportType)"
+          readonly
+          class="form-control l"
+          id="transport-type"
+          type="text"/>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-1 col-form-label" for="transport-tsid" >TSID</label>
+      <div class="col-md-2">
+        <input
+          [value]="transportStatusArray?.transportsStatus[0]?.transport?.tsid"
+          readonly
+          class="form-control l"
+          id="transport-tsid"
+          type="text"/>
+      </div>
+      <div class="col-md-1 p-2">
+        <i>0x{{convertTSID(transportStatusArray?.transportsStatus[0]?.transport?.tsid)}}</i>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="(output.outputType === OutputType.UDP && selectedUDPRoute?.enabled) || output.outputType === OutputType.ASI">
+    <div class="card">
+      <div class="card-header">
+        <h4>PID Statistics</h4>
+        <div class="form-group row">
+          <label class="col-sm-2 text-start col-form-label">Last Update</label>
+          <div class="col-sm-10">
+            <input type="text" readonly [ngModel]="lastUpdateData" >
+          </div>
+        </div>
+
+      </div>
+      <div class="card-body">
+        <app-nav-slider
+          [headerTabs] = headerTabs
+          [activeId] = activeId
+          (activeIdChanged) = activeIdChangedHandler($event)
+        >
+        </app-nav-slider>
+        <ng-container *ngIf="activeId === 1">
+          <h4 class="mt-2 text-center">Transport: Bitrate: {{isDefined(this.bitRateMbps)? convertBytesToSpeed(this.bitRateMbps,'M') : 0}}</h4>
+          <canvas  baseChart width="800" height="400" style="width: 100%"
+                  [type]="'line'"
+                  [data]="lineChartData"
+                  [options]="lineChartOptions"
+                  [legend]="lineChartLegend">
+          </canvas>
+        </ng-container>
+
+       <ng-container *ngIf="activeId === 2">
+         <div class="card chart-container align-items-center" *ngIf="!isEmptyValue(lineChartData?.datasets)">
+           <h4 class="mt-2 text-center">Transport 1: {{output.outputType === OutputType.ASI ? transportStatusArray?.transportsStatus[0]?.transport?.name : transportStatusArray?.transportsStatus[0]?.transport?.name}}, Bitrate: {{isDefined(this.bitRateMbps)? convertBytesToSpeed(this.bitRateMbps,'M') : 0}}</h4>
+           <canvas  baseChart width="350" height="350"
+                   [type]="'pie'"
+                   [data]="pieChartData"
+                   [options]="pieChartOptions"
+                   [legend]="pieChartLegend">
+           </canvas>
+         </div>
+         <div class="card chart-container" *ngIf="isEmptyValue(lineChartData?.datasets)">
+             <h4 class="m-auto">No Data Available</h4>
+         </div>
+       </ng-container>
+
+       <ng-container *ngIf="activeId === 3">
+         <h4 class="mt-2 text-center">Transport: {{output.outputType === OutputType.ASI ? transportStatusArray?.transportsStatus[0]?.transport?.name : transportStatusArray?.transportsStatus[0]?.transport?.name}}, Bitrate: {{isDefined(this.bitRateMbps) ? convertBytesToSpeed(this.bitRateMbps,'M') : 0 }}</h4>
+         <canvas baseChart width="800" height="400" style="width: 100%;overflow: hidden;"
+                 [type]="'bar'"
+                 [data]="barChartData"
+                 [options]="barChartOptions"
+                 [legend]="barChartLegend">
+         </canvas>
+       </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>
+

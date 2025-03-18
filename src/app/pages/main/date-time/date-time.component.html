@@ -1,0 +1,169 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+    <div class="header-container">
+        <h4 class="card-title">Date Time Settings </h4>
+        <!-- // MODAL FOR CONFIRM COMMIT -->
+        <div class="row singleLayout">
+            <app-modal-commit-revert-dialog
+                    (parentCommit)="onCommit()"
+                    (parentRevert)="onRevert()"
+                    [dirty]="dirty">
+            </app-modal-commit-revert-dialog>
+        </div>
+    </div>
+    <!-- Main Date / Time body -->
+    <div class="content-table" style="min-height:400px;">
+        <div class="active form-group">
+
+            <div class="tab-content tabcontent-border triveniBorder" style="min-height:400px;">
+                <br/>
+                <div class="content-table" style="min-height:400px;position:absolute;left:100px; width: 800px;">
+                    <form>
+                        <div class="form-group row">
+                            <label for="dateField" class="col-sm-2 col-form-label">Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="{{ serverDate }}" class="form-control col-sm-4" id="dateField"
+                                       readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" (click)="openUpdateDateTime()"
+                                        class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+                                        data-toggle="modal" data-target="#updateDateTimeModal">Update Date / Time / NTP
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="serverTimeField" class="col-sm-2 col-form-label">Server Time</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="{{ serverTime }}" class="form-control" id="serverTimeField"
+                                       readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row" *ngFor="let row of ntpServerRowIndexes; let i = index">
+                            <label for="ntpServer{{i}}Field"
+                                   class="col-sm-2 col-form-label">{{i == 0 ? "NTP Servers" : ""}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" value="{{ localDateTime?.ntpServers[i]?.address }}"
+                                       class="form-control"
+                                       id="ntpServer{{i}}Field"
+                                       readonly>
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" *ngIf="i==0" (click)="openNtpStatus()"
+                                        class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+                                        data-toggle="modal" data-target="#ntpStatusModal">NTP Status
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="clearfix"></div>
+                    <app-select-timezone
+                            [required]="false"
+                            readonly="true"
+                            [data]="localDateTime?.timeZoneMapping?.windowsName"
+                            [btnLabel]="'Update Timezone'"
+                            (updateParent)="updateParentHandler($event)"
+                    ></app-select-timezone>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL for NTP Status -->
+        <div class="modal fade modal-holder" id="ntpStatusModal" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ntpStatusModalLabel">NTP Status - Automatically Refreshing</h5>
+                        <button type="button" (click)="closeNtpStatus()" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body modal-container">
+        <pre *ngFor="let ntpStatusLine of ntpStatusLines"
+             class="col-md-12" style="font-size: inherit;margin: 0;">{{ntpStatusLine}}</pre>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn waves-effect waves-light btn-rounded btn-success btnFormat btnWidth"
+                                (click)="closeNtpStatus()" data-dismiss="modal">OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MODAL for Update Date / Time -->
+        <div class="modal fade modal-holder" id="updateDateTimeModal" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateDateTimeModalLabel">Update Date / Time / NTP</h5>
+                        <button type="button" (click)="closeUpdateDateTime(false)" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body ">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="enableNTPField">Date</label>
+                            <div class="col-md-4">
+                                <input class="form-control custom-datetime" type="datetime-local" (change)="updateDateTime($event)"
+                                       value="{{updatedServerTimeString}}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="enableNTPField">Enable NTP</label>
+                            <div class="col-md-2">
+                                <div class="mt10 custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input"
+                                           (change)="updateNTPServerAddress()"
+                                           id="enableNTPField" [(ngModel)]="updatedNTPEnabled">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" *ngFor="let row of ntpServerRowIndexes; let i = index">
+                            <label class="col-md-2 col-form-label"
+                                   for="updateNTPServer{{row}}Field">{{i == 0 ? "NTP Servers" : ""}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" [(ngModel)]="updatedNTPServers[i].address"
+                                       class="form-control" (keyup)=updateNTPServerAddress()
+                                       [disabled]="!updatedNTPEnabled"
+                                       id="updateNTPServer{{row}}Field">
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" [disabled]="!updatedNTPEnabled"
+                                        (change)="updateDateTimeSelectNTPServerType(0, $event)">
+                                    <option *ngFor="let ntpServerType of ntpServerTypes"
+                                            [ngValue]="ntpServerType">{{ntpServerType}}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 w-auto alignCenter">
+                                <input type="checkbox" class="custom-control-input" id="burstMode{{i}}Field"
+                                       [disabled]="!updatedNTPEnabled"
+                                       [(ngModel)]="updatedNTPServers[i].burstMode">
+                            </div>
+                            <label class="col-md-2 col-form-label w-auto burstLabel" for="burstMode{{i}}Field">Burst
+                                Mode</label>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                              (click)="closeUpdateDateTime( false )" data-dismiss="modal">Cancel
+                      </button>
+                      <button class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                              [style.pointer-events]=updateDateTimeModalOKValid
+                              (click)="closeUpdateDateTime( true )" data-dismiss="modal">OK
+                      </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

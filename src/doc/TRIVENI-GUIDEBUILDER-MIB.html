@@ -1,0 +1,444 @@
+<body  link="#808080"><pre>TRIVENI-GUIDEBUILDER-MIB<strong> DEFINITIONS ::= BEGIN</strong>
+
+<strong>IMPORTS</strong>
+        <a name="enterprises">enterprises</a>,
+        <a name="MODULE-IDENTITY">MODULE-IDENTITY</a>,
+        <a name="OBJECT-TYPE">OBJECT-TYPE</a>,
+        <a name="NOTIFICATION-TYPE">NOTIFICATION-TYPE</a>,
+        <a name="IpAddress">IpAddress</a>,
+        <a name="Unsigned32">Unsigned32</a>
+                <strong>FROM </strong>SNMPv2-SMI
+        <a name="DisplayString">DisplayString</a>,
+        <a name="DateAndTime">DateAndTime</a>,
+        <a name="TEXTUAL-CONVENTION">TEXTUAL-CONVENTION</a>
+                <strong>FROM </strong>SNMPv2-TC
+        <a name="OBJECT-GROUP">OBJECT-GROUP</a>,
+        <a name="NOTIFICATION-GROUP">NOTIFICATION-GROUP</a>
+                <strong>FROM </strong>SNMPv2-CONF;
+
+<a name="gbModule">gbModule</a><strong> MODULE-IDENTITY</strong>
+        <strong>LAST-UPDATED </strong><I><font color="#666699">"201304301940Z"</font></I>    <font color="#408080">-- Apr 30, 2013 7:40:00 PM</font>
+        <strong>ORGANIZATION </strong><I><font color="#666699">"Triveni Digital, Inc."</font></I>
+        <strong>CONTACT-INFO</strong>
+<I><font color="#666699">                "Triveni Digital, Inc.
+                40 Washington Road
+                Princeton Junction, NJ 08550
+                Phone: 609-936-3434
+                Fax: 609-716-3503
+                Email: support@TriveniDigital.com
+                Web: http://www.trivenidigital.com/"</font></I>
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.1</font>
+        <strong>::= </strong>{ <a href="#enterprises">enterprises</a> 8716 4 1 }
+
+
+<a name="GbModuleStateType">GbModuleStateType</a> ::= <strong>TEXTUAL-CONVENTION</strong>
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                "Indicates current state of GuideBuilder module"</font></I>
+        <strong>SYNTAX </strong>INTEGER {
+                        maintenance(<font color="#999999">0</font>),
+                        passive(<font color="#999999">1</font>),
+                        redundancy(<font color="#999999">2</font>),
+                        active(<font color="#999999">3</font>) }
+
+
+<a name="GbType">GbType</a> ::= <strong>TEXTUAL-CONVENTION</strong>
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                "Indicates current Guidebuilder configuration"</font></I>
+        <strong>SYNTAX </strong>INTEGER {
+                        primary(<font color="#999999">1</font>),
+                        redundant(<font color="#999999">2</font>) }
+
+
+<a name="GbUpdateState">GbUpdateState</a> ::= <strong>TEXTUAL-CONVENTION</strong>
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <strong>SYNTAX </strong>INTEGER {
+                        pending(<font color="#999999">1</font>),
+                        processing(<font color="#999999">2</font>),
+                        complete(<font color="#999999">3</font>),
+                        error(<font color="#999999">4</font>) }
+
+
+<a name="triveni">triveni</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716</font>
+        <strong>::= </strong>{ <a href="#enterprises">enterprises</a> 8716 }
+
+<a name="guideBuilder">guideBuilder</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4</font>
+        <strong>::= </strong>{ <a href="#triveni">triveni</a> 4 }
+
+<a name="gbServer">gbServer</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2</font>
+        <strong>::= </strong>{ <a href="#guideBuilder">guideBuilder</a> 2 }
+
+<a name="serverType">serverType</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#GbType">GbType</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2.1</font>
+        <strong>::= </strong>{ <a href="#gbServer">gbServer</a> 1 }
+
+
+<a name="serverState">serverState</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#GbModuleStateType">GbModuleStateType</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2.2</font>
+        <strong>::= </strong>{ <a href="#gbServer">gbServer</a> 2 }
+
+
+<a name="serverIpAddress">serverIpAddress</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong>IpAddress
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2.3</font>
+        <strong>::= </strong>{ <a href="#gbServer">gbServer</a> 3 }
+
+
+<a name="serverStartTime">serverStartTime</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DateAndTime">DateAndTime</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2.4</font>
+        <strong>::= </strong>{ <a href="#gbServer">gbServer</a> 4 }
+
+
+<a name="version">version</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.2.5</font>
+        <strong>::= </strong>{ <a href="#gbServer">gbServer</a> 5 }
+
+
+<a name="gbInputStatusTable">gbInputStatusTable</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><strong>SEQUENCE OF </strong>GbInputStatusEntry
+        <strong>MAX-ACCESS </strong>not-accessible
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4</font>
+        <strong>::= </strong>{ <a href="#guideBuilder">guideBuilder</a> 4 }
+
+
+<a name="gbInputStatusEntry">gbInputStatusEntry</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong>GbInputStatusEntry
+        <strong>MAX-ACCESS </strong>not-accessible
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <strong>INDEX </strong>{
+                <a href="#gbInputIndex">gbInputIndex</a> }
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusTable">gbInputStatusTable</a> 1 }
+
+
+GbInputStatusEntry ::= <strong>SEQUENCE</strong> {
+
+        <a href="#gbInputIndex">gbInputIndex</a>             Unsigned32,
+        <a href="#gbInputName">gbInputName</a>              DisplayString,
+        <a href="#gbInputType">gbInputType</a>              DisplayString,
+        <a href="#gbInputUpdateState">gbInputUpdateState</a>       GbUpdateState,
+        <a href="#gbInputLastUpdateTime">gbInputLastUpdateTime</a>    DateAndTime,
+        <a href="#gbInputLastUpdateMessage">gbInputLastUpdateMessage</a> DisplayString,
+        <a href="#gbInputLastCompleteTime">gbInputLastCompleteTime</a>  DateAndTime }
+
+
+<a name="gbInputIndex">gbInputIndex</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong>Unsigned32
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.1</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 1 }
+
+
+<a name="gbInputName">gbInputName</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.2</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 2 }
+
+
+<a name="gbInputType">gbInputType</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.3</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 3 }
+
+
+<a name="gbInputUpdateState">gbInputUpdateState</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#GbUpdateState">GbUpdateState</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.4</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 4 }
+
+
+<a name="gbInputLastUpdateTime">gbInputLastUpdateTime</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DateAndTime">DateAndTime</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.5</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 5 }
+
+
+<a name="gbInputLastUpdateMessage">gbInputLastUpdateMessage</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.6</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 6 }
+
+
+<a name="gbInputLastCompleteTime">gbInputLastCompleteTime</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DateAndTime">DateAndTime</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.4.1.7</font>
+        <strong>::= </strong>{ <a href="#gbInputStatusEntry">gbInputStatusEntry</a> 7 }
+
+
+<a name="gbOutputsStatusTable">gbOutputsStatusTable</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><strong>SEQUENCE OF </strong>GbOutputStatusEntry
+        <strong>MAX-ACCESS </strong>not-accessible
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6</font>
+        <strong>::= </strong>{ <a href="#guideBuilder">guideBuilder</a> 6 }
+
+
+<a name="gbOutputStatusEntry">gbOutputStatusEntry</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong>GbOutputStatusEntry
+        <strong>MAX-ACCESS </strong>not-accessible
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <strong>INDEX </strong>{
+                <a href="#gbOutputIndex">gbOutputIndex</a> }
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1</font>
+        <strong>::= </strong>{ <a href="#gbOutputsStatusTable">gbOutputsStatusTable</a> 1 }
+
+
+GbOutputStatusEntry ::= <strong>SEQUENCE</strong> {
+
+        <a href="#gbOutputIndex">gbOutputIndex</a>             Unsigned32,
+        <a href="#gbOutputName">gbOutputName</a>              DisplayString,
+        <a href="#gbOutputType">gbOutputType</a>              DisplayString,
+        <a href="#gbOutputUpdateState">gbOutputUpdateState</a>       GbUpdateState,
+        <a href="#gbOutputLastUpdateTime">gbOutputLastUpdateTime</a>    DateAndTime,
+        <a href="#gbOutputLastUpdateMessage">gbOutputLastUpdateMessage</a> DisplayString,
+        <a href="#gbOutputLastCompleteTime">gbOutputLastCompleteTime</a>  DateAndTime }
+
+
+<a name="gbOutputIndex">gbOutputIndex</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong>Unsigned32
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.1</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 1 }
+
+
+<a name="gbOutputName">gbOutputName</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.2</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 2 }
+
+
+<a name="gbOutputType">gbOutputType</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.3</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 3 }
+
+
+<a name="gbOutputUpdateState">gbOutputUpdateState</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#GbUpdateState">GbUpdateState</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.4</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 4 }
+
+
+<a name="gbOutputLastUpdateTime">gbOutputLastUpdateTime</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DateAndTime">DateAndTime</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.5</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 5 }
+
+
+<a name="gbOutputLastUpdateMessage">gbOutputLastUpdateMessage</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DisplayString">DisplayString</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.6</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 6 }
+
+
+<a name="gbOutputLastCompleteTime">gbOutputLastCompleteTime</a><strong> OBJECT-TYPE</strong>
+        <strong>SYNTAX  </strong><a href="#DateAndTime">DateAndTime</a>
+        <strong>MAX-ACCESS </strong>read-only
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.6.1.7</font>
+        <strong>::= </strong>{ <a href="#gbOutputStatusEntry">gbOutputStatusEntry</a> 7 }
+
+
+<a name="gbNotifications">gbNotifications</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.7</font>
+        <strong>::= </strong>{ <a href="#guideBuilder">guideBuilder</a> 7 }
+
+<a name="gbNotificationsPrefix">gbNotificationsPrefix</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.7.0</font>
+        <strong>::= </strong>{ <a href="#gbNotifications">gbNotifications</a> 0 }
+
+<a name="gbGroups">gbGroups</a><strong> OBJECT IDENTIFIER </strong>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.8</font>
+        <strong>::= </strong>{ <a href="#guideBuilder">guideBuilder</a> 8 }
+
+
+<a name="gbServerState">gbServerState</a><strong> NOTIFICATION-TYPE</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#serverType">serverType</a>,
+                <a href="#serverState">serverState</a>,
+                <a href="#serverIpAddress">serverIpAddress</a>}
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.7.0.1</font>
+        <strong>::= </strong>{ <a href="#gbNotificationsPrefix">gbNotificationsPrefix</a> 1 }
+
+
+<a name="gbInputStatus">gbInputStatus</a><strong> NOTIFICATION-TYPE</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#gbInputName">gbInputName</a>,
+                <a href="#gbInputType">gbInputType</a>,
+                <a href="#gbInputUpdateState">gbInputUpdateState</a>,
+                <a href="#gbInputLastUpdateTime">gbInputLastUpdateTime</a>,
+                <a href="#gbInputLastUpdateMessage">gbInputLastUpdateMessage</a>,
+                <a href="#gbInputLastCompleteTime">gbInputLastCompleteTime</a>}
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.7.0.2</font>
+        <strong>::= </strong>{ <a href="#gbNotificationsPrefix">gbNotificationsPrefix</a> 2 }
+
+
+<a name="gbOutputStatus">gbOutputStatus</a><strong> NOTIFICATION-TYPE</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#gbOutputName">gbOutputName</a>,
+                <a href="#gbOutputType">gbOutputType</a>,
+                <a href="#gbOutputUpdateState">gbOutputUpdateState</a>,
+                <a href="#gbOutputLastUpdateTime">gbOutputLastUpdateTime</a>,
+                <a href="#gbOutputLastUpdateMessage">gbOutputLastUpdateMessage</a>,
+                <a href="#gbOutputLastCompleteTime">gbOutputLastCompleteTime</a>}
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.7.0.3</font>
+        <strong>::= </strong>{ <a href="#gbNotificationsPrefix">gbNotificationsPrefix</a> 3 }
+
+<a name="gbServerObjects">gbServerObjects</a> <strong>OBJECT-GROUP</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#serverType">serverType</a>,
+                <a href="#serverState">serverState</a>,
+                <a href="#serverIpAddress">serverIpAddress</a>,
+                <a href="#serverStartTime">serverStartTime</a>,
+                <a href="#version">version</a> }
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.8.1</font>
+        <strong>::= </strong>{ <a href="#gbGroups">gbGroups</a> 1 }
+
+<a name="gbInputStatusObjects">gbInputStatusObjects</a> <strong>OBJECT-GROUP</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#gbInputIndex">gbInputIndex</a>,
+                <a href="#gbInputName">gbInputName</a>,
+                <a href="#gbInputType">gbInputType</a>,
+                <a href="#gbInputUpdateState">gbInputUpdateState</a>,
+                <a href="#gbInputLastUpdateTime">gbInputLastUpdateTime</a>,
+                <a href="#gbInputLastUpdateMessage">gbInputLastUpdateMessage</a>,
+                <a href="#gbInputLastCompleteTime">gbInputLastCompleteTime</a> }
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.8.3</font>
+        <strong>::= </strong>{ <a href="#gbGroups">gbGroups</a> 3 }
+
+<a name="gbOutputStatusObjects">gbOutputStatusObjects</a> <strong>OBJECT-GROUP</strong>
+        <strong>OBJECTS</strong> {
+                <a href="#gbOutputIndex">gbOutputIndex</a>,
+                <a href="#gbOutputName">gbOutputName</a>,
+                <a href="#gbOutputType">gbOutputType</a>,
+                <a href="#gbOutputUpdateState">gbOutputUpdateState</a>,
+                <a href="#gbOutputLastUpdateTime">gbOutputLastUpdateTime</a>,
+                <a href="#gbOutputLastUpdateMessage">gbOutputLastUpdateMessage</a>,
+                <a href="#gbOutputLastCompleteTime">gbOutputLastCompleteTime</a> }
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.8.5</font>
+        <strong>::= </strong>{ <a href="#gbGroups">gbGroups</a> 5 }
+
+<a name="gbNotifyGroup">gbNotifyGroup</a> <strong>NOTIFICATION-GROUP</strong>
+        <strong>NOTIFICATIONS</strong> {
+                <a href="#gbServerState">gbServerState</a>,
+                <a href="#gbInputStatus">gbInputStatus</a>,
+                <a href="#gbOutputStatus">gbOutputStatus</a> }
+        <strong>STATUS </strong>current
+        <strong>DESCRIPTION</strong>
+<I><font color="#666699">                ""</font></I>
+        <font color="#408080">-- 1.3.6.1.4.1.8716.4.8.6</font>
+        <strong>::= </strong>{ <a href="#gbGroups">gbGroups</a> 6 }
+
+<strong>END</strong>
+</pre></body>

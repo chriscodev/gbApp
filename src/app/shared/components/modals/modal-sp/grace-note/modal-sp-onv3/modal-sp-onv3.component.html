@@ -1,0 +1,101 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<h4 class="card-header" style="padding-left:0px;">HTTP Settings</h4>
+<div class="tab-content tabcontent-border triveniBorder" style="padding:20px;">
+  <div class="form-bottom">
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="protocolField">Scheme</label>
+      <div class="col-md-3">
+        <select (change)="onProtocolChanged()"
+                [(ngModel)]="localScheduleProvider.protocol"
+                class="form-control"
+                id="protocolField">
+          <option *ngFor="let httpScheme of httpSchemes"
+                  [ngValue]="httpScheme"> {{ httpScheme }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="hostField">Host</label>
+      <div class="col-md-3">
+        <input (input)="inputSettings()"
+               [(ngModel)]="localScheduleProvider.host"
+               class="form-control l"
+               id="hostField"
+               type="text"/>
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="hostIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="portField">Port</label>
+      <div class="col-md-3">
+        <input (input)="inputSettings()"
+               (keypress)="numberOnly($event)"
+               [(ngModel)]="localScheduleProvider.port"
+               class="form-control l"
+               id="portField"
+               type="number"/>
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="portIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="apiKeyField">API-Key</label>
+      <div class="col-md-3">
+        <input (input)="inputSettings()"
+               [(ngModel)]="localScheduleProvider.apiKey"
+               class="form-control l"
+               id="apiKeyField"
+               type="{{ !showPassword ? 'password' : 'text' }}"/>
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="apiKeyIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <label (click)="toggleView()">
+          <i aria-hidden="true"
+             class="fa {{ !showPassword ? 'fa-eye' : 'fa-eye-slash' }}"></i>
+        </label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <button (click)="doTestConnection()"
+                [disabled]="!apiKeyValid"
+                class="btn btn-sm"
+                data-backdrop="static"
+                data-keyboard="false"
+                data-target="#testConnectionModal"
+                data-toggle="modal">
+          Test Connection
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+
+<div class="clearfix"></div>
+
+<app-modal-sp-testconnection
+  (testConnectionClosed)="testConnectionClosedHandler($event)"
+  *ngIf="showTestConnection"
+  [scheduleProvider]="localScheduleProvider"
+  [showTestConnection]="showTestConnection">
+</app-modal-sp-testconnection>
+
+<app-modal-sp-schedule-download-settings
+  [scheduleProvider]="localScheduleProvider">
+</app-modal-sp-schedule-download-settings>
+
+

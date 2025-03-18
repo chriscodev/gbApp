@@ -1,0 +1,81 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<input [hidden]="true" #fileOutputUDPInput type="file" (change)="onImport($event)">
+<div class="form-group">
+  <div class="row">
+    <label class="col-md-3 col-form-label" for="nicField">Network Interface</label>
+    <div class="col-md-7">
+      <select [(ngModel)]="udpOutput.networkInterfaceName" class="form-control" id="nicField">
+        <option *ngFor="let nic of nics" [ngValue]="nic.interfaceName">{{ nic.verboseName }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <label class="col-md-3 col-form-label" for="ttlField">Time to live</label>
+    <div class="col-md-2">
+      <input (input)="inputSettings()" [(ngModel)]="udpOutput.ttl" class="form-control l" id="ttlField"
+             numbersOnly title="Max value 255" type="number"/>
+    </div>
+    <div class="col-md-1 validImage ">
+      <span><i [ngClass]="ttlIconText" aria-hidden="true" class="fa fa-check-circle "></i></span>
+    </div>
+  </div>
+
+  <div class="row">
+    <label class="col-md-3 col-form-label x" for="a110Field">Transmit A110 Packet</label>
+    <div class="col-md-9">
+      <input [(ngModel)]="udpOutput.a110Enabled" class="mt10 custom-control custom-checkbox"
+             id="a110Field" type="checkbox"/>
+    </div>
+  </div>
+</div>
+
+
+<h4 class="card-header">UDP Route</h4>
+<div class="tab-content tabcontent-border triveniBorder">
+  <div class="tab-pane active" role="tabpanel">
+    <div class="p-20">
+      <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          (buttonClicked)="onButtonClicked($event)"
+          (rowClicked)="onRowClicked($event)"
+          [buttonList]="buttonList"
+          [enableSearch]="true"
+          [enableScroll]="true"
+          [modalName]="modalName"
+          [multiSelect]="true"
+          [objectTableType]="'OutputUdpRoute-'"
+          [tableData]="udpRoutes"
+          [tableHeaders]="tableHeaders"
+          [translateTableData]="translatedUDPRoutes">
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-modal-outputs-udp-route-select
+  (modalClosed)="modelClosedHandler()"
+  (udpRouteChanged)="udpRouteChangedHandler($event)"
+  *ngIf="showAddEditModal"
+  [editMode]="editMode"
+  [mpegTransports]="localMPEGTransports"
+  [udpOutput]="udpOutput"
+  [objectType]="objectTableType"
+  [selectedTransport]="selectedTransport"
+  [currentUdpRoute]="currentUDPRoute">
+</app-modal-outputs-udp-route-select>
+
+<app-modal-udp-import-csv
+  *ngIf="modalChildImportUdpCsv"
+  [udpOutput]="udpOutput"
+  [importUdpCsvData]="importUdpCsvData"
+  (outputUdpImportChange)="outputUdpImportChangeHandler($event)"
+>
+</app-modal-udp-import-csv>
+
+<app-modal-progress-bar
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+  (progressBarEmit)=fileProgressModalHandler()
+></app-modal-progress-bar>

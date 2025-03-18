@@ -1,0 +1,342 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="modal fade" id="modalEditDSTPSettings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit DSTP Settings</h5>
+                <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card nopad-top">
+                    <h5 class="card-title align-content-center">Tunnel Mode Settings</h5>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="field250">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label" for="dstpEnabledField">Enable DSTP</label>
+                                    <div class="col-md-1">
+                                        <div class="custom-control custom-checkbox">
+                                            <input
+                                                    (change)="inputDSTPSettings()"
+                                                    [(ngModel)]="localDSTPSSettings.enabled"
+                                                    class="mt10 custom-control custom-checkbox"
+                                                    id="dstpEnabledField"
+                                                    type="checkbox"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Address</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                [(ngModel)]="localDSTPSSettings.dstAddress"
+                                                [disabled]="!localDSTPSSettings.enabled"
+                                                (input)="inputDSTPSettings()"
+                                                (keypress)="validateIP($event)"
+                                                class="form-control l"
+                                                placeholder="0.0.0.0"
+                                                type="text"/>
+                                    </div>
+                                    <div *ngIf="localDSTPSSettings.enabled" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpAddressIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Port</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                (input)="inputDSTPSettings()"
+                                                (keypress)="numberOnly($event)"
+                                                [(ngModel)]="localDSTPSSettings.dstPort"
+                                                [disabled]="!localDSTPSSettings.enabled"
+                                                numbersOnly
+                                                [numbersOnlyType]="'port'"
+                                                class="form-control l"
+                                                title="Value range 1-65535"
+                                                type="number"/>
+                                    </div>
+                                    <div *ngIf="localDSTPSSettings.enabled" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpPortIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field250">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Tunnel Mode</label>
+                                    <div class="col-md-6">
+                                        <select
+                                                [disabled]="!localDSTPSSettings.enabled"
+                                                [(ngModel)]="localDSTPSSettings.tunnelMode"
+                                                (click)="onChangeTunnelMode()"
+                                                class="form-control"
+                                                id="tunnelModeType">
+                                            <option *ngFor="let tunnelMode of tunnelModeTypes"
+                                                    [value]="tunnelMode"> {{ DSTP_TUNNEL_MODE_TYPES[tunnelMode].displayName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Bind NIC</label>
+                                    <div class="col-md-6">
+                                        <select
+                                                class="form-control"
+                                                [disabled]="!enableBindPortFields"
+                                                id="network-interface"
+                                                [(ngModel)]="localDSTPSSettings.bindNic">
+                                            <option *ngFor="let net of networkInterface" [ngValue]="net.interfaceName">
+                                                {{ net?.verboseName}}
+                                            </option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Bind Port</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                (input)="inputDSTPSettings()"
+                                                (keypress)="numberOnly($event)"
+                                                [(ngModel)]="localDSTPSSettings.bindPort"
+                                                [disabled]="!enableBindPortFields"
+                                                numbersOnly
+                                                [numbersOnlyType]="'port'"
+                                                class="form-control l"
+                                                title="Value range 1-65535"
+                                                type="number"/>
+                                    </div>
+                                    <div *ngIf="enableBindPortFields" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpBindPortIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <!--FEC Settings-->
+                    <h5 class="card-title align-content-center">FEC Settings</h5>
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="field250">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label" for="dstpEnabledField">Enable FEC</label>
+                                    <div class="col-md-1">
+                                        <div class="custom-control custom-checkbox">
+                                            <input
+                                                    (change)="inputDSTPSettings()"
+                                                    [disabled]="!(enableBindFields && dstpenableFECLantencyields)"
+                                                    [(ngModel)]="localDSTPSSettings.fecEnabled"
+                                                    class="mt10 custom-control custom-checkbox"
+                                                    id="dstpFecEnabled"
+                                                    type="checkbox"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">FEC Columns</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                (input)="inputDSTPSettings()"
+                                                (keypress)="numberOnly($event)"
+                                                [(ngModel)]="localDSTPSSettings.fecColumns"
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled)"
+                                                class="form-control l"
+                                                title="Value range 2-65535"
+                                                type="number"/>
+                                    </div>
+                                    <div *ngIf="enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpFecColumnsIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">FEC Rows</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                (input)="inputDSTPSettings()"
+                                                (keypress)="numberOnly($event)"
+                                                [(ngModel)]="localDSTPSSettings.fecRows"
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled)"
+                                                class="form-control l"
+                                                title="enableBindFields && dstpenableFECLantencyieldsValue range 1-65535"
+                                                type="number"/>
+                                    </div>
+                                    <div *ngIf="enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpFecRowsIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="field250">
+                                <div class="form-group row"> &nbsp;</div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">FEC Layout</label>
+                                    <div class="col-md-6">
+                                        <select
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled)"
+                                                [(ngModel)]="localDSTPSSettings.fecLayout"
+                                                class="form-control">
+                                            <option *ngFor="let layoutType of fecLayoutTypes"
+                                                    [ngValue]="layoutType"> {{ SRT_FEC_LAYOUT_TYPES[layoutType].displayName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">ARQ</label>
+                                    <div class="col-md-6">
+
+                                        <select
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.fecEnabled)"
+                                                [(ngModel)]="localDSTPSSettings.autoRepeatRequest"
+                                                class="form-control">
+                                            <option *ngFor="let requestType of autoRepeatRequestTypes"
+                                                    [ngValue]="requestType"> {{ SRT_AUTO_RESPONSE_REQUEST_TYPES[requestType].displayName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <!--Transmisson settings-->
+                    <div class="form-group row">
+                        <div class="col-md-6" style="border-right:#fff solid 1px;">
+                            <div class="field250">
+                                <div class="form-group row">
+                                    <h5 class="card-title align-content-center" style="padding-left:5px;">Transmission
+                                        Settings</h5>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">MTU</label>
+                                        <div class="col-md-6">
+                                            <input
+                                                    (input)="inputDSTPSettings()"
+                                                    [(ngModel)]="localDSTPSSettings.mtu"
+                                                    (keypress)="numberOnly($event)"
+                                                    [disabled]="!localDSTPSSettings.enabled"
+                                                    class="form-control l"
+                                                    placeholder=1500
+                                                    type="number"/>
+                                        </div>
+                                        <div *ngIf="localDSTPSSettings.enabled" class="col-sm-1 validImage">
+                                            <span><i [ngClass]="dstpMTUIconText" aria-hidden="true"
+                                                     class="fa fa-check-circle"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">TTL</label>
+                                        <div class="col-md-6">
+                                            <input
+                                                    (input)="inputDSTPSettings()"
+                                                    [(ngModel)]="localDSTPSSettings.ttl"
+                                                    (keypress)="numberOnly($event)"
+                                                    [disabled]="!localDSTPSSettings.enabled"
+                                                    class="form-control l"
+                                                    title="Value range 1-64"
+                                                    placeholder="64"
+                                                    type="number"/>
+                                        </div>
+                                        <div *ngIf="localDSTPSSettings.enabled" class="col-sm-1 validImage">
+                                            <span><i [ngClass]="dstpTTLIconText" aria-hidden="true"
+                                                     class="fa fa-check-circle"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Latency (ms)</label>
+                                        <div class="col-md-6">
+                                            <input
+                                                    (input)="inputDSTPSettings()"
+                                                    (keypress)="numberOnly($event)"
+                                                    [(ngModel)]="localDSTPSSettings.latency"
+                                                    [disabled]="!localDSTPSSettings.enabled"
+                                                    class="form-control l"
+                                                    placeholder="'120 ms'"
+                                                    type="number"/>
+                                        </div>
+                                        <div *ngIf="localDSTPSSettings.enabled" class="col-sm-1 validImage">
+                                            <span><i [ngClass]="dstpLatencyIconText" aria-hidden="true"
+                                                     class="fa fa-check-circle"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Encrption Settings-->
+                        <div class="col-md-6">
+                            <div class="field250">
+                                <h5 class="card-title align-content-center">Encryption Settings</h5>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label" for="dstpEnabledField">Enable
+                                        Encryption</label>
+                                    <div class="col-md-6">
+                                        <div class="custom-control custom-checkbox">
+                                            <input
+                                                    (change)="inputDSTPSettings()"
+                                                    [disabled]="!(enableBindFields && dstpenableFECLantencyields)"
+                                                    [(ngModel)]="localDSTPSSettings.encryptionEnabled"
+                                                    class="mt10 custom-control custom-checkbox"
+                                                    id="encryptionEnabledField"
+                                                    type="checkbox"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Pass Phrase</label>
+                                    <div class="col-md-6">
+                                        <input
+                                                (input)="inputDSTPSettings()"
+                                                [(ngModel)]="localDSTPSSettings.passphrase"
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.encryptionEnabled)"
+                                                class="form-control l"
+                                                type="{{showFieldValue ? 'text' : 'password'}}"/>
+                                    </div>
+                                    <div *ngIf="enableBindFields && dstpenableFECLantencyields && localDSTPSSettings.encryptionEnabled" class="col-sm-1 validImage">
+                                        <span><i [ngClass]="dstpPassPhraseIconText" aria-hidden="true"
+                                                 class="fa fa-check-circle"></i></span>
+                                        &nbsp;&nbsp; <span><i
+                                            class="validImage fR marginLeft10 fa {{ !showFieldValue ? 'fa-eye' : 'fa-eye-slash'}}"
+                                            aria-hidden="true"
+                                            (click)=toggleFieldVisibility()></i></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Key length</label>
+                                    <div class="col-md-6">
+                                        <select
+                                                [disabled]="!(enableBindFields && dstpenableFECLantencyields)"
+                                                [(ngModel)]="localDSTPSSettings.keyLength"
+                                                class="form-control">
+                                            <option *ngFor="let lengthType of keyLengthTypes"
+                                                    [ngValue]="lengthType"> {{ SRT_KEY_LENGTH_TYPES[lengthType].displayName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline-dark" (click)="closeModal()">
+                    <i class="fas fa fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-outline-dark" [disabled]="!updateEnabled" (click)="updateDSTPSettings()">
+                    <i class="fas fa fa-check"></i> Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

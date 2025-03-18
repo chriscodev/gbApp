@@ -1,0 +1,76 @@
+<?xml version = '1.0'?>
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<!DOCTYPE project>
+<project default="all">
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+  <property name="defaultGBOneSvnTrunk" value="http://10.77.11.24/svn/GuideBuilder/GBOne/branches/5.6.0"/>
+  <property name="gbWebAppGitSvnPath" value="build/gbWebAppGitSvn"/>
+  <property name="gbWebAppGitSvnDistPath" value="dist/gbWebAppGitSvn"/>
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${build}/lib/ant-contrib-1.0b3.jar"/>
+  <taskdef resource="net/sf/antcontrib/antlib.xml" classpath="${build}/lib/ant-contrib-1.0b3.jar"/>
+
+  <target name="all" depends="dist, commitGbWebAppGitSvn" description="Make a distribution of this project">
+  </target>
+
+  <target name="dist" depends="" description="Make distribution files">
+    <zip destfile="${dist}/gbApp.zip">
+      <zipfileset dir="${dist}/gbApp/" includes="**/*" prefix="gbApp/"/>
+    </zip>
+  </target>
+
+  <target name="gbOneSvnPathInit" depends="">
+    <if>
+      <isset property="gbOneSvnUrlOverride"/>
+      <then>
+        <echo message="gbOneSvnUrlOverride detected: ${gbOneSvnUrlOverride}"/>
+        <property name="gbOneSvnUrl" value="${gbOneSvnUrlOverride}"/>
+      </then>
+      <else>
+        <echo message="gbOneSvnUrlOverride not detected"/>
+        <property name="gbOneSvnUrl" value="${defaultGBOneSvnTrunk}"/>
+      </else>
+    </if>
+    <property name="gbWebAppGitSvnUrl" value="${gbOneSvnUrl}/${gbWebAppGitSvnPath}/"/>
+    <echo message="gbOneSvnUrl location ${gbOneSvnUrl}"/>
+    <echo message="gbWebAppGitSvnUrl location ${gbWebAppGitSvnUrl}"/>
+  </target>
+
+  <target name="checkOutGbWebAppGitSvn" depends="gbOneSvnPathInit" description="Get the gitRevision.txt file">
+    <exec executable="/usr/bin/svn">
+      <arg value="checkout"/>
+      <arg value="${gbWebAppGitSvnUrl}"/>
+      <arg value="--non-interactive"/>
+      <arg value="--no-auth-cache"/>
+      <arg value="--username"/>
+      <arg value="hudson"/>
+      <arg value="--password"/>
+      <arg value="nosduh"/>
+      <arg value="${gbWebAppGitSvnDistPath}"/>
+    </exec>
+  </target>
+
+  <target name="updateGitRevisionFile" depends="checkOutGbWebAppGitSvn" description="Update the gitRevision.txt file">
+    <exec executable="/usr/bin/git" outputproperty="gitRevision">
+      <arg value="rev-parse"/>
+      <arg value="HEAD"/>
+      <redirector output="${gbWebAppGitSvnDistPath}/gitRevision.txt" alwayslog="true"/>
+    </exec>
+    <echo message="updateGitRevisionFile to ${gitRevision}"/>
+  </target>
+
+  <target name="commitGbWebAppGitSvn" depends="updateGitRevisionFile" description="Update the gitRevision.txt file">
+    <exec executable="/usr/bin/svn" dir="${gbWebAppGitSvnDistPath}">
+      <arg value="commit"/>
+      <arg value="-m"/>
+      <arg value="Updating gitRevision.txt to ${gitRevision}"/>
+      <arg value="--no-auth-cache"/>
+      <arg value="--username"/>
+      <arg value="hudson"/>
+      <arg value="--password"/>
+      <arg value="nosduh"/>
+    </exec>
+  </target>
+
+</project>

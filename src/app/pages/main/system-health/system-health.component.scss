@@ -1,0 +1,97 @@
+fieldset {
+    border-width: 1px;
+    border-style: groove;
+    border-color: #4f5467;
+    border-image: initial;
+    padding: 5px;
+}
+
+legend {
+    font-size:14px;
+    width: auto;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+button.btnFormat.btnWidth {
+    width: auto;
+}
+
+a {
+    color: black;
+}
+
+div.modal-body {
+    padding-bottom: unset;
+    .card-title {
+        margin-bottom: 25px;
+    }
+    .form-group {
+        margin-bottom: unset;
+    }
+}
+
+.col-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.shutdownModal-body {
+    min-height: 0;
+}
+
+.btnRefresh {
+    position: absolute;
+    right: 10px;
+    margin-top: 10px;
+}
+
+.tab-content{
+  height:auto;
+}
+
+.actionButton{
+  margin-top:10px;
+  margin-bottom:0;
+  margin-left:5px;
+  min-width:20%;
+}
+.form-group {
+  margin:5px;
+}
+.actionButtons{
+  right: 12%;
+  position:absolute;
+  width:43%;
+}
+
+.nav-tabs .nav-link.active {
+  color: #5b3968;
+}
+.nav-item.disabled {
+  background: transparent;
+  opacity: 0.5;
+}
+.nav-tabs li.disabled a {
+  pointer-events: none;
+}
+.nav-tabs li.exception a {
+  color: red;
+}
+
+.form-control.exception {
+  color: red !important;
+}
+
+.actionButtons{
+  padding:0;
+}
+.singleLayout{
+  right: 5%;
+  width: 100%;
+  position: absolute;
+}
+.border-thin{
+  border-width: thin;
+}

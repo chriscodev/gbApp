@@ -1,0 +1,108 @@
+/*!
+ * Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+ */
+
+.form-body {
+  padding: 5px;
+}
+
+::ng-deep .treeview {
+  cursor: pointer;
+
+  .row-item {
+    display: flex;
+  }
+
+  .form-check {
+    padding-left: 3px;
+  }
+
+  label {
+    cursor: pointer;
+
+    &:hover {
+      font-weight: 500;
+    }
+  }
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  i {
+    overflow: hidden;
+    cursor: default !important;
+
+    svg {
+      cursor: default !important;
+    }
+
+    &:after {
+      content: "" !important;
+      background: url("/../../assets/icons/svg-icons/satellite.svg") no-repeat !important;
+      padding: 13px;
+      background-size: 25px !important;
+      background-position: center !important;
+      margin-left: -2px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.table-responsive {
+  overflow: auto !important;
+  overflow-x: unset !important;
+  min-height: 500px;
+  background: linear-gradient(#272c36, #272c36) center/250px 100% no-repeat,
+  linear-gradient(to right, #353c48 6%, #272c36 0);
+
+  .table {
+    height: inherit;
+
+    td,
+    th {
+      padding: 9px;
+    }
+
+    tbody {
+      font-weight: 500;
+
+      td {
+        border-color: #fff;
+      }
+    }
+
+    .nowrap {
+      white-space: nowrap;
+    }
+
+    .empty-gray {
+      color: transparent;
+      border-color: #353c48 !important;
+      background-color: transparent;
+    }
+
+    .empty-white {
+      background-color: #353c48;
+    }
+  }
+}
+
+.collapse-bg {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.bg {
+  border: 1px solid #4f5467;
+}
+
+.output-table {
+  max-height: 500px;
+  overflow: auto;
+}

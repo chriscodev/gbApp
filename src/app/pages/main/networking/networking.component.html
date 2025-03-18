@@ -1,0 +1,191 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Network Settings</h4>
+    <!-- COMMIT_REVERT COMPONENT-->
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)=onCommit()
+        (parentRevert)=onRevert()
+        [dirty]=dirty></app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder" >
+      <div class="form-hostname form-group">
+        <div class="col-xs-12 form-group" *ngIf="localNetworkSettings?.hostname!==null">
+          <label class="col-form-label hostname-label">Hostname</label>
+          <div class="col-sm-10" style="padding-left:15px;padding-right:15px;" >
+            <input (input)="updateDirty()" [(ngModel)]="localNetworkSettings.hostname" class="form-control"
+                   placeholder="Hostname" type="text"/>
+          </div>
+          <div class="col-sm-10" style="padding-left:15px;padding-right:15px;">
+          <span aria-hidden="true"
+                class="fa errspan {{!localNetworkSettings.hostname ? 'fa-times-circle' : 'fa-check-circle text-success'}}"></span>
+          </div>
+        </div>
+        <div class="content-table" *ngIf="localNetworkSettings?.ipSettings">
+          <app-modal-simple-table
+            (buttonClicked)=onButtonClicked($event)
+            [buttonList]=buttonList
+            [columnIdentifier]="'name'"
+            [modalName]=modalName
+            [objectTableType]="'Networksettings'"
+            [tableData]=localNetworkSettings?.ipSettings
+            [tableHeaders]=tableHeaders>
+          </app-modal-simple-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Modal ADD UPDATE DELETE-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade modal-holder" data-backdrop="static"
+     data-keyboard="false" id="myModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editIPSettingsTitle }} </h5>
+        <button (click)="closeEditIPSettings(false)" aria-label="Close" class="close" data-dismiss="modal"
+                type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-xs-12">
+            <label class="control-label">Type</label>
+            <select (change)=onIPSettingsChanged()
+                    [(ngModel)]=currentIPSettings.type
+                    class="form-control">
+              <option *ngFor="let type of ipTypes" [ngValue]="type">{{ type }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <label class="control-label">IP Address</label>
+            <input (input)=ipAddressOnly($event)
+                   (keyup)=updateIPAddressValid()
+                   [(ngModel)]=currentIPSettings.address
+                   [attr.disabled]="disableInputFields ? 'true' : undefined"
+                   [required]=!disableInputFields
+                   class="form-control"
+                   [pattern]="ipPattern"
+                   appIpAddress
+                   placeholder="0.0.0.0"
+                   type="text"/>
+            <span
+              *ngIf="isIPSettingsStatic()"
+              aria-hidden="true" class="fa errspan {{currentIPSettings.address ? (
+                !editIPAddressValid ?
+                  'fa-times-circle text-danger' : 'fa-check-circle text-success') : 'fa-check-circle'}}"></span>
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <label class="control-label">Netmask</label>
+            <input (input)="ipAddressOnly($event)"
+                   (keyup)=updateNetmaskValid()
+                   [(ngModel)]="currentIPSettings.netmask"
+                   [attr.disabled]="disableInputFields ? '' : undefined"
+                   [required]=!disableInputFields
+                   appIpAddress
+                   class="form-control"
+                   pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                   placeholder="0.0.0.0"
+                   type="text"/>
+            <span
+              *ngIf="isIPSettingsStatic()"
+              aria-hidden="true" class="fa errspan {{currentIPSettings.netmask ? (
+                !editNetmaskValid ?
+                  'fa-times-circle text-danger' : 'fa-check-circle text-success') : 'fa-check-circle'}}"></span>
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <label class="control-label">Gateway</label>
+            <input (input)=ipAddressOnly($event)
+                   (keyup)=updateGatewayValid()
+                   [(ngModel)]=currentIPSettings.gateway
+                   [attr.disabled]="disableInputFields ? '' : undefined"
+                   appIpAddress
+                   class="form-control"
+                   pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                   placeholder="0.0.0.0"
+                   type="text"/>
+
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <label class="control-label">Preferred DNS</label>
+            <input (input)=ipAddressOnly($event)
+                   (keyup)=updateDNS1Valid()
+                   [(ngModel)]=currentIPSettings.nameServers[0]
+                   [attr.disabled]="disableInputFields ? '' : undefined"
+                   appIpAddress
+                   class="form-control"
+                   pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                   placeholder="0.0.0.0"
+                   type="text"/>
+
+          </div>
+        </div>
+        <div>
+          <div class="col-xs-12">
+            <label class="control-label">Alternate DNS</label>
+            <input (input)=ipAddressOnly($event)
+                   (keyup)=updateDNS2Valid()
+                   [(ngModel)]=currentIPSettings.nameServers[1]
+                   [attr.disabled]="disableInputFields ? '' : undefined"
+                   appIpAddress
+                   class="form-control"
+                   pattern="^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                   placeholder="0.0.0.0"
+                   type="text"/>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)=closeEditIPSettings(false) class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+        <button (click)=closeEditIPSettings(true) [disabled]=!okButtonEnabled
+                class="btn btn-outline-light" data-dismiss="modal">OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade modal-holder" id=commitConfirmDialog tabindex="-1" role="dialog"
+     aria-labelledby="commitConfirmDialogLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body modal-container" style=" text-align: center;">
+        <div class="swal-icon swal-icon--warning">
+          <span class="swal-icon--warning__body"><span class="swal-icon--warning__dot"></span>
+          </span>
+        </div>
+        <div>
+          <div>
+            <div class="swal-title" style="">Commit Warning</div>
+            <div class="swal-text">
+              The Config App will need to close and the Server will need to restart for these changes to take effect. Do
+              you wish to restart now?
+            </div>
+          </div>
+
+        </div>
+        <div class="swal-footer">
+          <span (click)="doRestart(true)" class="btn btn-outline-light" data-dismiss="modal">Yes</span> &nbsp;&nbsp;
+          <span (click)="doRestart(false)" class="btn btn-outline-light" data-dismiss="modal">No</span> &nbsp;&nbsp;
+          <span class="btn btn-outline-light" data-dismiss="modal">Cancel</span> &nbsp;&nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

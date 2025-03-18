@@ -1,0 +1,262 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row" xmlns="http://www.w3.org/1999/html">
+  <div class="header-container">
+    <h4 class="card-title w-100">GuideBuilder Status</h4>
+    <div class="row singleLayout">
+      <!-- COMMIT_REVERT COMPONENT-->
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="table-bordered tabcontent-border triveniBorder ">
+      <br/>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="hostname">Host Name</label>
+        <div class="col-sm-4">
+          <input class="form-control " id="hostname" readonly type="text" value="{{serverInfo?.hostName}}">
+        </div>
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-2 serverButtons">
+          <button class="btn btn-info btn-rounded btn-primary btn-dark btnFormat border-thin"
+                  data-target="#backupDialog"
+                  data-toggle="modal" type="button"><i class="icons-Data-Backup"></i> Backup
+          </button>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="lastUpdated">Last Update</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="lastUpdated" readonly
+                 type="text" value="{{todayDate | date: 'EEE MMM dd hh:mm:ss a yyyy'}}">
+        </div>
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-2 serverButtons">
+          <button (click)="resetFileImport(fileRestoreInput)"
+                  class="btn btn-info btn-rounded btn-primary btn-dark btnFormat border-thin"
+                  data-target="#restoreDialog"
+                  data-toggle="modal" id="modalRestore"
+                  type="button"><i class="icons-Restore-Window"></i> Restore
+          </button>
+          <input #fileRestoreInput (change)="openRestoreModal($event)" accept=".zip" style="display:none;"
+                 type="file"/>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="version">Version</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="version" readonly type="text" value="{{serverInfo?.version}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="serialNumber">Serial number</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="serialNumber" readonly type="text" value="{{serverInfo?.serialNumber}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="platform">Platform</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="platform" readonly type="text" value="{{serverInfo?.platform}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="processor">Processor</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="processor" readonly
+                 type="text" value="{{serverInfo?.processorName || serverInfo?.processorSpeed }}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="dongleId">Dongle ID</label>
+        <div class="col-sm-4">
+          <input class="form-control" id="dongleId" readonly type="text" value="{{serverStatus?.dongleId}}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="welcomeMessage">Welcome Message</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.welcomeMessage"
+                 class="form-control" id="welcomeMessage"
+                 placeholder="Welcome" type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="locationName">Location Name</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.locationName"
+                 class="form-control" id="locationName"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="locationAddress">Location Address</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.locationAddress"
+                 class="form-control" id="locationAddress"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="locationCity">Location City</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.locationCity"
+                 class="form-control" id="locationCity"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="stateRegion">State/ Province/ Region</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.locationState"
+                 class="form-control" id="stateRegion"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="contactName">Contact Name</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.contactName" class="form-control"
+                 id="contactName"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="contactPhone">Contact Phone Number</label>
+        <div class="col-sm-4">
+          <input (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.contactPhone"
+                 class="form-control" id="contactPhone"
+                 type="text">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="notes">Notes</label>
+        <div class="col-sm-4">
+          <textarea (keyup)="onSettingsChange()" [(ngModel)]="localLocationSettings.notes" class="form-control l"
+                    id="notes" rows="10" spellcheck="false"
+                    wrap="soft"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESTORE MODAL-->
+  <div aria-hidden="true" aria-labelledby="fileUploadModal" class="modal fade" data-backdrop="static"
+       data-keyboard="false" id="fileUploadModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Restore GuideBuilder Archive file</h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body form-check">
+          <div class="media-upload-table-container">
+            <div class="form-group row" style="padding-right:10px;">
+              <label class="col-sm-4 col-form-label">Archive Creation Date</label>
+              <div class="col-md-8 ">
+                <input class="form-control" id="productId" readonly type="text"
+                       value="{{restoreDate}}">
+              </div>
+            </div>
+            <div class="form-group row" style="padding-right:10px;">
+              <label class="col-sm-4 col-form-label">GuideBuilder Version</label>
+              <div class="col-md-8 ">
+                <input class="form-control" readonly type="text"
+                       value="{{restoreVersion}}">
+              </div>
+            </div>
+            <div class="form-group row" style="padding-right:10px;">
+              <label class="col-sm-4 col-form-label">Archive Description</label>
+              <div class="col-md-8">
+                <textarea class="form-control" cols="10" readonly rows="4" value="{{restoreDescription}}"></textarea>
+              </div>
+            </div>
+            <div class="form-group row" style="padding-right:10px;">
+              <label class="col-sm-4 col-form-label">Remove License</label>
+              <div class="col-md-8 alignCenter">
+                <input (change)="toggleRemoveLicense($event)" [(ngModel)]="restartOptionsRequest.removeLicense"
+                       type="checkbox"/>
+              </div>
+            </div>
+            <div class="form-group row" style="padding-right:10px;">
+              <label class="col-sm-4 col-form-label">Server Restart Mode</label>
+              <div class="col-md-8 ">
+                <select [(ngModel)]="restartOptionsRequest.restartServerMode"
+                        class="form-control l"
+                        name="restartMode">
+                  <option
+                    *ngFor="let restartServerMode of restartServerModes"
+                    [ngValue]="restartServerMode">{{ RESTART_SERVER_MODES[restartServerMode].displayName }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="resetRestoreData()"
+                    class="btn btn-info btn-rounded btn-primary btn-dark btnFormat" data-dismiss="modal"><i
+              class="fas fa fa-times"></i> Cancel
+            </button>
+            <button (click)="doRestore()" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                    data-dismiss="modal" type="button">Restore
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- BACKUP MODAL-->
+  <div aria-hidden="true" aria-labelledby="backupDialog" class="modal fade modal-holder" data-backdrop="static"
+       data-keyboard="false" id="backupDialog" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create GuideBuilder Archive File</h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <br/>
+        <div class="form-group row" style="padding-right:10px;">
+          <label class="col-sm-4 col-form-label">File Name</label>
+          <div class="col-md-8 ">
+            <input (keyup)="updateFileName()" [(ngModel)]="backupFile" class="form-control"
+                   type="text"/>
+          </div>
+        </div>
+        <div class="form-group row" style="padding-right:10px;">
+          <label class="col-sm-4 col-form-label">Archive Description</label>
+          <div class="col-md-8">
+        <textarea (keyup)="updateDesc($event)" [(ngModel)]="backupDesc" class="form-control" cols="10" id="desc" name=""
+                  rows="4"
+                  type="number"></textarea>
+            <br/>
+          </div>
+        </div>
+        <div class="modal-footer ">
+          <button (click)="resetBackupData()" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                  data-dismiss="modal" type="button">Cancel
+          </button>
+          <button (click)="getBackupFile()" [disabled]="backupFormStatus"
+                  class="btn btn-info btn-rounded btn-primary btn-dark btnFormat" data-dismiss="modal"
+                  type="button">Archive
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-progress-bar
+  (progressBarEmit)=fileProgressModalHandler($event)
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+></app-modal-progress-bar>
+

@@ -1,0 +1,415 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div *ngIf="modalSelectCert" class="modal fade" id="modalCertLink" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form class="form-horizontal form-material">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Select Certificate</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                  (click)="closeModal('#modalCertLink')"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <app-modal-dynamic-tb-translate
+            [tableHeaders]=tableHeaders
+            [tableData]=serverCerts
+            [buttonList]="buttonList"
+            [objectTableType]="'AddCert'"
+            [modalName]="''"
+            [enableSearch]=true
+            [tableMaxHeight]="'200px'"
+            [pagination]=false>
+          </app-modal-dynamic-tb-translate>
+          <div id="errorMessage" style="color:#DF3F1E;"> {{ errorMessage }}</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-next" (click)="selectCert($event)"><i
+            class="fa fas fa-check"></i> OK
+          </button>
+          <button type="button" class="btn btn-default" (click)="closeModal('#modalCertLink')"><i
+            class="fa fas  fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--View  Modal Cert Data  #ViewCertModal-->
+<div class="modal fade modal-holder" id="viewCertModal" tabindex="-1" role="dialog"
+     aria-labelledby="viewCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Viewing Certificate</h5>
+        <button (click)="closeModal('#viewCertModal')" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ currentCert?.name }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Serial</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ currentCert?.serialNumber }} ( {{ convertDecToHexComponent(currentCert?.serialNumber ) }} ) "
+                   readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued To</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ currentCert?.issuedTo }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued By</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ currentCert?.issuedBy }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Validity</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ currentCert?.notBefore | date: 'MMM dd HH:mm:ss yyyy' }} GMT - {{currentCert?.notAfter | date: 'MMM dd HH:mm:ss yyyy' }} GMT"
+                   readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">AKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ currentCert?.aki }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">SKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ currentCert?.ski }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Status</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ currentCert?.isSelfSigned ? 'Self Signed' : convertCertStatusType(currentCertStatus?.status) }}"
+                   readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Requested</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="currentCertStatus?.requested">
+              <input type="text" class="form-control"
+                     value="{{ currentCertStatus?.requested |  date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!currentCertStatus?.requested">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Produced</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="currentCertStatus?.produced">
+              <input type="text" class="form-control"
+                     value="{{ currentCertStatus?.produced | date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!currentCertStatus?.produced">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Private Key</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ currentCert?.privateKeyAvailable ?  'Available' : 'Not Available' }}" readonly>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" (click)="closeModal('#viewCertModal')">Ok</button>
+          <button class="btn btn-outline-light" (click)="viewCertDetails(currentCert)"><i
+            class="fa fa-search"></i> Details
+          </button>
+          <button class="btn btn-outline-light" [disabled]="issuerStatus"
+                  (click)="viewIssuerCertDetails()"><i class="fa fa-search"></i> View Issuer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--View  Modal Cert Issuer Data #ViewIssuerCertModal-->
+<div class="modal fade modal-holder" id="viewIssuerCertModal" tabindex="-1" role="dialog"
+     aria-labelledby="viewIssuerCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Viewing Certificate</h5>
+        <button (click)="closeModal('#viewIssuerCertModal')" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.name }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Serial</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.serialNumber }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued To</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.issuedTo }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued By</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.issuedBy }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Validity</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ issuerCert?.notBefore| date: 'MMM dd HH:mm:ss yyyy' }} GMT  - {{ issuerCert?.notAfter| date: 'MMM dd HH:mm:ss yyyy' }} GMT "
+                   readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">AKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.aki }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">SKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert?.ski }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Status</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ convertCertStatusType(issuerCertStatus?.status) }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Requested</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="issuerCertStatus?.requested">
+              <input type="text" class="form-control"
+                     value="{{ issuerCertStatus?.requested| date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!issuerCertStatus?.requested">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Produced</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="issuerCertStatus?.produced">
+              <input type="text" class="form-control"
+                     value="{{ issuerCertStatus?.produced| date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!issuerCertStatus?.produced">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Private Key</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ issuerCert?.privateKeyAvailable ?  'Available' : 'Not Available' }}" readonly>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" (click)="closeModal('#viewIssuerCertModal')">Ok</button>
+          <button class="btn btn-outline-light" (click)="viewCertDetails(issuerCert)"><i class="fa fa-search"></i>
+            Details
+          </button>
+          <button class="btn btn-outline-light" [disabled]="issuerCert?.aki?.toString() ===null"
+                  (click)="viewIssuerCert2Details()">
+            <i class="fa fa-search"></i> View Issuer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Cert Details Data-->
+<div class="modal fade modal-holder" id="viewDetailsModal" tabindex="-1" role="dialog"
+     aria-labelledby="viewDetailsModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Certificate Details </h5>
+        <button (click)="closeModal('#viewDetailsModal')" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="viewDetailsCert">
+        <div class="form-group row" style="overflow: hidden;">
+          <div>
+            <pre>{{ certDecodedData }}</pre>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" (click)="closeModal('#viewDetailsModal')">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Verify Cert Details Data-->
+<div class="modal fade modal-holder" id="verifyCert" tabindex="-1" role="dialog"
+     aria-labelledby="verifyCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Verify Certificate Confirmation </h5>
+        <button (click)="closeModal('#verifyCert')" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:25px;min-height: 100px;">
+        <br/>
+        <div class="form-group row ">
+          <div class="col-sm-1"></div>
+          <i class="fa fa-question-circle fa-3x col-sm-3 " style="align-items: center"></i>
+          <div class="col-md-8 font-16 align-content-around">
+            Verify the selected certificate?
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" data-dismiss="modal" (click)="verifyCert()">Yes</button>
+        <button class="btn btn-outline-light" (click)="closeModal('#verifyCert')">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Cert issuer 2 data -->
+<div class="modal fade modal-holder" id="viewIssuerCert2Modal" tabindex="-1" role="dialog"
+     aria-labelledby="viewIssuerCert2Modal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Viewing Certificate</h5>
+        <button (click)="closeModal('#viewIssuerCert2Modal')" type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.name }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Serial</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.serialNumber }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued To</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.issuedTo }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Issued By</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.issuedBy }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Validity</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ issuerCert2?.notBefore| date: 'MMM dd HH:mm:ss yyyy' }} GMT  - {{ issuerCert2?.notAfter| date: 'MMM dd HH:mm:ss yyyy' }} GMT "
+                   readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">AKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.aki }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">SKI</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" value="{{ issuerCert2?.ski }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Status</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ convertCertStatusType(issuerCertStatus2?.status) }}" readonly>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Requested</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="issuerCertStatus2?.requested">
+              <input type="text" class="form-control"
+                     value="{{ issuerCertStatus2?.requested| date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!issuerCertStatus2?.requested">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">OCSP Produced</label>
+          <div class="col-sm-6">
+            <ng-container *ngIf="issuerCertStatus2?.produced">
+              <input type="text" class="form-control"
+                     value="{{ issuerCertStatus2?.produced| date: 'EEE MMM dd hh:mm:ss a yyyy' }}  " readonly>
+            </ng-container>
+            <ng-container *ngIf="!issuerCertStatus2?.produced">
+              <input type="text" class="form-control" value="Not Checked" readonly>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label">Private Key</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control"
+                   value="{{ issuerCert2?.privateKeyAvailable ?  'Available' : 'Not Available' }}" readonly>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" (click)="closeModal('#viewIssuerCert2Modal')">Ok</button>
+          <button class="btn btn-outline-light" [disabled]="true"><i
+            class="fa fa-search"></i>
+            Details
+          </button>
+          <button class="btn btn-outline-light" [disabled]="true">
+            <i class="fa fa-search"></i> View Issuer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

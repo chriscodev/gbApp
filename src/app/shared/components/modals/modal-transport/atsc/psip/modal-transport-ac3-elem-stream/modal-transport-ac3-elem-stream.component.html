@@ -1,0 +1,233 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="card nopad-top">
+  <div class="form-bottom">
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Type of Service</label>
+      <div class="col-md-7">
+        <select (change)="onChangeTypeService()"
+                [(ngModel)]="ac3ElementaryStream.audioServiceType"
+                class="form-control">
+          <option *ngFor="let audioServiceType of audioServiceTypes"
+                  [ngValue]="audioServiceType"> {{ AUDIO_SERVICE_TYPES[audioServiceType].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- //Priority -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Priority</label>
+      <div class="col-md-7">
+        <select [(ngModel)]="ac3ElementaryStream.priority" class="form-control">
+          <option *ngFor="let audioPriority of audioPriorities"
+                  [ngValue]="audioPriority"> {{ AUDIO_PRIORITIES[audioPriority].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- //Audio ID -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Audio ID</label>
+      <div class="col-md-7">
+        <input
+          (input)="onFieldInput()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="ac3ElementaryStream.audioId"
+          appBlockCopyPaste
+          autocomplete="off"
+          class="form-control l"
+          name="form-first-name"
+          title="Value range 1-7"
+          type="number"
+        />
+      </div>
+      <div class="col-sm-1 validImage">
+        <span> <i [ngClass]="audioIdIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Main service -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Main Service ID</label>
+      <div class="col-md-7">
+        <input
+          (input)="onFieldInput()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="ac3ElementaryStream.mainServiceId"
+          [disabled]="!mainServiceEnabled"
+          appBlockCopyPaste
+          autocomplete="off"
+          class="form-control l"
+          name="form-first-name"
+          title="Max value 7"
+          type="number"
+        />
+      </div>
+      <div *ngIf="mainServiceEnabled" class="col-sm-1 validImage">
+        <span><i [ngClass]="mainServiceIdIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- //Associated service -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Associated Service</label>
+      <div class="col-md-7">
+        <input
+          (input)="onFieldInput()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="ac3ElementaryStream.associatedServiceId"
+          [disabled]="mainServiceEnabled"
+          appBlockCopyPaste
+          autocomplete="off"
+          class="form-control l"
+          name="form-first-name"
+          title="Max value 255"
+          type="number"
+        />
+      </div>
+      <div *ngIf="!mainServiceEnabled" class="col-sm-1 validImage">
+                <span><i [ngClass]="associatedServiceIdIconText" aria-hidden="true"
+                         class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Sample Rate -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Sample Rate</label>
+      <div class="col-md-7">
+        <select [(ngModel)]="ac3ElementaryStream.sampleRate" class="form-control">
+          <option *ngFor="let sampleRate of sampleRates"
+                  [ngValue]="sampleRate"> {{ AUDIO_SAMPLE_RATES[sampleRate].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Dolby Surround Mode -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Dolby Surround Mode</label>
+      <div class="col-md-7">
+        <select [(ngModel)]="ac3ElementaryStream.surroundMode" class="form-control">
+          <option *ngFor="let surroundMode of surroundModes"
+                  [ngValue]="surroundMode"> {{ SURROUND_MODES[surroundMode].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Full service -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Full Service</label>
+      <div class="col-md-7">
+        <select [(ngModel)]="localFullServiceType" class="form-control">
+          <option *ngFor="let fullServiceType of fullServiceTypes"
+                  [ngValue]="fullServiceType"> {{ FULL_SERVICE_TYPES[fullServiceType].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Description -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Description</label>
+      <div class="col-md-7">
+        <input
+          [(ngModel)]="ac3ElementaryStream.description"
+          appBlockCopyPaste
+          autocomplete="off"
+          class="form-control l"
+          name="form-first-name"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Language -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Language</label>
+      <div class="col-md-7">
+        <select (change)="onLanguageChange()" [(ngModel)]="localLanguage" class="form-control">
+          <option *ngFor="let language of languages" [ngValue]="language"> {{ language }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Exact Bit Rate -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Exact Bit Rate</label>
+      <div class="col-md-7">
+        <div class="">
+          <input [(ngModel)]="ac3ElementaryStream.exactBitRate"
+                 class="custom-control mt10"
+                 type="checkbox"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Bit Rate -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Bit Rate</label>
+      <div class="col-md-7">
+        <select [(ngModel)]="ac3ElementaryStream.bitRate" class="form-control">
+          <option *ngFor="let audioBitRate of audioBitRates"
+                  [ngValue]="audioBitRate"> {{ AUDIO_BITRATES[audioBitRate].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!-- Audio Coding -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Audio Coding</label>
+      <div class="col-sm-1 text-center">
+        <div class="">
+          <input
+            [checked]="!ac3ElementaryStream.useNumberOfChannels"
+            (change)="toggleAudioChannels()"
+            class="custom-control mt10"
+            type="radio"
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <select [(ngModel)]="ac3ElementaryStream.audioCoding"
+                [disabled]="ac3ElementaryStream.useNumberOfChannels"
+                class="form-control">
+          <option *ngFor="let audioCoding of audioCodings"
+                  [ngValue]="audioCoding"> {{ AUDIO_CODINGS[audioCoding].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <!-- Channels -->
+    <div class="form-group row">
+      <label class="col-md-4 col-form-label">Channels</label>
+      <div class="col-sm-1 text-center">
+        <div class="">
+          <input
+            [checked]="ac3ElementaryStream.useNumberOfChannels"
+            (change)="toggleAudioChannels()"
+            class="custom-control mt10"
+            type="radio"
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <select [(ngModel)]="ac3ElementaryStream.numberOfChannels"
+                [disabled]="!ac3ElementaryStream.useNumberOfChannels"
+                class="form-control">
+          <option *ngFor="let channel of channels; let i = index"
+                  [ngValue]="i"> {{ channel }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

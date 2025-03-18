@@ -1,0 +1,443 @@
+TRIVENI-GUIDEBUILDER-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+	enterprises,
+	MODULE-IDENTITY,
+	OBJECT-TYPE,
+	NOTIFICATION-TYPE,
+	IpAddress,
+	Unsigned32
+		FROM SNMPv2-SMI
+	DisplayString,
+	DateAndTime,
+	TEXTUAL-CONVENTION
+		FROM SNMPv2-TC
+	OBJECT-GROUP,
+	NOTIFICATION-GROUP
+		FROM SNMPv2-CONF;
+
+gbModule MODULE-IDENTITY
+	LAST-UPDATED "201304301940Z"	-- Apr 30, 2013 7:40:00 PM
+	ORGANIZATION "Triveni Digital, Inc."
+	CONTACT-INFO
+		"Triveni Digital, Inc.
+		40 Washington Road
+		Princeton Junction, NJ 08550
+		Phone: 609-936-3434
+		Fax: 609-716-3503
+		Email: support@TriveniDigital.com
+		Web: http://www.trivenidigital.com/"
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.1
+	::= { enterprises 8716 4 1 }
+
+
+GbModuleStateType ::= TEXTUAL-CONVENTION
+	STATUS current
+	DESCRIPTION
+		"Indicates current state of GuideBuilder module"
+	SYNTAX INTEGER {
+			maintenance(0),
+			passive(1),
+			redundancy(2),
+			active(3) }
+
+
+GbType ::= TEXTUAL-CONVENTION
+	STATUS current
+	DESCRIPTION
+		"Indicates current Guidebuilder configuration"
+	SYNTAX INTEGER {
+			primary(1),
+			redundant(2) }
+
+
+GbUpdateState ::= TEXTUAL-CONVENTION
+	STATUS current
+	DESCRIPTION
+		""
+	SYNTAX INTEGER {
+			pending(1),
+			processing(2),
+			complete(3),
+			error(4) }
+
+
+triveni OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716
+	::= { enterprises 8716 }
+
+guideBuilder OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716.4
+	::= { triveni 4 }
+
+gbServer OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716.4.2
+	::= { guideBuilder 2 }
+
+serverType OBJECT-TYPE
+	SYNTAX  GbType
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.2.1
+	::= { gbServer 1 }
+
+
+serverState OBJECT-TYPE
+	SYNTAX  GbModuleStateType
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.2.2
+	::= { gbServer 2 }
+
+
+serverIpAddress OBJECT-TYPE
+	SYNTAX  IpAddress
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.2.3
+	::= { gbServer 3 }
+
+
+serverStartTime OBJECT-TYPE
+	SYNTAX  DateAndTime
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.2.4
+	::= { gbServer 4 }
+
+
+version OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.2.5
+	::= { gbServer 5 }
+
+
+gbInputStatusTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF GbInputStatusEntry
+	MAX-ACCESS not-accessible
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4
+	::= { guideBuilder 4 }
+
+
+gbInputStatusEntry OBJECT-TYPE
+	SYNTAX  GbInputStatusEntry
+	MAX-ACCESS not-accessible
+	STATUS current
+	DESCRIPTION
+		""
+	INDEX {
+		gbInputIndex }
+	-- 1.3.6.1.4.1.8716.4.4.1
+	::= { gbInputStatusTable 1 }
+
+
+GbInputStatusEntry ::= SEQUENCE {
+
+	gbInputIndex             Unsigned32,
+	gbInputName              DisplayString,
+	gbInputType              DisplayString,
+	gbInputUpdateState       GbUpdateState,
+	gbInputLastUpdateTime    DateAndTime,
+	gbInputLastUpdateMessage DisplayString,
+	gbInputLastCompleteTime  DateAndTime }
+
+
+gbInputIndex OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.1
+	::= { gbInputStatusEntry 1 }
+
+
+gbInputName OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.2
+	::= { gbInputStatusEntry 2 }
+
+
+gbInputType OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.3
+	::= { gbInputStatusEntry 3 }
+
+
+gbInputUpdateState OBJECT-TYPE
+	SYNTAX  GbUpdateState
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.4
+	::= { gbInputStatusEntry 4 }
+
+
+gbInputLastUpdateTime OBJECT-TYPE
+	SYNTAX  DateAndTime
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.5
+	::= { gbInputStatusEntry 5 }
+
+
+gbInputLastUpdateMessage OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.6
+	::= { gbInputStatusEntry 6 }
+
+
+gbInputLastCompleteTime OBJECT-TYPE
+	SYNTAX  DateAndTime
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.4.1.7
+	::= { gbInputStatusEntry 7 }
+
+
+gbOutputsStatusTable OBJECT-TYPE
+	SYNTAX  SEQUENCE OF GbOutputStatusEntry
+	MAX-ACCESS not-accessible
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6
+	::= { guideBuilder 6 }
+
+
+gbOutputStatusEntry OBJECT-TYPE
+	SYNTAX  GbOutputStatusEntry
+	MAX-ACCESS not-accessible
+	STATUS current
+	DESCRIPTION
+		""
+	INDEX {
+		gbOutputIndex }
+	-- 1.3.6.1.4.1.8716.4.6.1
+	::= { gbOutputsStatusTable 1 }
+
+
+GbOutputStatusEntry ::= SEQUENCE {
+
+	gbOutputIndex             Unsigned32,
+	gbOutputName              DisplayString,
+	gbOutputType              DisplayString,
+	gbOutputUpdateState       GbUpdateState,
+	gbOutputLastUpdateTime    DateAndTime,
+	gbOutputLastUpdateMessage DisplayString,
+	gbOutputLastCompleteTime  DateAndTime }
+
+
+gbOutputIndex OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.1
+	::= { gbOutputStatusEntry 1 }
+
+
+gbOutputName OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.2
+	::= { gbOutputStatusEntry 2 }
+
+
+gbOutputType OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.3
+	::= { gbOutputStatusEntry 3 }
+
+
+gbOutputUpdateState OBJECT-TYPE
+	SYNTAX  GbUpdateState
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.4
+	::= { gbOutputStatusEntry 4 }
+
+
+gbOutputLastUpdateTime OBJECT-TYPE
+	SYNTAX  DateAndTime
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.5
+	::= { gbOutputStatusEntry 5 }
+
+
+gbOutputLastUpdateMessage OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.6
+	::= { gbOutputStatusEntry 6 }
+
+
+gbOutputLastCompleteTime OBJECT-TYPE
+	SYNTAX  DateAndTime
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.6.1.7
+	::= { gbOutputStatusEntry 7 }
+
+
+gbNotifications OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716.4.7
+	::= { guideBuilder 7 }
+
+gbNotificationsPrefix OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716.4.7.0
+	::= { gbNotifications 0 }
+
+gbGroups OBJECT IDENTIFIER 
+	-- 1.3.6.1.4.1.8716.4.8
+	::= { guideBuilder 8 }
+
+
+gbServerState NOTIFICATION-TYPE
+	OBJECTS {
+		serverType,
+		serverState,
+		serverIpAddress}
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.7.0.1
+	::= { gbNotificationsPrefix 1 }
+
+
+gbInputStatus NOTIFICATION-TYPE
+	OBJECTS {
+		gbInputName,
+		gbInputType,
+		gbInputUpdateState,
+		gbInputLastUpdateTime,
+		gbInputLastUpdateMessage,
+		gbInputLastCompleteTime}
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.7.0.2
+	::= { gbNotificationsPrefix 2 }
+
+
+gbOutputStatus NOTIFICATION-TYPE
+	OBJECTS {
+		gbOutputName,
+		gbOutputType,
+		gbOutputUpdateState,
+		gbOutputLastUpdateTime,
+		gbOutputLastUpdateMessage,
+		gbOutputLastCompleteTime}
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.7.0.3
+	::= { gbNotificationsPrefix 3 }
+
+gbServerObjects OBJECT-GROUP
+	OBJECTS {
+		serverType,
+		serverState,
+		serverIpAddress,
+		serverStartTime,
+		version }
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.8.1
+	::= { gbGroups 1 }
+
+gbInputStatusObjects OBJECT-GROUP
+	OBJECTS {
+		gbInputIndex,
+		gbInputName,
+		gbInputType,
+		gbInputUpdateState,
+		gbInputLastUpdateTime,
+		gbInputLastUpdateMessage,
+		gbInputLastCompleteTime }
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.8.3
+	::= { gbGroups 3 }
+
+gbOutputStatusObjects OBJECT-GROUP
+	OBJECTS {
+		gbOutputIndex,
+		gbOutputName,
+		gbOutputType,
+		gbOutputUpdateState,
+		gbOutputLastUpdateTime,
+		gbOutputLastUpdateMessage,
+		gbOutputLastCompleteTime }
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.8.5
+	::= { gbGroups 5 }
+
+gbNotifyGroup NOTIFICATION-GROUP
+	NOTIFICATIONS {
+		gbServerState,
+		gbInputStatus,
+		gbOutputStatus }
+	STATUS current
+	DESCRIPTION
+		""
+	-- 1.3.6.1.4.1.8716.4.8.6
+	::= { gbGroups 6 }
+
+END

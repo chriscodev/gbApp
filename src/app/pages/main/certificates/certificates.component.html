@@ -1,0 +1,294 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Certificates</h4>
+    <div class="row singleLayout">
+    <!-- COMMIT_REVERT COMPONENT-->
+    <app-modal-commit-revert-dialog
+      (parentCommit)="onCommit()"
+      (parentRevert)="onRevert()"
+      [dirty]="dirty">
+    </app-modal-commit-revert-dialog>
+  </div>
+  </div>
+  <!--DYNAMIC TABLE COMPONENT WITH add,delete,update button
+  the list of fields including the dataChanged should exist in the parent component including this modal for implementation -->
+    <div class="form-group row">
+      <div class="col-md-12" >
+        <div class="tab-content tabcontent-border triveniBorder" style="min-height:380px;">
+          <div class="content-table" >
+            <app-modal-dynamic-tb-translate
+              [tableHeaders]=tableHeaders
+              [translateTableData]="translatedCertData"
+              [tableData]=localCerts
+              [confirmDialog]="confirmDialog"
+              [objectTitle]="'Certificates'"
+              [objectTableType]=objectType
+              [buttonList]=buttonList
+              [modalName]=modalName
+              [enableSearch]=true
+              [multiSelect] =true
+              (buttonClicked)=onButtonClicked($event)
+              (rowClicked)=rowClicked($event)>
+            </app-modal-dynamic-tb-translate>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Cert Import Dialog for File-->
+  <div class="modal fade modal-holder" id="certModal" tabindex="-1" role="dialog"
+       aria-labelledby="certModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ title }} </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label" >Import File</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" style="font-size :10px;" [(ngModel)]="fileName" >
+              <input #fileImport type="file"  (change)="importFileName($event)"
+                     accept="509, cer, crt, der, p12, pem, pfx" style="display:none;" />
+            </div>
+            <div class="col-sm-3">
+              <button id="modalImport" type="button" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                      data-toggle="modal" data-target="#restoreDialog"
+                      (click)="resetFileImport(fileImport)"> Browse</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" [disabled]=disableImportBtn (click)="importCertFile()" >Import</button>
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="reset()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cert Password Dialog for File-->
+  <div class="modal fade modal-holder" id="certPasswordModal" tabindex="-1" role="dialog"
+       aria-labelledby="certPasswordModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Unlock Keystore </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row" *ngIf="!is509Cert">
+            <label class="col-sm-5 col-form-label" >Unlock KeyStore</label>
+            <div class="col-sm-3">
+              <input type="{{showPassword ? 'text' : 'password'}}" class="form-control" placeholder="Password"
+                     [(ngModel)]=keyStoreDesc.password />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="listImportCertFile()" >Ok</button>
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="reset()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Display import List Modal for Cert-->
+  <div class="modal fade modal-holder" id="importCertModal" tabindex="-1" role="dialog"
+       aria-labelledby="importCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select Entries to import</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">Entries
+          <table class="table basic table-hover table-bordered table-striped table-primary">
+            <thead>
+            <tr>
+              <th>Import</th>
+              <th>Name</th>
+              <th>Locked</th>
+            </tr>
+            </thead>
+            <tr *ngFor="let record of importCertList?.entries">
+              <td class="alignImg">
+                <input type="checkbox"  id={{record.alias}}
+                       name="importCertGroup" (change)="onCheckboxChange(record, $event)" />
+              </td>
+              <td>{{ record.alias }}</td>
+              <td *ngIf="record?.passwordRequired === true;else elseBlock">
+                <span class="normal alignImg" style="color:#F5BC1D;">
+                  <i class="fa fa-lock fa-lg"></i>
+                </span>
+              </td>
+              <ng-template #elseBlock>
+              <td>
+                <span class="normal alignImg" style="color:green;">
+                  <i class="fa fa-lock-open fa-lg" ></i>
+                </span>
+              </td>
+              </ng-template>
+            </tr>
+          </table>
+          <br/>
+          <div class="modal-footer">
+            <button class="btn btn-outline-light" data-dismiss="modal" [disabled]="disableImportBtn">Ok</button>
+            <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Cert Unlock Dialog password-->
+  <div class="modal fade modal-holder" id="passwordModal" tabindex="-1" role="dialog"
+       aria-labelledby="passwordModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Unlock Entry </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label" >Unlock KeyStore</label>
+            <div class="col-sm-3">
+              <input type="password" class="form-control" placeholder="Password"
+                     [(ngModel)]=privateKeyStorePassword />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="importPrivateKeyCert()" >Ok</button>
+          <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Export modal to export certificate(s)-->
+  <div class="modal fade modal-holder" id="exportCertModal" tabindex="-1" role="dialog"
+       aria-labelledby="exportCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Password Protect the New Keystore </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label" >Keystore Password</label>
+            <div class="col-sm-3">
+              <input type="{{showPassword ? 'text' : 'password'}}" class="form-control" placeholder="Password"
+                     [(ngModel)]=exportCertDescriptor.keystorePassword />
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="requiredExportPrivateKey">
+            <label class="col-sm-5 col-form-label" >Private Key Password</label>
+            <div class="col-sm-3">
+              <input type="{{showPassword ? 'text' : 'password'}}" class="form-control" placeholder="Private Key"
+                     [(ngModel)]=exportCertDescriptor.privateKeyPassword />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label" >Export File</label>
+            <div class="col-sm-3">
+              <!--<input type="text" class="form-control">-->
+              <input type="text"  class="form-control" (input)="exportFileName($event)"/>
+                     <!--accept="509, cer, crt, der, p12, pem, pfx" style="display:none;" />-->
+            </div>
+            <div class="col-sm-3">
+            <!-- <button id="modalExport" type="button" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                      data-toggle="modal" data-target="#restoreDialog"
+                      (click)="fileExport.click()"> Browse</button>-->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="exportCertFile()" >Ok</button>
+          <button class="btn btn-outline-light" data-dismiss="modal" >Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Verify Cert Details Data-->
+  <div class="modal fade modal-holder" id="verifyCert" tabindex="-1" role="dialog"
+       aria-labelledby="verifyCertModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Verify Certificate Confirmation </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding:25px;min-height: 100px;">
+          <br/>
+          <div class="form-group row ">
+          <div class="col-sm-1"></div>
+          <i class="fa fa-question-circle fa-3x col-sm-3 " style="align-items: center" ></i>
+            <div class="col-md-8 font-16 align-content-around">
+            Verify the selected certificate?
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="verifyCert()">Yes</button>
+          <button class="btn btn-outline-light" data-dismiss="modal" >No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal-holder" id="overwriteCertModal" tabindex="-1" role="dialog"
+       aria-labelledby="overwriteModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Overwrite Confirmation </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding:25px;min-height: 100px;">
+          <br/>
+          <div class="form-group row ">
+            <div class="col-sm-1"></div>
+            <i class="fa fa-question-circle fa-3x col-sm-3 " style="align-items: center" ></i>
+            <div class="col-md-8 font-16 align-content-around">
+              Certificate already exists, Do you wish to replace it?
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="overwriteCert()">Yes</button>
+          <button class="btn btn-outline-light" data-dismiss="modal" >No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-view-cert
+  [modalSelectCert]="modalSelectCert"
+  [serverCerts]="serverCerts"
+  [currentCert] = currentCert
+  [currentCertStatus] = currentCertStatus
+  [issuerCert] = issuerCert
+  [issuerCertStatus] = issuerCertStatus
+  [issuerStatus] = issuerStatus>
+</app-view-cert>
+
+<app-modal-progress-bar
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+  (progressBarEmit)=fileProgressModalHandler($event)
+></app-modal-progress-bar>

@@ -1,0 +1,162 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalEditBroadbandSettings" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg" style="width:700px;">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Broadband Settings</h5>
+          <button
+            (click)="closeModal()"
+            aria-label="Close"
+            class="close"
+            type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          <div class="modal-body" >
+              <div class="form-group row">
+              <label class="col-sm-3 col-form-label" for="slsEnabledField">SLS Enabled</label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    (change)="inputBroadbandSettings()"
+                    [(ngModel)]="localBroadbandSettings.slsEnabled"
+                    class="mt10 custom-control custom-checkbox"
+                    id="slsEnabledField"
+                    type="checkbox" />
+                </div>
+              </div>
+              </div>
+              <div class="form-group row">
+              <label class="col-sm-3 col-form-label" for="esgEnabledField">ESG Enabled</label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    (change)="inputBroadbandSettings()"
+                    [(ngModel)]="localBroadbandSettings.esgEnabled"
+                    class="mt10 custom-control custom-checkbox"
+                    id="esgEnabledField"
+                    type="checkbox" />
+                </div>
+              </div>
+            </div>
+          <hr/>
+            <h5 class="card-title align-content-center">Primary Publishing</h5>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label" for="primaryEnabledField">Enabled</label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    (change)="inputBroadbandSettings()"
+                    [(ngModel)]="localBroadbandSettings.publishingEnabled"
+                    class="mt10 custom-control custom-checkbox"
+                    id="primaryEnabledField"
+                    type="checkbox"/>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Publish URL</label>
+              <div class="col-md-4 ">
+                <input
+                  (input)="inputBroadbandSettings()"
+                  [(ngModel)]="localBroadbandSettings.primaryPublishUrl"
+                  [disabled]="!localBroadbandSettings.publishingEnabled"
+                  class="form-control l"
+                  type="text"
+                />
+              </div>
+              <div *ngIf="localBroadbandSettings.publishingEnabled" class="mt10 col-sm-1 text-center">
+                <span><i [ngClass]="primaryURLIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">User Name</label>
+              <div class="col-md-4 ">
+                <input
+                  [(ngModel)]="localBroadbandSettings.primaryUserName"
+                  [disabled]="!localBroadbandSettings.publishingEnabled"
+                  class="form-control l"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Password</label>
+              <div class="col-md-4 ">
+                <input
+                  [(ngModel)]="localBroadbandSettings.primaryPassword"
+                  [disabled]="!localBroadbandSettings.publishingEnabled"
+                  class="form-control l"
+                  type="password"
+                />
+              </div>
+            </div>
+          <hr/>
+            <h5 class="card-title align-content-center">Backup Publishing</h5>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label" for="backupEnabledField">Enabled</label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    id="backupEnabledField"
+                    (change)="inputBroadbandSettings()"
+                    [(ngModel)]="localBroadbandSettings.backupPublishingEnabled"
+                    class="mt10 custom-control custom-checkbox"
+                    type="checkbox"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Publish URL</label>
+              <div class="col-md-4 ">
+                <input
+                  (input)="inputBroadbandSettings()"
+                  [(ngModel)]="localBroadbandSettings.backupPublishUrl"
+                  [disabled]="!localBroadbandSettings.backupPublishingEnabled"
+                  class="form-control l"
+                  type="text"
+                />
+              </div>
+              <div *ngIf="localBroadbandSettings.backupPublishingEnabled" class="mt10 col-sm-1 text-center">
+                <span><i [ngClass]="backupURLIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">User Name</label>
+              <div class="col-md-4 ">
+                <input
+                  [(ngModel)]="localBroadbandSettings.backupUserName"
+                  [disabled]="!localBroadbandSettings.backupPublishingEnabled"
+                  class="form-control l"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-3 col-form-label">Password</label>
+              <div class="col-md-4 ">
+                <input
+                  [(ngModel)]="localBroadbandSettings.backupPassword"
+                  [disabled]="!localBroadbandSettings.backupPublishingEnabled"
+                  class="form-control l"
+                  type="password"
+                />
+              </div>
+            </div>
+        </div>
+        <!-- //end of modal body -->
+        <div class="modal-footer">
+          <button (click)="closeModal()" class="btn btn-outline-dark">
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button (click)="updateBroadbandSettings()" [disabled]="!updateEnabled" class="btn btn-outline-dark">
+            <i class="fas fa fa-check"></i> Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

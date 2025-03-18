@@ -1,0 +1,164 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="modalTransportRouteDetails"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Media Stream Details</h4>
+                    <button
+                            (click)="closeModal()"
+                            aria-label="Close"
+                            class="close"
+                            type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mh-100 row">
+                    <!-- //content goes here -->
+                    <fieldset>
+                        <!-- //LEFT -->
+                        <div class="col-md-6 fL">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="nameField">Name</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.name"
+                                            class="form-control l"
+                                            disabled
+                                            id="nameField"/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="ingestProtocolField">Protocol</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.ingestProtocol"
+                                            class="form-control l"
+                                            disabled
+                                            id="ingestProtocolField"/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="idField">Route ID</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.id"
+                                            class="form-control l"
+                                            disabled
+                                            id="idField"
+                                            type=number/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="serviceId">Service ID</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.serviceId"
+                                            class="form-control l"
+                                            disabled
+                                            id="serviceId"
+                                            type=number/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="dstAddressField">Dest Address</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.dstAddress"
+                                            class="form-control l"
+                                            disabled
+                                            id="dstAddressField"/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="dstPortField">Dest Port</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.dstPort "
+                                            class="form-control l"
+                                            disabled
+                                            id="dstPortField"
+                                            type="number"/>
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                        </div>
+                        <!-- //RIGHT -->
+                        <div class="col-md-6 fR">
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="enabledField">Enabled</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.enabled"
+                                            class="mt10 custom-control custom-checkbox"
+                                            disabled
+                                            id="enabledField"
+                                            type="checkbox"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="tsiBaseField">TSI Base</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.tsibase"
+                                            class="form-control l"
+                                            disabled
+                                            id="tsiBaseField"
+                                            type="number"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="sourcePortField">Source Port</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.slsSourcePort "
+                                            class="form-control l"
+                                            disabled
+                                            id="sourcePortField"
+                                            type=number/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label" for="nicField">NIC</label>
+                                <div class="col-md-8">
+                                    <input
+                                            [(ngModel)]="localMediaStream.nic"
+                                            class="form-control l"
+                                            disabled
+                                            id="nicField"
+                                            type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button (click)="closeModal()" class="btn btn-outline-dark">
+                        <i class="fas fa fa-times"></i> Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

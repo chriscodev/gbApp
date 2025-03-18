@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div class="form-group row">
+  <label class="col-md-1 col-form-label">URL</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()"
+           [(ngModel)]="currentExportProfile.url"
+           class="form-control l"
+           id="url"
+           type="text"
+    />
+  </div>
+  <div class="mt10 col-sm-1 ">
+    <i [ngClass]="urlIconText" aria-hidden="true"
+       class="fa fa-check-circle ">
+    </i>
+  </div>
+</div>
+<app-modal-export-services
+  [currentExportProfile]="currentExportProfile"
+  (serviceLinksChanged)="serviceLinksHandler($event)">
+</app-modal-export-services>

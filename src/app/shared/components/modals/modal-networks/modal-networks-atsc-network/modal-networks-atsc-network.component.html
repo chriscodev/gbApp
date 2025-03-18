@@ -1,0 +1,68 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div class="form-bottom">
+  <div class="button-group">
+    <!-- ngbslider start-->
+    <app-nav-slider
+      [headerTabs]=headerTabs
+      [activeId]=activeId
+      (activeIdChanged)=activeIdChangedHandler($event)
+    >
+    </app-nav-slider>
+    <div class="tab-content tabcontent-border">
+      <div class="content-table" [hidden]="activeId !== 1">
+        <app-modal-dynamic-tb-translate
+          *ngIf="!this.isHiddenChannelTab"
+          [tableHeaders]=tableHeadersChannel
+          [tableData]=localChannels
+          [objectTableType]="'Network-Channels'"
+          [buttonList]=buttonList
+          [enableScroll]="true"
+          [modalName]="modalNameChannel"
+          [enableSearch]=true
+          [multiSelect]=true
+          [translateTableData]="translatedChannels"
+          (rowClicked)="showSelectedRows()"
+          (buttonClicked)=onButtonClickedChannel($event)
+        >
+        </app-modal-dynamic-tb-translate>
+      </div>
+      <div class="content-table" [hidden]="activeId !== 2">
+        <app-modal-dynamic-tb-translate *ngIf="this.isHiddenChannelTab"
+                                        [tableHeaders]=tableHeadersDescriptor
+                                        [tableData]=clonedDescriptor
+                                        [objectTableType]="'Network-Descriptors'"
+                                        [buttonList]=buttonList
+                                        [enableScroll]="true"
+                                        [modalName]=modalNameDescriptor
+                                        [enableSearch]=true
+                                        [multiSelect]=true
+                                        (buttonClicked)=onButtonClickedDescriptors($event)>
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+
+    <!-- ngbslider end -->
+  </div>
+
+  <app-modal-networks-atsc-channel
+    *ngIf="!this.isHiddenChannelTab"
+    (channelChanged)="channelChangeHandler($event)"
+    [channelEditMode]="channelEditMode"
+    [channels]="localATSCNetworksChannels"
+    [channel]="currentChannel"
+    [networkStream]="atscNetworks"
+    [allNetworks]="allNetworks">
+  </app-modal-networks-atsc-channel>
+
+  <app-modal-networks-descriptor *ngIf="this.isHiddenChannelTab"
+                                 (descriptorChanged)="descriptorChangeHandler($event)"
+                                 [descriptorEditMode]="descriptorEditMode"
+                                 [descriptors]="localATSCNetworksDescriptors"
+                                 [descriptor]="currentDescriptor"
+                                 [sourceData]="'DescCallFromNetwork'">
+  </app-modal-networks-descriptor>
+</div>
+
+

@@ -1,0 +1,108 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Users</h4>
+    <div class="row singleLayout">
+      <!-- COMMIT_REVERT COMPONENT-->
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <!--DYNAMIC TABLE COMPONENT WITH add,delete,update button
+  the list of fields including the dataChanged should exist in the parent component including this modal for implementation -->
+
+
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder"
+         style="min-height:380px;padding-top:10px;">
+      <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          (buttonClicked)=onButtonClicked($event)
+          (rowClicked)=rowClicked($event)
+          [buttonList]=buttonList
+          [enableSearch]=true
+          [modalName]=modalName
+          [multiSelect]=false
+          [objectTableType]="'User'"
+          [objectTitle]="'Users'"
+          [tableData]=localUsers
+          [tableHeaders]=tableHeaders>
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal USER Data-->
+  <div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade modal-holder" data-backdrop="static"
+       data-keyboard="false" id="usersModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ title }} </h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="usernameField">Name</label>
+            <div class="col-md-6">
+              <input (input)=inputSettings() (keyup)=checkAlphanumeric($event) [(ngModel)]=currentUser.name
+                     [readonly]="!editableUser"
+                     class="form-control"
+                     id="usernameField"
+                     placeholder="Name"
+                     type="text">
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i [ngClass]="nameIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="passwordField">Password</label>
+            <div class="col-md-6">
+              <input (input)=inputSettings() [(ngModel)]=currentUser.password
+                     class="form-control" id="passwordField"
+                     placeholder="password"
+                     type="{{showPassword ? 'text' : 'password'}}">
+            </div>
+            <div class="mt10 col-md-1 text-center">
+              <span><i [ngClass]="passwordIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+            <div class="col-md-1 col-form-label">
+              <label
+                (click)="toggleShowPassword()"
+                class="col-form-label fL"
+                id="showPass">
+                <i aria-hidden="true"
+                   class="fR fa {{showPassword ? 'fa-eye' : 'fa-eye-slash'}}"></i>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="privilegeField">Privilege</label>
+            <div class="col-md-6">
+              <select [(ngModel)]=currentUser.privilegeLevel [disabled]="editMode"
+                      class="form-control l"
+                      id="privilegeField">
+                <option
+                  *ngFor="let privilegeLevel of privilegeLevels"
+                  [value]=privilegeLevel>{{ privilegeLevel }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+          <button (click)=addUpdateCurrentUser() [disabled]="!okEnabled" class="btn btn-outline-light"
+                  data-dismiss="modal">{{editMode ? 'Update' : 'Add'}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

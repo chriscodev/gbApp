@@ -1,0 +1,143 @@
+/*!
+ * Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+ */
+
+.highlighted-row {
+  background-color: #e0e0e0;
+}
+
+::ng-deep tr.mat-row {
+  height: 10px !important;
+  line-height: normal;
+  display: table-row;
+}
+
+::ng-deep td.mat-cell {
+  height: 10px !important;
+}
+
+tr.mat-header-row {
+  height: 26px;
+  text-transform: uppercase;
+  background-color: #515454;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.actionButton {
+  margin-top: 10px;
+  margin-bottom: 0px;
+  margin-left: 5px;
+  min-width: 60%;
+}
+
+.searchLabel {
+  text-align: right;
+  width: auto;
+}
+
+.searchDiv i {
+  position: absolute;
+  transform: translateY(-200%);
+  margin-left: 10px;
+}
+
+.form-group {
+  margin: 5px;
+}
+
+.actionButtons {
+  right: -1%;
+  position: absolute;
+  width: 20%;
+}
+
+::ng-deep .mat-row.mat-row:hover:not(.mat-row-selected) {
+  background-color: #f5f5f5;
+  cursor: pointer;
+  line-height: 1.5;
+
+}
+
+.timeStampStyle {
+  display: flex !important;
+  width: 180px;
+}
+
+.selectedRow {
+  font-style: italic;
+  background: linear-gradient(to bottom, #807d7d, #a2a0a0);
+}
+
+.table-margin {
+  padding-right: 5%;
+}
+
+.my_classTOP {
+  margin-top: 100px !important;
+}
+
+.alignImg {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+/* scroll table settings*/
+.table-container {
+  max-height: 400px;
+  display: block;
+}
+
+.mat-paginator {
+  right: 20%;
+  position: absolute;
+  transform: translateY(-110%);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1000;
+  margin: 0px;
+}
+
+.dispColumn {
+  word-wrap: normal;
+  width: 150px;
+}
+
+.dispTranslateColumn {
+  word-wrap: normal;
+}
+
+.custom-paginator .mat-paginator-icon {
+  font-size: 10px;
+}
+
+.mat-table {
+  max-height: 350px;
+  table-layout: auto;
+  width: 100%;
+}
+
+.dynamicTableComponent {
+  max-height: 500px;
+  min-height: 210px;
+}
+
+.mat-table.mat-table-empty {
+  height: 300px;
+}
+
+.card-footer {
+  position: relative;
+  top: 10px;
+}
+
+::ng-deep .mat-mdc-icon-button {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 2px !important;
+}

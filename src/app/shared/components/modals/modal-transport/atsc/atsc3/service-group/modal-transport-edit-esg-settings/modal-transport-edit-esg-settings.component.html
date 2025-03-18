@@ -1,0 +1,147 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div
+  class="modal fade"
+  id="modalEditESGSettings"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Edit ESG Settings</h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mh-100">
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="esgEnabledField">ESG Enabled</label>
+          <div class="col-md-5">
+            <div class="custom-control custom-checkbox">
+              <input
+                id="esgEnabledField"
+                class="mt10 custom-control custom-checkbox"
+                type="checkbox"
+                [(ngModel)]="localESGSettings.enabled"
+                (change)="inputESG()"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">Destination Address</label>
+          <div class="col-md-5 ">
+            <input
+              [(ngModel)]="localESGSettings.dstAddress"
+              [disabled]="!localESGSettings.enabled"
+              (input)="inputESG()"
+              (keypress)="validateIP($event)"
+              type="text"
+              class="form-control l"
+              placeholder="0.0.0.0"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center" *ngIf="localESGSettings.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="dstAddressIconText"></i></span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">Destination Port</label>
+          <div class="col-md-5 ">
+            <input
+              type="number"
+              class="form-control l"
+              [(ngModel)]="localESGSettings.dstPort"
+              [disabled]="!localESGSettings.enabled"
+              (input)="inputESG()"
+              (keypress)="numberOnly($event)"
+              title="Value range 1025-65535"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center" *ngIf="localESGSettings.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="dstPortIconText"></i></span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">Kilobitrate</label>
+          <div class="col-md-5 ">
+            <input
+              name="form-first-name"
+              type="number"
+              class="form-control l"
+              [(ngModel)]="localESGSettings.bitrate"
+              [disabled]="!localESGSettings.enabled"
+              (input)="inputESG()"
+              (keypress)="numberOnly($event)"
+              title="Max value 2147483647"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center" *ngIf="localESGSettings.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="bitrateIconText"></i></span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">Hours Ahead</label>
+          <div class="col-md-5 ">
+            <input
+              type="number"
+              class="form-control l"
+              [(ngModel)]="localESGSettings.hoursAhead"
+              [disabled]="!localESGSettings.enabled"
+              (input)="inputESG()"
+              (keypress)="numberOnly($event)"
+              title="Value range 1-1536"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center" *ngIf="localESGSettings.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="hoursAheadIconText"></i></span>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label">Hours Behind</label>
+          <div class="col-md-5">
+            <input
+              type="number"
+              class="form-control l"
+              [(ngModel)]="localESGSettings.hoursBehind"
+              [disabled]="!localESGSettings.enabled"
+              (input)="inputESG()"
+              (keypress)="numberOnly($event)"
+              title="Max value 1536"/>
+          </div>
+          <div class="mt10 col-sm-1 text-center" *ngIf="localESGSettings.enabled">
+            <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="hoursBehindIconText"></i></span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-4 col-form-label" for="nameField">App Context ID List</label>
+          <div class="col-md-6">
+            <input
+              (input)="inputESG()"
+              [(ngModel)]="localESGSettings.appContextIdList"
+              [disabled]="!localESGSettings.enabled"
+              class="form-control l"
+              id="nameField"
+              placeholder=""
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- //end of modal body -->
+      <div class="modal-footer">
+        <button class="btn btn-outline-dark" (click)="closeModal()">
+          <i class="fas fa fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-outline-dark" [disabled]="!updateEnabled" (click)="updateESGSettings()">
+          <i class="fas fa fa-check"></i> Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

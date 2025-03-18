@@ -1,0 +1,191 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row ">
+  <div class="header-container">
+    <h4 class="card-title">SNMP Settings </h4>
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+</div>
+
+<div class="table-bordered tabcontent-border triveniBorder ">
+  <br/>
+  <div class="form-group row">
+    <div class="col-md-8 form-group ">
+      <h5 class="card-header">SNMP Parameters</h5>
+      <div class="form-group row">
+        <label for="systemName" class="col-sm-4 col-form-label">System Name</label>
+        <div class="col-sm-6">
+          <input id="systemName" type="text" class="form-control" placeholder="System Name"
+                 [(ngModel)]="localSnmpSettings?.snmpConfiguration.systemName"
+                 (input)="updateDirty()">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="systemLocation" class="col-sm-4 col-form-label">System Location</label>
+        <div class="col-sm-6">
+          <input id="systemLocation" type="text" class="form-control" placeholder="System Location"
+                 [(ngModel)]="localSnmpSettings?.snmpConfiguration.systemLocation"
+                 (input)="updateDirty()">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="communityReadOnlyString" class="col-sm-4 col-form-label">Community ReadOnly String</label>
+        <div class="col-sm-6">
+          <input id="communityReadOnlyString" type="text" class="form-control"
+                 placeholder="Community ReadOnly String"
+                 [(ngModel)]="localSnmpSettings?.snmpConfiguration.communityReadOnlyString"
+                 (input)="updateDirty()">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-2 form-group">
+      <h5>View MIB</h5>
+      <div class="form-group row ">
+        <button type="button"
+                class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+                (click)="fileText.click()">Text Format
+        </button>
+      </div>
+      <div class="form-group row">
+        <a href="{{urlTxt}}" target="_blank" #fileText class="no-display"></a>
+        <button type="button"
+                class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton "
+                (click)="fileHtml.click()">HTML Format
+        </button>
+        <a href="{{urlHtml}}" target="_blank" #fileHtml class="no-display"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 snmp-managers">
+  <div class="table-bordered tabcontent-border triveniBorder ">
+    <h5 class="card-header">SNMP Managers</h5>
+    <div class="col-md-12 ">
+      <div class="content-table" *ngIf="localSnmpSettings?.snmpManagers">
+        <app-modal-dynamic-tb-translate
+          [tableHeaders]="tableHeaders"
+          [tableData]="localSnmpSettings?.snmpManagers"
+          [modalName]="modalName"
+          [objectTableType]="objectTitle"
+          [objectTitle]="objectTypeTitle"
+          [buttonList]="buttonList"
+          [enableSearch]="true"
+          [multiSelect]="true"
+          (buttonClicked)="onButtonClicked($event)"
+        >
+        </app-modal-dynamic-tb-translate>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+
+<!-- // Modal ADD UPDATE DELETE-->
+<div class="modal fade modal-holder" id="SNMPModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="form-horizontal ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ (editMode ? 'Edit - ' : 'Add - ') + 'SNMP Manager' }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- end of modal header -->
+        <div class="modal-body modal-container">
+          <div class="row form-group">
+            <label class="col-md-4 col-form-label" for="managerName">Manager Name</label>
+             <div class="col-md-7">
+               <input id="managerName" class="form-control " type="text"
+                      placeholder="Manager Name"
+                      [(ngModel)]="currentSnmpManager.entityName"
+                      (input)="validateManagerName()"/>
+             </div>
+
+            <div class="col-sm-1 text-center">
+              <label class="control-label"></label>
+              <div class="clearfix"></div>
+              <span><i
+                class="fa errspan {{!managerNameValid ? 'errspan' : ''}} {{checkNameValidity()}}"
+                aria-hidden="true"></i></span>
+            </div>
+          </div>
+          <div class="row form-group">
+            <label class="col-md-4 col-form-label" for="ipAddress">IP Address</label>
+            <div class="col-md-7">
+              <input id="ipAddress" class="form-control" type="text" placeholder="0.0.0.0"
+                     [(ngModel)]="currentSnmpManager.ipAddress"
+                     (keypress)="ipAddressOnly($event)"
+                     (input)="validateIPAddress()"
+                     [pattern]="ipPattern"
+              />
+            </div>
+            <div class="col-sm-1 text-center">
+              <label class="control-label"></label>
+              <div class="clearfix"></div>
+              <span><i
+                class="fa errspan {{!ipAddressValid ? 'errspan' : ''}} {{checkIPAddressValidity()}}"
+                aria-hidden="true"></i></span>
+            </div>
+          </div>
+          <div class="row form-group">
+            <label class="col-form-label col-sm-4" for="snmpVersion">SNMP Version</label>
+            <div class="col-md-7">
+              <select id="snmpVersion" class="form-control"
+                      [(ngModel)]="currentSnmpManager.snmpVersion"
+                      (change)="changeVersion()">
+                <option *ngFor="let snmpVersion of snmpVersions"
+                        [ngValue]="snmpVersion"> {{ SNMP_VERSIONS[snmpVersion] }}
+                  <!-- {{ snmpVersion }} -->
+                </option>
+              </select>
+            </div>
+
+          </div>
+          <div class="row form-group">
+            <label class="col-form-label col-md-4" for="securityName">Security Name</label>
+            <div class="col-md-7">
+              <input id="securityName" class="form-control" type="text"
+                     placeholder="public"
+                     [disabled]="true"/>
+            </div>
+
+          </div>
+          <div class="row form-group">
+            <label class="col-form-label col-md-4" for="contextName">Context Name</label>
+            <div class="col-md-7">
+              <input id="contextName" type="text" class="form-control"
+                     [disabled]="!contextNameEnabled"
+                     (input)="validateContextName()"
+                     [(ngModel)]="currentSnmpManager.contextName"/>
+            </div>
+
+            <div class="col-sm-1 text-center">
+              <label class="control-label"></label>
+              <div class="clearfix"></div>
+              <span><i
+                class="fa errspan {{!contextNameValid ? 'errspan' : ''}} {{checkContextNameValidity()}}"
+                aria-hidden="true"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-outline-light" data-dismiss="modal"
+                    (click)=addUpdateCurrentManager()
+                    [disabled]="disableOK">{{editMode ? 'Update' : 'Add'}}
+            </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

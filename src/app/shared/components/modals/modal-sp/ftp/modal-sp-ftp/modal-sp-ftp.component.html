@@ -1,0 +1,169 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<h4 class="card-header">FTP Settings</h4>
+<div class="tab-content tabcontent-border triveniBorder" style="padding:20px;">
+  <br/>
+  <div class="form-bottom">
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label">Protocol</label>
+      <div class="col-md-5">
+        <select
+          (change)="onProtocolChanged()"
+          [(ngModel)]="localScheduleProvider.protocol"
+          class="form-control">
+          <option *ngFor="let fetchType of fetchTypes" [ngValue]="fetchType">
+            {{ FETCH_TYPE[fetchType].displayName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="hostField">Host</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          [(ngModel)]="localScheduleProvider.host"
+          class="form-control "
+          id="hostField"
+          type="text"
+        />
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="hostIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="portField">Port</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="localScheduleProvider.port"
+          autocomplete="disabled"
+          class="form-control l"
+          id="portField"
+          title="Value range 1-65535"
+          type="number"
+        />
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="portIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="directoryField">Directory</label>
+      <div class="col-md-5">
+        <input
+          [(ngModel)]="localScheduleProvider.path"
+          class="form-control l"
+          id="directoryField"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="userField">User Name</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          [(ngModel)]="localScheduleProvider.user"
+          class="form-control l"
+          id="userField"
+          type="text"
+        />
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="userIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="passwordField">Password</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          [(ngModel)]="localScheduleProvider.password"
+          autoComplete="new-password"
+          class="form-control l"
+          id="passwordField"
+          type="{{ !shown ? 'password' : 'text' }}"
+        />
+      </div>
+      <div class="col-sm-1 text-center">
+        <span><i [ngClass]="passwordIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+      <div class="col-md-1 text-center">
+        <span (click)="togglePass()">
+          <i aria-hidden="true"
+             class="fa {{!shown ? 'fa-eye' : 'fa-eye-slash'}}"></i></span>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="transformerField">Transformer</label>
+      <div class="col-md-5">
+        <input
+          [(ngModel)]="localScheduleProvider.transformer"
+          [disabled]="true"
+          class="form-control l"
+          id="transformerField"
+          type="text"
+        />
+      </div>
+      <div class="col-md-1 text-center">
+        <button
+          (click)="doChooseTransformer()"
+          class="btn btn-sm"
+          data-backdrop="static"
+          data-keyboard="false"
+          data-target="#selectXSLTModal"
+          data-toggle="modal"
+        >
+          Choose
+        </button>
+      </div>
+      <div class="col-md-1 text-center">
+        <button
+          (click)="chooseToEmptyTransformer()"
+          class="btn btn-sm marLeft20"
+        >
+          X
+        </button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-3"></div>
+      <div class="col-md-5">
+        <button
+          (click)="doTestConnection()"
+          [disabled]="!ftpSettingsValid"
+          class="btn btn-sm"
+          data-backdrop="static"
+          data-keyboard="false"
+          data-target="#testConnectionModal"
+          data-toggle="modal"
+        >
+          Test Connection
+        </button>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
+
+<app-modal-sp-selectxslt (xlstSelected)="xlstSelectedHandler($event)"
+                         (xsltClosed)="xlstClosedHandler()"
+                         *ngIf="showSelectTransformer">
+</app-modal-sp-selectxslt>
+
+<app-modal-sp-testconnection (testConnectionClosed)="testConnectionClosedHandler($event)"
+                             *ngIf="showTestConnection"
+                             [scheduleProvider]="localScheduleProvider"
+                             [showTestConnection]="showTestConnection">
+</app-modal-sp-testconnection>
+
+<app-modal-sp-schedule-download-settings
+  [scheduleProvider]="localScheduleProvider">
+</app-modal-sp-schedule-download-settings>

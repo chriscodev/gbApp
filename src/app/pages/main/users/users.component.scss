@@ -1,0 +1,42 @@
+// import('../../../../assets/node_modules/sweetalert/sweetalert.css');
+// @import '../../../../assets/node_modules/sweetalert/sweetalert.css';
+.marginLeft10 {
+  margin-left: 10px;
+  margin-top: 3px;
+}
+
+.fR {
+  float: right;
+}
+
+.retype {
+  font-size: 12px;
+  color: red;
+}
+.tableFieldSet{
+  border-color:slategray;
+  border-style: inset;
+  padding:10px 10px 10px 30px;
+}
+.actionButton{
+  margin-bottom:10px;
+  margin-left:25px;
+  width:120%;
+}
+.userImage{
+  margin-top:12px;
+}
+button:hover{
+  border-color: #01c0c8;
+}
+// text-hide sorting
+.actionButtons{
+  right: -5%!important;
+  position:absolute!important;
+  width:20%!important;
+}
+.singleLayout{
+  right: 5%;
+  width: 100%;
+  position: absolute;
+}

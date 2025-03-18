@@ -1,0 +1,26 @@
+.transportButtons button{
+    margin:0 2px
+}
+
+.btnFormat{
+    margin:0 2px!important;
+}
+
+.form-body{
+    padding:30px;
+}
+
+.retype {
+    font-size: 12px;
+    color: red;
+}
+
+label.disabledLabel{
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+    opacity: .65;
+}
+button:hover{
+    border-color: #01c0c8;
+  }

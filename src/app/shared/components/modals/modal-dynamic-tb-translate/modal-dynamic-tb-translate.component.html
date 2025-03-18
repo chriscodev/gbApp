@@ -1,0 +1,137 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<!--Search on Dynamic TABLE-->
+<ng-container *ngIf="enableSearch">
+  <div class="form-group row">
+    <label class="col-sm-1 col-form-label searchLabel"> Search : </label>
+    <div class="col-sm-2  searchDiv">
+      <input
+        type="text"
+        name="name"
+        class="form-control rounded-pill"
+        placeholder="Search"
+        [(ngModel)]="searchString"
+        (keyup)="applyFilter()"/>
+    </div>
+    <div class="col-sm-10">
+      <ng-container *ngIf="pagination && dataSource.data.length>10 && !enableScroll">
+        <mat-paginator class="custom-paginator "
+                       [pageSize]="rowsPerPage"
+                       hidePageSize="true"
+                       [showFirstLastButtons]="false"
+                       [length]="dataSource.data.length">
+        </mat-paginator>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<!--DYNAMIC TABLE-->
+<div class="form-group row table-margin dynamicTableComponent">
+  <div [ngClass]="buttonList.length > 0 ? 'col-md-10' : 'col-md-12'">
+    <div class="table-container" [style.max-height]="tableMaxHeight"
+         [style.overflow-y]="enableScroll? 'auto' :'hidden'">
+      <table mat-table class="table basic table-bordered table-primary " [dataSource]="dataSource"
+             [class.mat-table-empty]="dataSource.data.length === 0">
+        <ng-container [matColumnDef]="col.key" *ngFor="let col of tableHeaders">
+          <ng-container *ngIf="col.key">
+            <th mat-header-cell *matHeaderCellDef>{{ col.header }}</th>
+            <ng-container *ngIf="col.function">
+              <tr>
+                <td mat-cell *matCellDef="let element">{{ col.function(element[col.key]) }}</td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="!col.function">
+              <tr>
+                <td mat-cell *matCellDef="let element">
+                  <ng-container *ngIf="col.subclass">
+                    {{ getNestedValue(element, col.key) }}
+                  </ng-container>
+                  <span *ngIf="col.showOnline && col.translateField" class="normal alignImg">
+            <span *ngIf="!element[col.key]"><i class="fa fa-check green text-success fa-lg fa-align-center"></i></span>
+            <span *ngIf="element[col.key]"><i class="fa fa-times red text-danger fa-lg fa-align-center"></i></span>
+          </span>
+                  <span *ngIf="col.showOnline &&  !col.translateField" class="normal alignImg">
+            <span *ngIf="element[col.key]"><i class="fa fa-check green text-success fa-lg fa-align-center"></i></span>
+            <span *ngIf="!element[col.key]"><i class="fa fa-times red text-danger fa-lg fa-align-center"></i></span>
+          </span>
+                  <span *ngIf="col.showHex && col.translateField"
+                        class="normal dispColumn">{{ element[col.key] }}
+                    <span class="italicGrey"> {{ convertDecToHexComponent(element[col.key]) }}</span></span>
+                  <span *ngIf="col.showDate" class="normal timeStampStyle ">{{ convertDate(element[col.key]) }}</span>
+                  <span *ngIf="!col.showOnline && !col.showDate && !col.showDataCount && !col.showHex && !col.showImg"
+                        class="normal dispColumn"> {{ element[col.key] }}</span>
+                  <span *ngIf="col.showDataCount && col.translateField"
+                        class="normal dispColumn">{{ getCount(element[col.key]) }}</span>
+                  <span *ngIf="col.showImg && col.translateField"
+                        class="normal dispColumn"><span [innerHTML]="col.showImg"></span>  {{ element[col.key] }}</span>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <tr style="font-size:12px;" mat-header-row *matHeaderRowDef="tableDispHeaders"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: tableDispHeaders"
+          [ngClass]="{'selectedRow': isHighlighted(row)}"
+          (click)="selectRow(row,$event)"
+          (dblclick)="doubleClickUpdateRow()"
+          style="cursor: pointer;"
+        ></tr>
+      </table>
+    </div>
+  </div>
+  <!-- ACTION BUTTONS-->
+  <div class="actionButtons">
+    <ng-container *ngFor="let button of buttonList">
+      <ng-container
+        *ngIf="(button.name.includes('View') ||button.name.includes('Status') ) || button.name.includes('Edit'); else otherButtonContent">
+        <button
+          type="button"
+          #editRow
+          [id]="button.name+'-'+ objectTableType"
+          [name]="button.name+'-'+ objectTableType"
+          class="actButton btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+          [attr.data-toggle]="'modal'"
+          [attr.data-target]="modalName"
+          [disabled]="button.disable"
+          (click)="button.name.includes('Edit') ? updateRow(button.name) : setMessageType(button.name,  null)"
+          [innerHTML]="button.imgSrc + ' ' + button.name">
+        </button>
+      </ng-container>
+      <ng-template #otherButtonContent>
+        <!-- TODO (click) below needs to get re-thought-->
+        <button
+          type="button"
+          [id]="button.name+'-'+ objectTableType"
+          [name]="button.name+'-'+ objectTableType"
+          class="actButton btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+          [attr.data-toggle]="'modal'"
+          [attr.data-target]="setModalName(button.name)"
+          [disabled]="button.disable"
+          (click)="onActionButtonClicked(button,$event)"
+          [innerHTML]="button.name.includes('UpdateRow') ? buttonImage + '  '+ buttonText : button.imgSrc + ' ' + button.name">
+        </button>
+
+        <!--TODO check if this is needed with codev and if we can reuse existing functionality as it just pass control to client-->
+        <!--Removing this from dyanmic each child should implement it     also added a condition on click to determine if Button is Import or Add file else will be a normal button
+        -->
+        <!--<input [hidden]="true" #fileInput type="file" (change)="setMessageType(button.name, $event)">-->
+      </ng-template>
+    </ng-container>
+
+    <div *ngIf="showMoveRowSelection">
+      <button
+        class="actButton btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+        (click)="moveRowUp()"
+        [disabled]="currentIndex <= 0 || tableData.length < 2"><i class='fas fa-angle-up'></i></button>
+      <button
+        class="actButton btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+        (click)="moveRowDown()"
+        [disabled]="currentIndex >= dataSource.data.length - 1  || tableData.length < 2"><i
+        class='fas fa-angle-down'></i></button>
+    </div>
+
+  </div>
+</div>
+<div class="card-footer" *ngIf="objectTitle">{{ dataSource.data.length }} {{ objectTitle }}</div>

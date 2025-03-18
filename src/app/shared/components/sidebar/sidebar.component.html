@@ -1,0 +1,229 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<aside class="left-sidebar">
+  <!-- Sidebar scroll-->
+  <div [ngStyle]="{'pointer-events' : getPointerEventsValue()}" class="scroll-sidebar ps ps--theme_default ps--active-y"
+       data-ps-id="18c23a0f-542e-d8ac-5865-9b95d267ddbc">
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        <li>
+          <a
+            (click)="activeTab('status')"
+            class="waves-effect waves-dark {{isStatusExpanded ? 'has-arrow-custom no' : 'active has-arrow-custom'}}"
+            id="statusRoute">
+            <i class="ti-dashboard"></i>
+            <span class="hide-menu">Status</span>
+          </a>
+          <ul aria-expanded="false" class="{{isStatusExpanded ? '' : 'collapse'}}">
+            <li
+              [ngClass]="isActive('/main/service-map')">
+              <a (click)="singleRoute('/main/service-map')" class=" waves-effect waves-dark"
+                 id="serviceMapRoute">
+                <i class="fas fa-map"></i>
+                <span class="hide-menu">Service Map</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/gb-status')">
+              <a (click)="singleRoute('/main/gb-status')" class=" waves-effect waves-dark"
+                 id="bckupRestoreRoute">
+                <i class="fas fa-server"></i>
+                <span class="hide-menu">GuideBuilder</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/activity-log')">
+              <a (click)="singleRoute('/main/activity-log')" class=" waves-effect waves-dark"
+                 id="activityLogRoute">
+                <i class="ti-clipboard"></i>
+                <span class="hide-menu">Activity Log</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/system-health')">
+              <a (click)="singleRoute('/main/system-health')" class=" waves-effect waves-dark"
+                 id="systemHealthRoute">
+                <i class=" ti-pulse"></i>
+                <span class="hide-menu">System Health</span></a>
+            </li>
+
+          </ul>
+        </li>
+        <!-- // START DTV SERVICES -->
+        <li
+          [ngClass]="isActive('/main/service')">
+          <a (click)="activeTab('service')"
+             class=" waves-effect waves-dark {{isServiceExpanded ? 'has-arrow-custom no' : 'active has-arrow-custom'}}"
+             id="networkConfigRoute">
+            <i class="fas fa-tv"></i>
+            <span class="hide-menu">DTV Services</span>
+          </a>
+          <ul aria-expanded="false" class="{{isServiceExpanded ? '' : 'collapse'}}">
+            <li
+              [ngClass]="isActive('/main/dtv-services/schedule-provider')">
+              <a (click)="singleRoute('/main/dtv-services/schedule-provider')" class="waves-effect waves-dark"
+                 id="dtvSched">
+                <i class="fas fa-file-code"></i>
+                <span class="hide-menu">Schedule Provider</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/dtv-services/dtv-network')">
+              <a (click)="singleRoute('/main/dtv-services/dtv-network')" class="waves-effect waves-dark"
+                 id="dtvNetwork">
+                <i class="fas fa-broadcast-tower"></i>
+                <span class="hide-menu">DTV Network</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/dtv-services/service-export')">
+              <a id="serviceExport" class="waves-effect waves-dark"
+                 (click)="singleRoute('/main/dtv-services/service-export')">
+                <i class="fas fa-file-export"></i>
+                <span class="hide-menu">Service Export</span></a>
+            </li>
+
+          </ul>
+        </li>
+        <!-- // END DTV SERIES -->
+
+        <li
+        >
+          <a (click)="activeTab('server')"
+             class="waves-effect waves-dark {{isServerExpanded ? 'has-arrow-custom no' : 'active has-arrow-custom'}}"
+             id="serverSettingsRoute">
+            <i class="ti-settings"></i>
+            <span class="hide-menu">Server Settings</span>
+          </a>
+          <ul aria-expanded="false" class="{{isServerExpanded ? '' : 'collapse'}}">
+            <li
+              [ngClass]="isActive('/main/date-time')">
+              <a (click)="singleRoute('/main/date-time')" class=" waves-effect waves-dark" id="dateTime">
+                <i class="ti-time"></i>
+                <span class="hide-menu">Date / Time</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/networking')">
+              <a (click)="singleRoute('/main/networking')" class=" waves-effect waves-dark"
+                 id="networkingRoute">
+                <i class="fa fa-network-wired"></i>
+                <span class="hide-menu">Networking</span></a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/features')">
+              <a (click)="singleRoute('/main/features')" class=" waves-effect waves-dark"
+                 id="featuresRoute">
+                <i class="ti-key"></i>
+                <span class="hide-menu">Features</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/sw-update')">
+              <a (click)="singleRoute('/main/sw-update')" class=" waves-effect waves-dark"
+                 id="swUpdateRoute">
+                <i class="ti-package"></i>
+                <span class="hide-menu">S/W Update</span>
+              </a>
+            </li>
+            <li [ngClass]="isActive('/main/users')">
+              <a (click)="singleRoute('/main/users')" class=" waves-effect waves-dark" id="usersRoute">
+                <i class="ti-user"></i>
+                <span class="hide-menu">Users</span>
+              </a>
+            </li>
+            <li [ngClass]="isActive('/main/redundancy')">
+              <a (click)="singleRoute('/main/redundancy')" class=" waves-effect waves-dark" id="redundancyRoute">
+                <i class="ti-layers"></i>
+                <span class="hide-menu">Redundancy</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/certificates')">
+              <a (click)="singleRoute('/main/certificates')" class=" waves-effect waves-dark"
+                 id="certificatesRoute">
+                <i class="fa fa-sharp fa-solid fa-certificate"></i>
+                <span class="hide-menu">Certificates</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/certificate-request')">
+              <a (click)="singleRoute('/main/certificate-request')" class=" waves-effect waves-dark"
+                 id="certificateRequestRoute">
+                <i class="fa fa-sharp fa-solid fa-file-contract"></i>
+                <span class="hide-menu">Certificate Request</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li
+        >
+          <a (click)="activeTab('notif')"
+             class="waves-effect waves-dark {{isNotifExpanded ? 'has-arrow-custom no' : 'active has-arrow-custom'}}"
+             id="notificationsRoute">
+            <i class="ti-announcement"></i>
+            <span class="hide-menu">Notifications</span>
+          </a>
+          <ul aria-expanded="false" class="{{isNotifExpanded ? '' : 'collapse'}}">
+            <li
+              [ngClass]="isActive('/main/snmp')">
+              <a (click)="singleRoute('/main/snmp')" class=" waves-effect waves-dark" id="snmpRoute">
+                <i class="ti-desktop"></i>
+                <span class="hide-menu">SNMP</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/smtp-email')">
+              <a (click)="singleRoute('/main/smtp-email')" class=" waves-effect waves-dark" id="smtpEmailRoute">
+                <i class="ti-email"></i>
+                <span class="hide-menu">SMTP/Email</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li
+        >
+          <a (click)="activeTab('alarm')"
+             class="waves-effect waves-dark {{isAlarmExpanded ? 'has-arrow-custom no' : 'active has-arrow-custom'}}"
+             id="alarmsRoute">
+            <i class="ti-bell"></i>
+            <span class="hide-menu">Alarms</span>
+          </a>
+          <ul aria-expanded="false" class="{{isAlarmExpanded ? '' : 'collapse'}}">
+            <li
+              [ngClass]="isActive('/main/alarm/active-alarms')">
+              <a (click)="singleRoute('/main/alarm/active-alarms')" class=" waves-effect waves-dark"
+                 id="activeAlarmsRoute">
+                <i class="ti-alert"></i>
+                <span class="hide-menu">Active Alarms</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/alarm/alarm-history')">
+              <a (click)="singleRoute('/main/alarm/alarm-history')" class=" waves-effect waves-dark" id="historyRoute">
+                <i class="fas fa-history"></i>
+                <span class="hide-menu">History</span>
+              </a>
+            </li>
+            <li
+              [ngClass]="isActive('/main/alarm/alarm-configuration')">
+              <a (click)="singleRoute('/main/alarm/alarm-configuration')" class=" waves-effect waves-dark"
+                 id="settingsRoute">
+                <i class="ti-settings"></i>
+                <span class="hide-menu">Settings</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- End Sidebar navigation -->
+    <div class="ps__scrollbar-x-rail" style="left: 0px; bottom: -700px;">
+      <div class="ps__scrollbar-x" style="left: 0px; width: 0px;" tabindex="0"></div>
+    </div>
+    <div class="ps__scrollbar-y-rail" style="top: 700px; height: 804px; right: 0px;">
+      <div class="ps__scrollbar-y" style="top: 316px; height: 362px;" tabindex="0"></div>
+    </div>
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>

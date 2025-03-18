@@ -1,0 +1,12 @@
+.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+
+.fade.show {
+    opacity: 1;
+}
+
+button[aria-label="Close"]:focus {
+    outline: none;
+  }

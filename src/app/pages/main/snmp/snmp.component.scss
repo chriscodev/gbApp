@@ -1,0 +1,68 @@
+.tableButton .button-group {
+    padding-top: 70px;
+}
+
+button.btnFormat.btnWidth{
+    width: 100%;
+}
+
+.errspan {
+    //color: red;
+}
+
+fieldset {
+    border-width: 2px;
+    border-style: groove;
+    border-color: threedface;
+    border-image: initial;
+    padding: 10px;
+}
+
+legend {
+    width: auto;
+    margin-left: 5px;
+    margin-bottom: 0;
+}
+
+.manager-table {
+    float: left;
+}
+
+.tableButton {
+    float: right;
+}
+
+.snmp-managers {
+    margin-top: 20px;
+}
+
+.no-display {
+    display:none;
+}
+
+.content-table{
+  min-height: 200px;
+}
+
+Copy code
+fieldset.tab-style {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend.tab-legend {
+  padding: 10px 20px; /* Adjust padding as needed */
+  background-color: #6F7272FF; /* Background color */
+  color: white; /* Text color */
+  font-weight: bold; /* Font weight */
+  border-radius: 10px 10px 0 0; /* Rounded corners (top-left and top-right) */
+}
+
+fieldset.tab-style .tab-content {
+  position: relative;
+  padding: 20px; /* Adjust padding as needed */
+  border-radius: 0 10px 10px 10px; /* Rounded corners (bottom-left and bottom-right) */
+  background-color: #ffffff; /* Background color */
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15); /* Box shadow */
+}

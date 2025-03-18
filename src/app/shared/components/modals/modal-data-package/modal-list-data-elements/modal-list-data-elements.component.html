@@ -1,0 +1,8 @@
+<!-- Copyright (c) 2023 Triveni Digital, Inc. All rights reserved. -->
+<div class="card-body" style="min-height:400px;">
+    <app-modal-data-add-elements
+      [currentDataPackage] = "currentDataPackage"
+      [localDataElements]="localDataElements"
+      (dataPackageElementsChanged) = "updateDataPackageElements($event)">
+    </app-modal-data-add-elements>
+</div>

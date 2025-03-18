@@ -1,0 +1,45 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="selectXSLTModal"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div>
+                <div class="modal-header">
+                    <h4 class="modal-title">Select XSLT</h4>
+                    <button (click)="closeModal()" aria-label="Close" class="close" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mh-100">
+                    <div class="tab-content tabcontent-border triveniBorder" style="padding:20px;">
+                        <div class="content-table">
+                            <app-modal-dynamic-tb-translate
+                                    (buttonClicked)="onButtonClicked($event)"
+                                    (rowClicked)="onRowClicked($event)"
+                                    [buttonList]="buttonList"
+                                    [tableData]="xslts"
+                                    [tableHeaders]="tableHeaders"
+                            >
+                            </app-modal-dynamic-tb-translate>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button (click)="clickSelect()" class="btn btn-default btn-next"
+                            type="button">
+                        Select
+                    </button>
+                    <button (click)="closeModal()" class="btn btn-default" type="button">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<ng-template class="custom-modal modal-holder" #modalRef >
+    <div class="modal-header">
+        <h5 class="modal-title">GuildeBuilder Application Timeout</h5>
+    </div>
+    <div class="modal-body min100">
+        <div class="field">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h4>Due to Inactivity, this application will automatically close in <span id="countdown">30
+                            seconds</span>
+                    </h4>
+                    <p>To keep this application open, click on the 'OK' button</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" (click)="stopTimeLogout()">OK</button>
+    </div>
+</ng-template>

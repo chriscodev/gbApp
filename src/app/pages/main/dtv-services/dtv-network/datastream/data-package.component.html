@@ -1,0 +1,213 @@
+<!-- Copyright (c) 2023 Triveni Digital, Inc. All rights reserved. -->
+<div class="card-body " xmlns="http://www.w3.org/1999/html">
+  <!--DYNAMIC TABLE COMPONENT -->
+  <div class="col-md-12">
+    <div class="clearfix"></div>
+    <div class="content-table">
+      <app-modal-dynamic-tb-translate
+        [tableHeaders]="tableHeaders"
+        [tableData]="localDataPackages"
+        [objectTableType]="currentDataPackage.constructor.name"
+        [buttonList]="buttonList"
+        [modalName]="modalName"
+        [enableSearch]="true"
+        (buttonClicked)="onButtonClicked($event)">
+      </app-modal-dynamic-tb-translate>
+    </div>
+  </div>
+<div class="modal fade" id="dataStreamModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width:100%;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{title}}</h5>
+        <button
+          type="button"
+          class="close" aria-label="Close" (click)="closeModal()" ><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <!-- //CONTAINER PANEl -->
+          <div class="form-bottom">
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label" >Data Stream Name</label>
+              <div class="col-sm-6">
+                <input
+                  name="dataStreamName"
+                  class=" form-control l"
+                  type="text"
+                  required
+                  [(ngModel)]="currentDataPackage.name"
+                  (keyup)=updateOkButtonEnabled()>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label" >Enabled</label>
+              <div class="col-sm-6  col-form-label">
+                <input
+                  type="checkbox"
+                  name = "enabled"
+                  [(ngModel)]="currentDataPackage.enabled"/>
+              </div>
+            </div>
+            <div class="form-group row">
+                    <label class="col-sm-4 col-form-label" for="form-serviceGroups">Bind Transport</label>
+                    <div class="col-sm-6  col-form-label">
+                      <button
+                        type="button"
+                        class="label btn waves-effect waves-light btn-rounded btn-dark btnFormat"
+                        id="form-serviceGroups"
+                        name = "form-serviceGroups"
+                        (click)="openSelectServiceGroup()">Select Transport</button>
+                    </div>
+                    <div class="col-sm-1">
+                      <i aria-hidden="true"
+                         class="fa errorImageClass errspan {{bindedTransportValid() ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                    </div>
+                  </div>
+            <div>
+                  <ng-container *ngIf="currentDataPackage.packageType === 'ATSC3_APP_NRT'">
+                    <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class="col-form-label" >Delivery</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <select class="form-control"  [(ngModel)]="currentDataPackage.deliveryMode" >
+                        <option *ngFor="let dMode of deliveryModes"
+                                [value]="dMode">{{dMode}}</option>
+                      </select>
+                    </div>
+                    </div>
+                  </ng-container>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class=" col-form-label" >Transmit Mode</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <select class="form-control" [(ngModel)]="currentDataPackage.broadcastAttributes.elementSchedulingMode">
+                        <option *ngFor="let transmitMode of transmitModes"
+                                [value]="transmitMode">{{transmitMode}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class="col-form-label" for="destAddress">Destination Address</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input
+                        id="destAddress"
+                        class="form-control l"
+                        type="text"
+                        placeholder="0.0.0.0"
+                        (keydown)=ipAddressOnly($event)
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.dstAddress"
+                        [pattern]="ipPattern"
+                      />
+                    </div>
+                    <div class="col-sm-1">
+                      <i aria-hidden="true"
+                         class="fa errorImageClass errspan {{currentDataPackage.broadcastAttributes.dstAddress ?
+                         (!validIpAddress(currentDataPackage.broadcastAttributes.dstAddress) ? 'fa-times-circle text-danger' : 'fa-check-circle text-success') : 'fa-check-circle'}}" ></i>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class="col-form-label" for="destPort">Destination Port</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input
+                        class="form-control l"
+                        id="destPort"
+                        type="number"
+                        required
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.dstPort"
+                        (keyup)=updateOkButtonEnabled()
+                        title="Max range 1-65535"/>
+                    </div>
+                    <div class="col-sm-1">
+                      <i aria-hidden="true"
+                         class="fa errorImageClass errspan {{currentDataPackage.broadcastAttributes.dstPort ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class="col-form-label" for="maxRate">Max Rate </label>
+                      <label class="calculatedFields"><span> {{getMaxRateCalculated()}}</span></label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input
+                        id="maxRate"
+                        class="form-control l"
+                        type="number"
+                        required
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.maxTransmitBitsPerSecond">
+                    </div>
+                    <div class="col-sm-1">
+                      <i aria-hidden="true"
+                         class="fa errorImageClass errspan {{currentDataPackage.broadcastAttributes.maxTransmitBitsPerSecond ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class=" col-form-label" >IP Encapsulate</label>
+                    </div>
+                    <div class="col-sm-1">
+                      <input
+                        name="ipEncapsulate"
+                        type="radio"
+                        (keyup)=updateOkButtonEnabled()
+                        [value]="true"
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.mpeEnabled" /> &nbsp;&nbsp;
+                        <label class=" col-form-label" >On</label>
+                    </div>
+                    <div class="col-sm-1">
+                      <input
+                        name="ipEncapsulate"
+                        type="radio"
+                        [value] ="false"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.mpeEnabled"> &nbsp;&nbsp;
+                        <label class="col-form-label" >Off</label>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="currentDataPackage.broadcastAttributes.mpeEnabled === true">
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <label class="col-form-label" for="dataPID">Data PID</label>
+                    </div>
+                    <div class="col-sm-6">
+                      <input
+                        id="dataPID"
+                        class="form-control l"
+                        type="text"
+                        placeholder="42"
+                        [(ngModel)]="currentDataPackage.broadcastAttributes.dataPid"/>
+                    </div>
+                    <div class="col-sm-1 text-center">0X2A</div>
+                  </div>
+                  </ng-container>
+                </div>
+            <app-modal-list-data-elements
+              [currentDataPackage] = "currentDataPackage"
+              [localDataElements]="currentDataPackage.dataElements"
+              (dataPackageElementsChanged)="updateDataElementList()">
+            </app-modal-list-data-elements>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" data-dismiss="modal" [disabled]=!okButtonEnabled (click)="addUpdateCurrentDataPackage()">OK</button>
+        <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<app-modal-transport-select-service-group
+  [atsc3Transports]="atscResolvedTransports"
+  [currentDataPackage]="currentDataPackage"
+  (ac3TranStreamChanged)="openSelectServiceGroup()">
+</app-modal-transport-select-service-group>

@@ -1,0 +1,445 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Licensed Features</h4>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-12">
+      <div class="button-group">
+        <button (click)="updateRefreshActivateOnlineNames()"
+                class="btn waves-effect waves-light btn-rounded btn-dark btnFormat"
+                data-target="#activateRefreshModal"
+                data-toggle="modal"
+                type="button">{{ buttonAct1 }}
+        </button>
+        <button (click)="updateRefreshActivateOfflineNames()"
+                class="btn waves-effect waves-light btn-rounded btn-dark btnFormat"
+                data-target="#activateRefreshModal"
+                data-toggle="modal"
+                type="button">{{ buttonAct2 }}
+        </button>
+        <button (click)="updateResponseOfflineNames()"
+                class="btn waves-effect waves-light btn-rounded btn-dark btnFormat"
+                data-target="#offlineResponseModal"
+                data-toggle="modal"
+                type="button">{{ buttonAct3 }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-md-12">
+  <div *ngIf="activatedLicensed">
+      <table class="table-bordered triveniBorder">
+        <div class="form-group row" style="padding-top:10px;">
+          <label class="col-sm-2 col-form-label" for="licenseId">License ID</label>
+          <div class="col-sm-4">
+            <input class="form-control form-control-lg " id="licenseId" readonly
+                   type="text" value="{{serverLicenseInfo?.serverLicense?.licenseId}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="productId">Product ID</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="productId" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.productId}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="installationId">Installation ID</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="installationId" readonly
+                   type="text" value="{{serverLicenseInfo?.serverLicense?.installationId}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="installationName">Installation Name</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="installationName" readonly
+                   type="text" value="{{serverLicenseInfo?.serverLicense?.installationName}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="guest">Guest OS VM Allowed</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="guest" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.guestOSVMEnabled}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="version">Entitled Version</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="version" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.version}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="creationDate">License Creation Date</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="creationDate" readonly
+                   type="text" value="{{serverLicenseInfo?.serverLicense?.creationDate | date}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="licenseExpirationDate">License Expiration Date</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="licenseExpirationDate" readonly
+                   type="text" value="{{serverLicenseInfo?.serverLicense?.licenseExpirationDate | date}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="validInput">License Valid</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="validInput" readonly type="text"
+                   value="{{serverLicenseInfo.valid}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="nodeLockType">Node Lock Type</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="nodeLockType" readonly
+                   type="text" value="{{NODE_LOCK_TYPES[serverLicenseInfo?.serverLicense?.nodeLockType]?.displayName}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="gracePeriodMinutes">Grace Period Minutes</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="gracePeriodMinutes" readonly
+                   type="text" value="{{serverLicenseInfo?.gracePeriodMinutes}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="systemType">System Type</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="systemType" readonly
+                   type="text"
+                   value="{{SYSTEM_TYPES[serverLicenseInfo?.serverLicense?.systemType]?.displayName}}">
+
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="nodeLockValid">Node Lock Valid</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="nodeLockValid" readonly
+                   type="text" value="{{serverLicenseInfo?.nodeLockValid}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxTransports">Max Transports</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxTransports" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxTransports === MAX_JAVA_INT ? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxTransports}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxMajorNumbers">Max Major Numbers</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxMajorNumbers" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxMajorNumbers === MAX_JAVA_INT ? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxMajorNumbers}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxServices">Max Services</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxServices" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxServices === MAX_JAVA_INT ? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxServices}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Features</label>
+          <div *ngIf='activatedLicensed' class="col-sm-10">
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.routeEncoderEnabled === true? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">Route Encoding</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.mmtEnabled === true ? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">MMTP Encoding</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.aeaEnabled === true ? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">AEA</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.aeaNrtEnabled === true ? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">AEA-NRT</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.esgEnabled === true? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">ESG</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.measEnabled === true? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">M-EAS</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <i aria-hidden="true"
+                 class="fa {{serverLicenseInfo?.serverLicense?.serviceExportEnabled === true? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">Service Export</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxRoutes">Max Routes</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxRoutes" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxRoutes === MAX_JAVA_INT ? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxRoutes}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Network Types</label>
+          <div class="col-sm-10">
+            <div *ngFor="let type of networkTypeList" class="form-check form-check-inline">
+              <i
+                aria-hidden="true"
+                class="fa {{ findInArray(serverLicenseInfo?.serverLicense?.licensedNetworkTypes, type.id) === true? 'fa-check' : 'fa-times' }}"></i>
+              <label class="form-check-label">{{ type.displayName }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Enabled Providers</label>
+          <div class="col-sm-10">
+            <div *ngFor="let type of enabledProvidersList" class="form-check form-check-inline">
+              <i
+                aria-hidden="true"
+                class="fa {{ findInArray(serverLicenseInfo?.serverLicense?.licensedInputTypes, type.id) === true ? 'fa-check' : 'fa-times' }}"></i>
+              <label class="form-check-label">{{ type.displayName }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxInputs">Max Providers Allowed</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxInputs" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxInputs === MAX_JAVA_INT ? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxInputs}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Enabled Outputs</label>
+          <div class="col-sm-10">
+            <div *ngFor="let type of enabledOutputsList" class="form-check form-check-inline">
+              <i
+                aria-hidden="true"
+                class="fa {{findInArray(serverLicenseInfo?.serverLicense?.licensedOutputTypes, type.id) === true? 'fa-check' : 'fa-times'}}"></i>
+              <label class="form-check-label">{{ type.displayName }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="maxOutputs">Max Outputs Allowed</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="maxOutputs" readonly
+                   type="text"
+                   value="{{serverLicenseInfo?.serverLicense?.maxOutputs === MAX_JAVA_INT? 'Unlimited' : serverLicenseInfo?.serverLicense?.maxOutputs}}">
+          </div>
+        </div>
+      </table>
+  </div>
+</div>
+
+<div *ngIf="!activatedLicensed" class="activatedDisplay">
+  <div class="row">
+    <p><i class="fa fa-exclamation-triangle" style='color:yellow'></i> <em> No License Loaded.
+      Licensed features currently disabled.</em></p>
+  </div>
+</div>
+
+<!-- Modal ACTIVATE / REFRESH ONLINE -->
+<div aria-hidden="true" class="modal fade modal-holder" data-backdrop="static" id="activateRefreshModal"
+     role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ formTitle }} </h5>
+        <button (click)="closeModal()" aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- end of modal header -->
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-form-label col-sm-4" for="licenseIDField">License ID</label>
+          <div class="col-sm-8">
+            <input (keydown)=validateNumbersOnly($event) [(ngModel)]=activateRefreshModalInfo.licenseId
+                   [readOnly]=activatedLicensed
+                   class="form-control"
+                   id="licenseIDField"
+                   pattern="\d+" step="1" type="number">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-sm-4" for="activationPasswordField">Activation Password</label>
+          <div class="col-sm-8">
+            <input [(ngModel)]=activateRefreshModalInfo.activationPassword [readOnly]=activatedLicensed
+                   class="form-control"
+                   id="activationPasswordField"
+                   type="text">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-sm-4">Installation Name</label>
+          <div class="col-sm-8">
+            <input [(ngModel)]=activateRefreshModalInfo.installationName [readOnly]=activatedLicensed
+                   class="form-control"
+                   id="installationNameField"
+                   type="text">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-sm-4"></label>
+          <div class="col-sm-8">
+            <button (click)="doActivateRefresh()" [disabled]=!activateRefreshModalInfo.isValid()
+                    class="btn btn-outline-dark">{{ formButton }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- ================================================================= -->
+      <div class="modal-footerInfo">
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4">Request Status</label>
+              <div class="col-sm-8">
+                <i #statusSpinner class="fa fa-2x fa-spinner"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+          <div class="table-bordered tabcontent-border triveniBorder status-result">
+            <h5 class="card-header">Refresh License Result</h5>
+            <div class="row">
+              <textarea [disabled]="true" class="text-area-result">{{ resultMessage }}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="modal-footer">
+        <button (click)="closeModal()" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- end of modal-dialog -->
+  </div>
+</div>
+
+<!-- Modal Apply Response Offline -->
+<div aria-hidden="true" class="modal fade modal-holder" data-backdrop="static" id="offlineResponseModal"
+     role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ formTitle }} </h5>
+        <button (click)="closeModal()" aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label for="file">Choose File</label>
+              <div class="clearfix"></div>
+              <input (change)="fileChanged($event)" accept=".xml" id="file"
+                     type="file">
+            </div>
+          </div>
+        </div>
+        <div class=" form-group">
+          <label for="file">Response XML</label>
+          <div class="clearfix"></div>
+          <textarea (input)="validateResponseValid()" [(ngModel)]=responseStringToUpload class="form-control textareaBox"
+                    cols="10"
+                    rows="10">{{ responseStringToUpload }}</textarea>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <button (click)=doApplyResponse() [disabled]='!applyResponseValid'
+                      class="btn btn-outline-dark">{{ formButton }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- {{responseXML}} -->
+      </div>
+      <!-- ================================================================= -->
+      <div class="modal-footerInfo">
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group row">
+              <label class="col-form-label col-sm-4">Request Status</label>
+              <div class="col-sm-8">
+                <i #statusSpinner2 class="fa fa-2x fa-spinner"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+          <div class="table-bordered tabcontent-border triveniBorder status-result">
+            <h5 class="card-header">Refresh License Result</h5>
+            <div class="row">
+              <textarea [disabled]="true" class="text-area-result">{{ resultMessage }}</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeModal()" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal SERVER RESTART -->
+<div #serverRestartModal aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade modal-holder"
+     data-backdrop="static"
+     id="serverRestartModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <form class="form-horizontal form-material" id="serverRestartActivateForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Server Restart Required </h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- end of modal header -->
+        <div class="modal-body min100 text-center">
+          <p>License update requires a Server restart. Do you wish to restart immediately after successful
+            update?</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="doServerRestart(true)" class="btn btn-outline-dark" data-dismiss="modal">Yes
+          </button>
+          <button (click)="doServerRestart(false)" class="btn btn-outline-dark" data-dismiss="modal">No
+          </button>
+          <button class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <!-- end of form  -->
+  </div>
+</div>

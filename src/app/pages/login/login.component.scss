@@ -1,0 +1,248 @@
+// Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+
+.login-register {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 100%;
+  width: 100%;
+  padding: 10% 0;
+  position: fixed;
+}
+
+.login-box {
+  width: 400px;
+  margin: 0 auto;
+}
+
+.login-box .footer {
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
+.login-box .social {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.submitBtn {
+  width: 50%;
+}
+
+.logbar {
+  opacity: 65%;
+}
+
+.navbar-header {
+  position: relative;
+  /*background-color: #3c4452;*/
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.navbar-header-right {
+  position: relative;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.logo-header {
+  position: absolute;
+  top: 0;
+}
+
+.logo-footer {
+  position: fixed !important;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+
+  label {
+    color: white;
+    display: block;
+    padding: 20px;
+  }
+}
+.logo-image{
+  position: fixed;
+  right:10px;
+}
+
+.logbar {
+  width: 460px;
+  height: auto;
+  opacity: 100%;
+}
+
+.topbar .top-navbar .navbar-header {
+  background-color: #fff;
+}
+
+.btn-info {
+  background-color: #515454;
+
+  :hover {
+    color: #fff !important
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'poppins', sans-serif;
+}
+
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-size: cover;
+}
+
+.form-box {
+  position: relative;
+  width: 360px;
+  height: 300px;
+  margin: 0 auto;
+  background: transparent;
+  border: 2px solid white;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  font-size: 2em;
+  color: white;
+  text-align: center;
+  padding: 15px 15px 30px 15px;
+}
+
+.inputbox {
+  position: relative;
+  margin: 40px 0;
+  width: 350px;
+  border-bottom: 2px solid white;
+}
+
+#loginform {
+  top: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.login-label {
+  position: relative;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 1em;
+  pointer-events: none;
+  transition: .5s;
+}
+
+input:focus ~ label,
+input:valid ~ label {
+  top: -5px;
+}
+
+.login-input {
+  width: 100%;
+  height: 50px;
+  background: #E8F0FE;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color: white !important;
+}
+
+button {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  background: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.form-control:focus {
+  color: #adb5bd;
+  border-color: rgba(255, 255, 255, .1);
+  outline: 0;
+  box-shadow: transparent;
+}
+
+.label-image {
+  padding-top: 5px;
+  padding-left: 20px;
+  color: grey;
+}
+
+.input-fields {
+  padding-left: 10px;
+}
+
+.form-material .form-control {
+  background-color: rgba(0, 0, 0, 0);
+  background-position: center bottom, center calc(100% - 1px);
+  background-repeat: no-repeat;
+  background-size: 0 2px, 100% 1px;
+  padding: 0;
+  transition: background 0s ease-out 0s;
+}
+
+.form-material .form-control.focus, .form-material .form-control:focus {
+  background-size: 100% 2px, 100% 1px;
+  outline: 0 none;
+  transition-duration: .3s;
+}
+
+.form-material .form-control,
+.form-material .form-control.focus,
+.form-material .form-control:focus {
+  background-image: linear-gradient(#617ab3, #617dbf), linear-gradient(#272c36, #272c36) !important;
+  border: 0 none;
+  border-radius: 0;
+  box-shadow: none;
+  float: none;
+}
+
+.btn-info span.logSpan {
+  height: 35px;
+  display: block;
+  color: #fff !important
+}
+
+.invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 11px;
+  color: #e46a76 !important;
+  display: block !important;
+}
+
+input {
+  height: 30px !important;
+}
+
+.alert {
+  width: 80%;
+  text-align: center;
+  margin: 10px auto;
+}

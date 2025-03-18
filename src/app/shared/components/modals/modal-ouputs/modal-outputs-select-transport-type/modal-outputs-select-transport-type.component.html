@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div class="form-group row">
+  <label class="col-md-2 col-form-label">Select a Transport</label>
+  <div class="col-md-8">
+    <button (click)="openSelectTransportModal()"
+            [disabled]="disableAdd" class="btn waves-effect waves-light btn-default  btn-rounded  m-1 "> &nbsp;&nbsp;
+      <i class="fa fa-plus"></i> Add
+    </button>
+    <button (click)="removeTransport()"
+            [disabled]="!disableAdd" class="btn waves-effect waves-light btn-default  btn-rounded  m-1  ">&nbsp;&nbsp;
+      <i class="fa fa-trash"></i> Remove
+    </button>
+    <button (click)="viewSelectTransportMaterial()"
+            [disabled]="!disableAdd" class="btn waves-effect waves-light btn-default  btn-rounded m-1  ">&nbsp;&nbsp;
+      <i class="fa fa-search"></i> View
+    </button>
+  </div>
+</div>
+<div class="tab-content tabcontent-border triveniBorder">
+  <div class="form-group row">
+    <table style="border:none !important;font-size:11px;">
+      <tr>
+        <td class="text-center"> Name</td>
+        <td class="text-center">Type</td>
+        <td class="text-center">{{ output.outputType === OutputType.ATSC3_UDP ? 'BSID' : 'TSID' }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="padding-left:10px;">
+          <input [value]="transportName" class="form-control" disabled id="nameField" type="text"/></td>
+        <td>
+          <input [value]="transportType" class="form-control" disabled id="typeField" type="text"/></td>
+        <td style="padding-right:15px;">
+          <input [value]="tsid" class="form-control" disabled id="tsidField" type="text"/>
+        </td>
+        <td [hidden]="!tsid">0x{{ convertDecToHex(tsid) }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<app-modal-outputs-select-transports
+  (closeViewSelectedTransportsModal)="closeModalHandler($event)"
+  (outputsSelectTransport)="selectedTransportHandler($event)"
+  [output]="output">
+</app-modal-outputs-select-transports>
+
+<app-modal-outputs-view-selected-transports-material
+  (modalClosed)="closeModalHandler($event)"
+  [transport]="selectedTransport"
+  [mediaStreams]="mediaStreams">
+</app-modal-outputs-view-selected-transports-material>
+
+
+

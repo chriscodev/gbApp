@@ -1,0 +1,80 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<h4 class="card-header">Schedule Download Settings</h4>
+<div class="tab-content tabcontent-border triveniBorder" style="padding:10px;">
+  <div class="form-group row">
+    <label class="col-md-3  col-form-label" for="daysAheadField">Days Ahead</label>
+    <div class="col-md-2">
+      <input
+        (input)="inputDownloadSettings()"
+        (keypress)="numberOnly($event)"
+        [(ngModel)]="scheduleProvider.daysAheadToProcess"
+        class="form-control l"
+        id="daysAheadField"
+        maxlength="2"
+        title="Value range 1-64"
+        type="number"
+      >
+    </div>
+    <div class="col-md-1 validImage">
+      <span><i [ngClass]="daysAheadIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="updateDailyField">Update Once Daily</label>
+    <div class="col-md-2">
+      <input
+        (change)="inputDownloadSettings()"
+        [(ngModel)]="scheduleProvider.updateDaily"
+        [value]="true"
+        class="mt10"
+        id="updateDailyField"
+        type="radio">
+    </div>
+    <label class="col-md-3 col-form-label" for="updateIntervalField">Update Every Interval</label>
+    <div class=" col-md-2">
+      <input
+        (change)="inputDownloadSettings()"
+        [(ngModel)]="scheduleProvider.updateDaily"
+        [value]="false"
+        class="mt10"
+        id="updateIntervalField"
+        type="radio">
+    </div>
+    <div class=" clearfix">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="timeOfDayField">Update Time of Day</label>
+    <div class="col-md-2">
+      <input
+        (change)="inputDownloadSettings()"
+        [(ngModel)]="scheduleProvider.timeOfDay"
+        [disabled]="!scheduleProvider.updateDaily"
+        class="form-control"
+        id="timeOfDayField"
+        type="time">
+    </div>
+    <label class="col-md-3 col-form-label" for="intervalField">Update Interval (Minutes)</label>
+    <div class="col-md-2">
+      <input
+        (change)="inputDownloadSettings()"
+        (keypress)="numberOnly($event)"
+        [(ngModel)]="scheduleProvider.intervalInMinutes"
+        [disabled]="scheduleProvider.updateDaily"
+        class="form-control l"
+        id="intervalField"
+        maxlength="10"
+        title="Value range 1-2147483647"
+        type="number">
+    </div>
+    <div class="col-md-1 validImage">
+            <span><i *ngIf="!scheduleProvider.updateDaily" [ngClass]="intervalInMinutesIconText" aria-hidden="true"
+                     class="fa fa-check-circle"></i></span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="actionButtons">
+    <div class="form-group row col-md-12">
+      <div class="col-md-12 btnAction">
+        <div class="button-group">
+          <button id="modalCommit" type="button" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                  data-toggle="modal" data-target="#commitRevertDialog" [disabled]="!dirty"
+                  (click)="onCommit()">
+            <i class="fa fa-check"></i> Commit
+          </button>
+          <button id="modalRevert" type="button" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                  data-toggle="modal" data-target="#commitRevertDialog" [disabled]="!dirty"
+                  (click)="onRevert()">
+            <i class="fa fa-undo"></i> Revert
+          </button>
+        </div>
+      </div>
+  </div>
+</div>

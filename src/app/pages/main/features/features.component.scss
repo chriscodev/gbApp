@@ -1,0 +1,66 @@
+// Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+
+.fa-check {
+  color: lightgreen;
+  padding-right: 5px;
+}
+
+.fa-times {
+  color: red;
+  padding-right: 5px;
+}
+
+.preloader_requestStatus {
+  min-height: 10px;
+}
+
+.modal-footerInfo {
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+#myServerRestartModal {
+  z-index: 1060;
+}
+
+.swal-overlay--show-modal {
+  padding-right: 17px !important;
+}
+
+// .modalBox{
+//     width: 100%;
+//     height: 200px;
+//     overflow-y: scroll;
+//     border: 1px solid #efefef;
+// }
+
+.textareaBox {
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  border: 1px solid #efefef;
+}
+
+.btn-outline-dark:disabled {
+  color: #fff !important;
+  opacity: .5;
+}
+
+.form-group {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.status-result {
+  width: 96%;
+  margin-left: 2%;
+}
+
+.text-area-result {
+  margin-left: 30px;
+  width: 92%;
+  height: 150px;
+  color: #ffffff;
+}

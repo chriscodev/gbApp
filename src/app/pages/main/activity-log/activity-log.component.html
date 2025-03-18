@@ -1,0 +1,30 @@
+<!-- Copyright (c) 2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Activity Log</h4>
+  </div>
+</div>
+<!-- Nav tabs -->
+<app-nav-slider
+  (activeIdChanged)=activeIdChangedHandler($event)
+  [activeId]=activeId
+  [headerTabs]=headerTabs
+>
+</app-nav-slider>
+<div class="tab-content tabcontent-border" >
+
+  <div [hidden]="activeId !== 1" >
+    <div class="activity-table col-md-12 ">
+      <app-event-log></app-event-log>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div [hidden]="activeId !== 2" >
+    <div class="content-table  col-md-12">
+      <app-runtime-log>
+      </app-runtime-log>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>

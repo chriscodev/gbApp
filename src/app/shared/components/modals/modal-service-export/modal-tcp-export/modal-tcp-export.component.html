@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div class="form-group row">
+  <label class="col-md-2 col-form-label">Address</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()"
+           [(ngModel)]="currentExportProfile.address"
+           class="form-control l"
+           id="address"
+           placeholder="0.0.0.0"
+           type="text"
+    />
+  </div>
+  <div class="mt10 col-sm-1 ">
+    <i [ngClass]="adddressIconText" aria-hidden="true"
+       class="fa fa-check-circle ">
+    </i>
+  </div>
+</div>
+<div class="form-group row">
+  <label class="col-md-2 col-form-label">Port</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()"
+           [(ngModel)]="currentExportProfile.port"
+           class="form-control l"
+           id="port"
+           type="number"
+           placeholder="3821"
+    />
+  </div>
+  <div class="mt10 col-sm-1 ">
+    <i [ngClass]="portIconText" aria-hidden="true"
+       class="fa fa-check-circle ">
+    </i>
+  </div>
+</div>
+<app-modal-export-services
+  [currentExportProfile]="currentExportProfile"
+  (serviceLinksChanged)="serviceLinksHandler($event)">
+</app-modal-export-services>

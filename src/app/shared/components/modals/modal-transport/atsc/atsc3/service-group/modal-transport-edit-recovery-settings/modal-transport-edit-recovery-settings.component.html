@@ -1,0 +1,126 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="modalEditRecoverySettings"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Recovery Settings</h5>
+                    <button
+                            (click)="closeModal()"
+                            aria-label="Close"
+                            class="close"
+                            type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mh-100">
+                    <h5 class="card-title align-content-center">Recovery Submission</h5>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="enabledField">Enable</label>
+                        <div class="col-md-8">
+                            <div class="custom-control custom-checkbox">
+                                <input
+                                        (change)="inputRecoverySettings()"
+                                        [(ngModel)]="localRecoverySettings.enabled"
+                                        class="mt10 custom-control custom-checkbox"
+                                        id="enabledField"
+                                        type="checkbox"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="nameField">Submission URL</label>
+                        <div class="col-md-8">
+                            <input
+                                    (input)="inputRecoverySettings()"
+                                    [(ngModel)]="localRecoverySettings.submissionUrl"
+                                    [disabled]="!localRecoverySettings.enabled"
+                                    class="form-control l"
+                                    id="nameField"
+                                    type="text"/>
+                        </div>
+                        <div *ngIf="localRecoverySettings.enabled" class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="submissionUrlIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="usernameField">Username</label>
+                        <div class="col-md-8">
+                            <input
+                                    [(ngModel)]="localRecoverySettings.userName"
+                                    [disabled]="!localRecoverySettings.enabled"
+                                    class="form-control l"
+                                    id="usernameField"
+                                    type="text"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label" for="passwordField">Password</label>
+                        <div class="col-md-8">
+                            <input
+                                    [(ngModel)]="localRecoverySettings.password"
+                                    [disabled]="!localRecoverySettings.enabled"
+                                    class="form-control l"
+                                    id="passwordField"
+                                    type="{{ !passwordShown ? 'password' : 'text' }}"
+                            />
+                        </div>
+                        <div *ngIf="localRecoverySettings.enabled" class="col-md-3">
+                            <label
+                                    (click)="toggleShowPassword()"
+                                    class="control-label col-form-label fL"
+                                    id="showPass">
+                                <i aria-hidden="true"
+                                   class=" fR marginLeft10 fa {{passwordShown ? 'fa-eye' : 'fa-eye-slash'}}"></i>
+                            </label>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="tab-content tabcontent-border triveniBorder">
+                        <h5 class="card-title align-content-center">VP1 Embedders</h5>
+                        <div class="content-table">
+                            <app-modal-dynamic-tb-translate
+                                    (buttonClicked)="onButtonClicked($event)"
+                                    [buttonList]="recoverySettingsButtonList"
+                                    [enableSearch]="true"
+                                    [modalName]="modalNameVP1Embedder"
+                                    [multiSelect]="true"
+                                    [objectTableType]="modalTitle"
+                                    [pagination]="false"
+                                    [tableData]="localVP1Embedders"
+                                    [tableHeaders]="recoverySettingsHeaders"
+                            >
+                            </app-modal-dynamic-tb-translate>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button (click)="closeModal()" class="btn btn-outline-dark">
+                        <i class="fas fa fa-times"></i> Cancel
+                    </button>
+                    <button (click)="clickEditRecovery()"
+                            [disabled]="!updateEnabled"
+                            class="btn btn-outline-dark">
+                        <i class="fas fa fa-check"></i> Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-modal-transport-vp1-embedders
+            (vp1EmbedderChanged)="vp1EmbedderChangedHandler($event)"
+            [editMode]="editMode"
+            [vp1Embedder]="localVP1Embedder">
+    </app-modal-transport-vp1-embedders>
+</div>

@@ -1,0 +1,17 @@
+/*!
+ * Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+ */
+.content-loader {
+  position: relative;
+  height: 100px;
+}
+
+#scheduleBox {
+  min-height: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.btnViewSchedule {
+  padding-right: 10px;
+}

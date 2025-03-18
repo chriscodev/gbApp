@@ -1,0 +1,30 @@
+.descriptor,
+.descriptor:focus {
+    border: 1px solid #e9ecef;
+    background-image: none;
+}
+select {
+    height: 35px;
+    width: 100%;    
+}
+.form-input {
+    width:100%;
+    border: 1px solid #E8E8E8;
+    height: 35px;
+}
+
+input, textarea, select{
+    background-color: #272c36 !important;
+    border-color: #272c36 !important;
+    border-radius: 5px;
+    color: #adb5bd !important;
+}
+.file-count{
+    color: #fff; 
+    font-size: 10px; 
+    position: relative; 
+    left: 20px;
+}
+button:hover{
+    border-color: #01c0c8;
+  }

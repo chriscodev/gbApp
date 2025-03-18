@@ -1,0 +1,11 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="table-bordered tabcontent-border triveniBorder ">
+  <div class="form-group row">
+    <app-modal-transport-add-ipstreams
+      (ipStreamsChanged)="ipStreamsChangedHandler($event)"
+      [atsc3TransportStream]="atsc3TransportStream"
+      [ipStreams]="localIPStreams">
+    </app-modal-transport-add-ipstreams>
+  </div>
+</div>

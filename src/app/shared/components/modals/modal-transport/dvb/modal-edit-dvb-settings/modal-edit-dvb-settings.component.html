@@ -1,0 +1,657 @@
+<p>modal-edit-dvb-settings works!</p>
+<div
+  class="modal fade"
+  id="editDvbTableSettings"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">DVB</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModalTable()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row dvbModalBody">
+        <!-- //MODAL BODY -->
+        <div class="col-md-6 fL">
+          <br />
+          <div class="card nopad-top">
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >EIT - P/F Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitpresentFollowingInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  (keyup)="
+                    validateInputFieldset($event, 'eitpresentFollowingInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTextpfInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name1"
+                >Enable EIT - P/F Others</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name1"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.eitpresentFollowingOtherEnabled"
+                  (change)="toggleCheckEITOthers($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >EIT - P/F Others Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitpresentFollowingOtherInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  [disabled]="!checkEITOthers"
+                  maxlength="5"
+                  (keyup)="
+                    validateInputFieldset($event, 'eitpresentFollowingOtherInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITOthers">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitpresentFollowingOtherInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name2"
+                >Enable EIT Schedules Actual</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name2"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.eitscheduleActualEnabled"
+                  (change)="toggleCheckEITScheduleActuals($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >EIT Schedules - Actual (Days)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitschedulesactual"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+                  [disabled]="!checkEITScheduleActual"
+                  (keyup)="
+                    validateInputFieldset($event, 'eitschedulesactual')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleActual">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitschedulesactual"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >First 8 Days - Actual Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitschedulePrimaryActualInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+                  [disabled]="!checkEITScheduleActual"
+                  (keyup)="
+                    validateInputFieldset($event, 'eitschedulePrimaryActualInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleActual">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitschedulePrimaryActualInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >Next 8 Days - Actual Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitscheduleSecondaryActualInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+                  [disabled]="!checkEITScheduleActual"
+                  (keyup)="
+                    validateInputFieldset($event, 'eitscheduleSecondaryActualInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleActual">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitscheduleSecondaryActualInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >NIT Actual Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.nitactualInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+
+                  (keyup)="
+                    validateInputFieldset($event, 'nitactualInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTextnitactualInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name3"
+                >Enabled NIT OThers</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name3"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.nitotherEnabled"
+                  (change)="toggleCheckNITOthers($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >NIT Others Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.nitotherInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+                  [disabled]="!checkNITOthers"
+                  (keyup)="
+                    validateInputFieldset($event, 'nitotherInterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleActual">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTextnitotherInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >TDT Interval(ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.tdtinterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 10000"
+                  maxlength="5"
+                  (keyup)="
+                    validateInputFieldset($event, 'tdtinterval')
+                  "
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexttdtinterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+          </div>
+          <!-- END OF CARD BODY -->
+
+        </div>
+        <!-- END OF COL 6 -->
+
+        <!-- //RIGHT COLUMN -->
+        <div class="col-md-6 fR">
+          <br />
+          <div class="card nopad-top">
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >SDT Actual Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.sdtactualInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  (keyup)="validateInputFieldset($event, 'sdtactualInterval')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTextsdtactualInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name4"
+                >Enable SDT Others</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name4"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.sdtotherEnabled"
+                  (change)="toggleCheckSDTOtherss($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >SDT Others Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.sdtotherInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  [disabled]="!checkSDTOthers"
+                  (keyup)="validateInputFieldset($event, 'sdtotherInterval')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkSDTOthers">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTextsdtotherInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name5"
+                >Enabled EIT Schedules Others</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name5"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.eitscheduleOtherEnabled"
+                  (change)="toggleCheckEITScheduleOther($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >EIT Schedules - Others (Days)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitschedulesothers"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  [disabled]="!checkEITScheduleOthers"
+                  (keyup)="validateInputFieldset($event, 'eitschedulesothers')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleOthers">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitschedulesothers"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >First 8 Days - Others Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitschedulePrimaryOtherInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  [disabled]="!checkEITScheduleOthers"
+                  (keyup)="validateInputFieldset($event, 'eitschedulePrimaryOtherInterval')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleOthers">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitschedulePrimaryOtherInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >Next 8 Days - Others Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.eitscheduleSecondaryOtherInterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  [disabled]="!checkEITScheduleOthers"
+                  (keyup)="validateInputFieldset($event, 'eitscheduleSecondaryOtherInterval')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center" *ngIf="checkEITScheduleOthers">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexteitscheduleSecondaryOtherInterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name6"
+                >Enabled BAT</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name6"
+                  class="l"
+                  type="checkbox"
+                  [(ngModel)]="dvbTableSettingsObj.batenabled"
+                  (change)="toggleCheckEnableBAT($event)"
+                />
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP  CHECKBOX-->
+
+            <div class="form-group row">
+              <label class="col-md-5 col-form-label" for="form-first-name"
+                >TOT Interval (ms)</label
+              >
+              <div class="col-md-6">
+                <input
+                  name="form-first-name"
+                  class="form-control tooltip-test"
+                  type="text"
+                  [(ngModel)]="dvbTableSettingsObj.totinterval"
+                  (input)="inputDVB()"
+                  (keypress)="onInputNumber($event)"
+                  title="Max value 2000"
+                  maxlength="4"
+                  (keyup)="validateInputFieldset($event, 'totinterval')"
+                  autocomplete="off"
+                  appBlockCopyPaste
+                />
+              </div>
+              <div class="mt10 col-sm-1 text-center">
+                <span
+                  ><i
+                    aria-hidden="true"
+                    class="fa fa-check-circle"
+                    [ngClass]="iconTexttotinterval"
+                  ></i
+                ></span>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- //END OF FORM GROUP -->
+
+          </div>
+          <!-- //END OF CARD BODY RIGHT -->
+        </div>
+        <div class="clearfix"></div>
+        <!-- END OF RIGHT COLUMN BODY -->
+
+        <!-- START OF FOOTER -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-default"
+            (click)="clickDefaultDVB()"
+          >
+            <i class="fa fas fa-undo"></i>
+            Defaults
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-default"
+            (click)="closeModalTable()"
+          >
+            <i class="fa fas fa-times"></i>
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-default btn-next"
+            [disabled]="disableUpdate"
+            (click)="clickUpdateDVBTable()"
+            data-dismiss="modal"
+          >
+            <i class="fa fas fa-edit"></i> Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

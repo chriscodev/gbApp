@@ -1,0 +1,212 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div
+  class="modal fade"
+  id="modalChildImportUdpCsv"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">Import Outputs</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <fieldset>
+            <legend>Import Summary</legend>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-output-type"
+              >Output Type</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-output-type"
+                  id="form-output-type"
+                  type="text"
+                  [(ngModel)]="importCSVObj.outputType"
+                  class="form-control l"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >Routes</label
+              >
+              <div class="col-md-7">
+                <input
+
+                  name="form-first-name"
+                  type="text"
+                  [(ngModel)]="importCSVObj.routes"
+                  class="form-control l"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >NIC</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  [(ngModel)]="importCSVObj.nic"
+                  class="form-control l"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >TTL</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.ttl"
+                  disabled
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >Max Bit Rate</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.maxBitrate"
+                  disabled
+                />
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Import Summary</legend>
+            <button class="btn btn btn-outline-dark" (click)="openOutputDefaultsModal()">Output Defaults</button>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline-dark"
+            (click)="closeModal()"
+          >
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-outline-dark"
+                  (click)="udpOutputTransportImport()"
+          >
+
+            <i class="fa fa-check"></i> Import
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div
+  class="modal fade"
+  id="modalChildImportUDPCSVDefaultData"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  *ngIf="outputDefaultsModal"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">Import Outputs</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeOutputDefaultsModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <fieldset>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-output-type"
+              >Network Interface</label
+              >
+              <div class="col-md-7">
+                <select [(ngModel)]="importCSVObj.nic" class="form-control" id="nicField">
+                  <option *ngFor="let nic of nics" [ngValue]="nic.interfaceName">{{ nic.verboseName }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >Time to Live</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.ttl"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label"
+              >Max Bit Rate</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.maxBitrate"
+                />
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline-dark"
+            (click)="closeOutputDefaultsModal()"
+
+          >
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-outline-dark" (click)="closeOutputDefaultsModal()">
+
+            <i class="fa fa-check"></i> OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

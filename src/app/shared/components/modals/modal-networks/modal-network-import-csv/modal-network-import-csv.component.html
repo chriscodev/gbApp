@@ -1,0 +1,109 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div
+  class="modal fade"
+  id="modalNetworkImportCSv"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">Import Networks</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="closeModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <fieldset>
+            <legend>Import Summary</legend>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-first-name"
+              >Network Type</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.networkType"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-first-name"
+              >Networks</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.networkCtr"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-first-name"
+              >Channels</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.channelCtr"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="form-first-name"
+              >Services</label
+              >
+              <div class="col-md-7">
+                <input
+                  name="form-first-name"
+                  type="text"
+                  class="form-control l"
+                  [(ngModel)]="importCSVObj.serviceCtr"
+                  disabled
+                />
+              </div>
+            </div>
+          </fieldset>
+
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline-dark"
+            data-dismiss="modal"
+            (click)="closeModal()"
+          >
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-outline-dark" (click)="import()">
+
+            <i class="fa fa-check"></i> Import
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

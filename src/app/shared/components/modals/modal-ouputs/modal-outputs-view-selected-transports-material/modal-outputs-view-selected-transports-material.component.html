@@ -1,0 +1,58 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="modalViewTransportMaterial"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">View Transport - {{transportName}}</h5>
+                <button (click)="closeModalView()"
+                        aria-label="Close"
+                        class="close"
+                        type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-1 col-form-label" for="tsidField">
+                        <span> {{tsidLabel}}</span>
+                    </label>
+                    <div class="col-2">
+                        <input [(ngModel)]="tsid"
+                               class="form-control l"
+                               disabled
+                               id="tsidField"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="mt10">0x{{ convertDecToHex(tsid) }}</span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-1 col-form-label" for="nameField">Name</label>
+                    <div class="col-md-4">
+                        <input [(ngModel)]="transportName"
+                               class="form-control l"
+                               disabled
+                               id="nameField"
+                               type="text"/>
+                    </div>
+                </div>
+                <app-modal-tree-view
+                        [headers]="treeHeaders"
+                        [treeData]="treeData"
+                        [treeType]="'table'">
+                </app-modal-tree-view>
+            </div>
+        </div>
+    </div>
+</div>

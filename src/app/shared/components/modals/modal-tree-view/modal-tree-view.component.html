@@ -1,0 +1,70 @@
+<!--&lt;!&ndash; tree view &ndash;&gt;-->
+<ng-container *ngIf="treeType === 'table'">
+          <div class="d-flex border flex-column rounded overflow-hidden mt-2">
+            <div class="d-flex font-weight-bold">
+              <ng-container *ngFor="let head of headers">
+                <div class="col p-3 border border-light" *ngIf="head.isVisible">{{ head.label }}</div>
+              </ng-container>
+            </div>
+            <div class="d-flex flex-wrap border">
+              <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="width: 100%">
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                  <div class="col p-3 " [ngStyle]="{'margin-right': node.level * -40 +'px'}">
+                    <img *ngIf="node.data.icon !== null" [ngSrc]="node.data.icon" alt="" width="30" height="30">
+                    {{ node.data[headers[0].key] }}
+                  </div>
+                  <ng-container *ngFor="let header of headers | slice: 1">
+                    <ng-container *ngIf="!header.isInnerHtml && header.key !== 'icon'">
+                      <div class="col p-3" *ngIf="header.isVisible && node.data.hasOwnProperty(header.key)">
+                        {{ node.data[header.key] }}
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="header.isInnerHtml && header.key !== 'icon'">
+                      <div class="col p-3" [innerHTML]="node.data[header.key]"  *ngIf="header.isVisible && node.data.hasOwnProperty(header.key)">
+
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </mat-tree-node>
+                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                  <div class="col p-3" [ngStyle]="{'margin-right': node.level * -40 +'px'}">
+                    <i class="mx-1 fa" [ngClass]="treeControl.isExpanded(node) ? 'fa-chevron-up' : 'fa-chevron-right'" matTreeNodeToggle></i>
+                    <img *ngIf="node.data.icon !== null" [ngSrc]="node.data.icon" alt="" width="30" height="30">
+                    {{ node.data[headers[0].key] }}
+                  </div>
+                  <ng-container *ngFor="let header of headers | slice: 1">
+                    <ng-container *ngIf="!header.isInnerHtml && header.key !== 'icon'">
+                      <div class="col p-3" *ngIf="header.isVisible && node.data.hasOwnProperty(header.key)">
+                        {{ node.data[header.key] }}
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="header.isInnerHtml && header.key !== 'icon'">
+                      <div class="col p-3" [innerHTML]="node.data[header.key]"  *ngIf="header.isVisible && node.data.hasOwnProperty(header.key)">
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </mat-tree-node>
+              </mat-tree>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="treeType === 'list'">
+          <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" style="width: 100%" >
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="selectNode(node.data)" >
+              <span [ngClass]="{'active': node.data.active}">
+                <i class="fa-square mx-1" [ngClass]="node.data.active ? 'fas' : 'far'"></i>
+                {{node.data.name}}</span>
+            </mat-tree-node>
+            <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding (click)="selectNode(node.data)" [ngClass]="{'active': node.data.active}">
+              <i class="mx-1 fa" [ngClass]="treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'" matTreeNodeToggle></i>
+              <span [ngClass]="{'active': node.data.active}">
+                <i class="fa-square mx-1" [ngClass]="node.data.active ? 'fas' : 'far'"></i>
+                {{node.data.name}}</span>
+            </mat-tree-node>
+          </mat-tree>
+        </ng-container>
+
+
+<!-- tree view end -->
+
+

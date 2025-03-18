@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+  <context:component-scan base-package="com.triveni.gb.server.webServer.servlets.ipStreamEncoder">
+    <context:exclude-filter type="assignable" expression="com.triveni.gb.server.webServer.servlets.ipStreamEncoder.web.controller.PutIngestController"/>
+    <context:exclude-filter type="assignable" expression="com.triveni.gb.server.webServer.servlets.ipStreamEncoder.web.controller.WebDAVIngestController"/>
+  </context:component-scan>
+  <mvc:default-servlet-handler/>
+  <mvc:annotation-driven/>
+  <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+    <property name="alwaysUseFullPath" value="true"/>
+  </bean>
+  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <property name="basename" value="/resources/messages/messages"/>
+  </bean>
+  <bean id="loginSuccessHandler" class="com.triveni.gb.server.webServer.servlets.ipStreamEncoder.web.controller.login.LoginSuccessHandler"/>
+  <bean id="logoutSuccessHandler" class="com.triveni.gb.server.webServer.servlets.ipStreamEncoder.web.controller.login.LogoutSuccessHandler"/>
+</beans>

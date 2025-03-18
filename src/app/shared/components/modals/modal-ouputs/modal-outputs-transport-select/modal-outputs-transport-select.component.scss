@@ -1,0 +1,16 @@
+/*!
+ * Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+ */
+
+.card-body {
+  min-height: 150px;
+}
+
+.btn-dark {
+  border-radius: 0.25rem;
+}
+
+.btn-dark:disabled {
+  background-color: #58626d;
+  border-color: #58626d;
+}

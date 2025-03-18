@@ -1,0 +1,594 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+  class="modal fade"
+  id="viewOutputStatus"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="viewOutputStatus"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <!-- view status, test connection, select transport modal -->
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          View Output Status - {{ outputsDataObject?.name }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeViewModal()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="StatusBox">
+          <div class="card-body">
+            <!-- dynamic slider-->
+            <app-nav-slider
+              [headerTabs]=headerTabs
+              [activeId]=activeId
+              (activeIdChanged)=activeIdChangedHandler($event)
+            >
+            </app-nav-slider>
+            <!-- dynamic slider content -->
+            <div class="tab-content tabcontent-border">
+              <ng-container>
+                <!-- status -->
+                <div class="form-body text-right" [hidden]="activeId !== 1">
+                  <div class="form-group row">
+                    <label for="form-name" class="col-md-3 col-form-label">Name</label>
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.name"
+                        id="form-name"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-outputType" class="col-md-3 col-form-label"
+                    >Output Type</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.outputType"
+                        id="form-outputType"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-updateStatus" class="col-md-3 col-form-label"
+                    >Update Status</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.updateStatus"
+                        id="form-updateStatus"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-ID" class="col-md-3 col-form-label">ID</label>
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.id"
+                        id="form-ID"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-lastEncodeStart" class="col-md-3 col-form-label"
+                    >Last Table Encode Start</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.lastEncodeStartTime"
+                        id="form-lastEncodeStart"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-lastEncodeEnd" class="col-md-3 col-form-label"
+                    >Last Table Encode End</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.lastEncodeEndTime"
+                        id="form-lastEncodeEnd"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-UpdateStart" class="col-md-3 col-form-label"
+                    >Last Output Update Start</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.lastOutputUpdateStartTime"
+                        id="form-UpdateStart"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-UpdateEnd" class="col-md-3 col-form-label"
+                    >Last Output Update End</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.lastOutputUpdateEndTime"
+                        id="form-UpdateEnd"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-UpdateTime" class="col-md-3 col-form-label"
+                    >Last Update Time</label
+                    >
+                    <div class="col-md-9">
+                      <input
+                        [(ngModel)]="outputsDataObject.lastUpdateTime"
+                        id="form-UpdateTime"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-StatueMessage" class="col-md-3 col-form-label"
+                    >Last Status Message</label
+                    >
+                    <div class="col-md-9">
+                <textarea
+                  id="form-StatueMessage"
+                  disabled="true"
+                  cols="3"
+                  rows="5"
+                  class="form-control"
+                  [(ngModel)]="outputsDataObject.lastUpdateMessage"
+                ></textarea>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </ng-container>
+              <ng-container>
+                <!-- Tables -->
+                <div class="form-body text-right pb-0" [hidden]="activeId !== 2">
+                  <div
+                    class="form-group row"
+                    *ngIf="outputsDataObject?.transportsStatus?.length > 0"
+                  >
+                    <div class="col-md-4">
+                      <div class="card text-justify">
+                        <div class="card-body bg output-table">
+                          <br/>
+                          <app-modal-tree-view
+                            [treeData]="treeData"
+                            [treeType]="'list'"
+                            (selectedNode)="clickedNode($event)"
+                          >
+                          </app-modal-tree-view>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="card text-justify">
+                        <div class="card-body bg">
+                          <div *ngIf="transportData || transportStatusData">
+                            <label class="col-form-label font-weight-bold">{{
+                                selectedNodeTemplate === 'Transport Stream' ? transportStatusData?.title : transportData?.title
+                              }}</label>
+                            <div class="form-body text-right pb-0">
+                              <ng-container
+                                *ngIf="selectedNodeTemplate === 'Table'"
+                              >
+                                <div class="form-group row">
+                                  <label for="form-transportName"
+                                         class="col-md-4 col-form-label"
+                                  >Name</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.name"
+                                      id="form-transportName"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-transportDomain"
+                                         class="col-md-4 col-form-label">Domain</label>
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.tableDomain"
+                                      id="form-transportDomain"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-tableType"
+                                         class="col-md-4 col-form-label">Table
+                                    Type ID</label>
+                                  <div class="col-md-6">
+                                    <input
+                                      [(ngModel)]="transportData.tableTypeId"
+                                      id="form-tableType"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                  <div class="col-md-1">
+                                    <label class="col-form-label">{{ transportData.tableTypeIdHex }}</label>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-PID"
+                                         class="col-md-4 col-form-label">PID</label>
+                                  <div class="col-md-6">
+                                    <input
+                                      [(ngModel)]="transportData.pid"
+                                      id="form-PID"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                  <div class="col-md-1">
+                                    <label class="col-form-label">{{ transportData.pidHex }}</label>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TableSize"
+                                         class="col-md-4 col-form-label"
+                                  >Size</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.size"
+                                      id="form-TableSize"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-tableVersion"
+                                         class="col-md-4 col-form-label"
+                                  >Version</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.version"
+                                      id="form-tableVersion"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransmitInterval"
+                                         class="col-md-4 col-form-label"
+                                  >Transmit Interval</label>
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.intervalInMillis"
+                                      id="form-TransmitInterval"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransmitPriority"
+                                         class="col-md-4 col-form-label"
+                                  >Transmit Priority</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.transmitPriority"
+                                      id="form-TransmitPriority"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-LastEncodeTime"
+                                         class="col-md-4 col-form-label"
+                                  >Last Encoded Time</label>
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportData.lastEncoded"
+                                      id="form-LastEncodeTime"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="modal-footer justify-content-center">
+                                  <button
+                                    type="button"
+                                    class="btn btn-default"
+                                    (click)="showTable()"
+                                  >
+                                    Show Table
+                                  </button>
+                                </div>
+                              </ng-container>
+
+                              <ng-container *ngIf="selectedNodeTemplate === 'Transport Stream'">
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeName"
+                                         class="col-md-4 col-form-label"
+                                  >Name</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportStatusData.transport.name"
+                                      id="form-TransportTreeName"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeType"
+                                         class="col-md-4 col-form-label"
+                                  >Type</label>
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportStatusData.transport.transportType"
+                                      id="form-TransportTreeType"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeBSID"
+                                         class="col-md-4 col-form-label"
+                                  >TSID</label>
+                                  <div class="col-md-6">
+                                    <input
+                                      [(ngModel)]="transportStatusData.transport.tsid"
+                                      id="form-TransportTreeBSID"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                  <div class="col-md-1">
+                                    <label class="col-form-label">{{ transportStatusData.transport.tsidHex }}</label>
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeID"
+                                         class="col-md-4 col-form-label"
+                                  >ID</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportStatusData.transport.id"
+                                      id="form-TransportTreeID"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeLastEncodeStart"
+                                         class="col-md-4 col-form-label"
+                                  >Last Encode Start</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportStatusData.lastEncodeStartTime"
+                                      id="form-TransportTreeLastEncodeStart"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div class="form-group row">
+                                  <label for="form-TransportTreeLastEncodeEnd"
+                                         class="col-md-4 col-form-label"
+                                  >Last Encode End</label
+                                  >
+                                  <div class="col-md-8">
+                                    <input
+                                      [(ngModel)]="transportStatusData.lastEncodeEndTime"
+                                      id="form-TransportTreeLastEncodeEnd"
+                                      type="text"
+                                      disabled="true"
+                                      class="form-control l ng-untouched ng-pristine"
+                                    />
+                                  </div>
+                                </div>
+                              </ng-container>
+                              <div class="clearfix"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="activeId === 3">
+                <!-- Routes -->
+                <app-modal-outputs-view-routes
+                  [outputsDataObject]="outputsDataObject"
+                  [outputLocal]="outputsDataObject"
+                >
+                </app-modal-outputs-view-routes>
+              </ng-container>
+
+              <ng-container *ngIf="activeId === 4">
+                <!-- Sockets -->
+                <div class="form-body text-right">
+                  <div class="form-group row">
+                    <label for="form-SourceAddress" class="col-md-4 col-form-label"
+                    >Source Address</label
+                    >
+                    <div class="col-md-8">
+                      <input
+                        [(ngModel)]="outputsDataObject.srcAddress"
+                        id="form-SourceAddress"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="form-SourcePort" class="col-md-4 col-form-label"
+                    >Source Port</label
+                    >
+                    <div class="col-md-8">
+                      <input
+                        [(ngModel)]="outputsDataObject.srcPort"
+                        id="form-SourcePort"
+                        type="text"
+                        disabled="true"
+                        class="form-control l ng-untouched ng-pristine"
+                      />
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="activeId === 5">
+                <!-- PLP -->
+                <textarea
+                  disabled
+                  class="form-control"
+                  style="max-height: 500px"
+                  [(ngModel)]="outputsDataObject.plpStatisticsText"
+                  [rows]="outputsDataObject.lines"
+                  *ngIf="
+            outputsDataObject.plpStatisticsText &&
+            outputsDataObject.plpStatisticsText !== ''
+          "
+                ></textarea>
+              </ng-container>
+            </div>
+            <!-- dynamic slider end -->
+          </div>
+        </div>
+
+        <!--MODAL SHOW TABLE -->
+        <div
+          class="modal d-block overflow-hidden"
+          [ngClass]="isShowTable ? 'collapse-bg' : ''"
+          *ngIf="isShowTable"
+        >
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">
+                  Table Hex View - {{ transportData.name }}
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  aria-label="Close"
+                  (click)="showTable()"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="container mt-4">
+                  <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                    <tr>
+                      <th *ngFor="let header of hexHeaders">{{ header }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let hexRow of hexRows">
+                      <td>{{ hexRow.offsetHeader }}</td>
+                      <td *ngFor="let hex of hexRow.hex">{{ hex }}</td>
+                      <td>
+                        <pre class="font-16">{{ hexRow.ascii }}</pre>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="showTable()">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

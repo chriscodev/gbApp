@@ -1,0 +1,133 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="content-table triveniBorder" style="min-height:350px;">
+  <app-modal-dynamic-tb-translate
+    (buttonClicked)="onButtonClicked($event)"
+    [buttonList]="buttonList"
+    [enableSearch]="true"
+    [modalName]="modalName"
+    [multiSelect]="true"
+    [objectTitle]="'Logical Networks'"
+    [objectTableType]="'Network'"
+    [tableData]="localNetworks"
+    [tableHeaders]="tableHeaders"
+    (rowClicked)="clickNetworkRow()"
+  >
+  </app-modal-dynamic-tb-translate>
+</div>
+
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="networkNewModal" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{ modalTitle }}</h5>
+        <button type="button" (click)="closeModal()"
+                class="close" data-toggle="modal" data-dismiss="modal" data-target="#networkNewModal"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="initialPage">
+          <input [hidden]="true" #fileNetworkInput type="file" (change)="openImportFile($event)">
+          <div class="form-bottom">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label">Name</label>
+              <div class="col-md-6">
+                <input
+                  (input)="validateName()"
+                  appNoSpecialChars
+                  [(ngModel)]="this.currentNetworkStream.name"
+                  class=" form-control l"
+                  name="form-first-name"
+                  type="text">
+                <div *ngIf="nameExists" class="retype">Name already exists</div>
+              </div>
+              <div class="col-sm-1 validImage ">
+                <span><i aria-hidden="true" class="fa fa-check-circle " [ngClass]="iconTextName"></i></span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="transportType">Network Type</label>
+              <div class="col-md-6">
+                <select
+                  (change)="onChangeNetworkType()"
+                  [disabled]="editMode"
+                  [(ngModel)]="currentNetworkStream.networkType"
+                  class="form-control"
+                  id="transportType">
+                  <option *ngFor="let net of networkTypes" [ngValue]="net">
+                    {{ NETWORK_TYPES2[net].displayName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!initialPage && isATSCNetworks()">
+          <app-modal-networks-atsc-network
+            [networkStream]="currentNetworkStream"
+            [allNetworks]="localNetworks">
+          </app-modal-networks-atsc-network>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button
+          (click)="clickPrev()"
+          [hidden]="initialPage"
+          [disabled]="!addUpdateNextEnabled"
+          class="btn btn-default btn-prev"
+          type="button">
+          <i class="fa fas fa-chevron-left"></i>
+          Prev
+        </button>
+
+        <button
+          (click)="clickNext()"
+          [disabled]="!addUpdateNextEnabled"
+          [hidden]="!initialPage"
+          class="btn btn-default btn-next"
+          type="button">
+          <i class="fa fas fa-chevron-right"></i>
+          Next
+        </button>
+
+        <button
+          (click)="closeModal()"
+          data-toggle="modal"
+          data-target="#networkNewModal"
+          data-dismiss="modal"
+          class="btn btn-default"
+          type="button">
+          <i class="fa fas  fa-times"></i>
+          Close
+        </button>
+
+        <button
+          (click)="addUpdateCurrentNetwork()"
+          data-toggle="modal"
+          data-target="#networkNewModal"
+          data-dismiss="modal"
+          [disabled]="!addUpdateNextEnabled"
+          class="btn btn-default btn-next"
+          type="button">
+          <i class="fa fas fa-plus"></i> {{ editMode ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-network-import-csv
+  *ngIf="modalChildImportCSVData"
+  [modalImportCSVData]="modalImportCSVData"
+  (networkImportChanged)="networkImportChangedHandler($event)">
+</app-modal-network-import-csv>
+
+<app-modal-progress-bar
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+  (progressBarEmit)=fileProgressModalHandler()
+></app-modal-progress-bar>
+

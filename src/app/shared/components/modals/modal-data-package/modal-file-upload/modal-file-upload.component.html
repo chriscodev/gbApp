@@ -1,0 +1,92 @@
+<div class="modal fade" id="fileUploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">{{modalTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body form-check">
+          <div>
+            <input type="file" accept=".zip,.jpeg,.png" (change)="onFileBrowse($event)" />
+            <div class="media-upload-table-container" *ngIf="uploadedMedia.length > 0">
+              <table class="media-upload-table table table-borderless">
+                <thead>
+                <tr>
+                  <th style="width: 80px"></th>
+                  <th class="media-progress-bar"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let media of uploadedMedia; let i = index">
+                  <td>
+                    <div class="d-flex flex-row align-items-center">
+                      <!-- <div style="margin-right: 8px;">
+                          <img  class="add-media-img" src="{{media.FileUrl}}">
+                        </div> -->
+                      <div class="media-file-name">
+                        <span style="word-wrap: break-word; white-space: pre-line">
+                            {{ media.FileName }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <div class="d-flex flex-column" style="margin-top: 18px;">
+                      <div>
+                        <div class="first-progress">
+                          <div
+                            [ngStyle]="{ 'width.%': media.FileProgress }"
+                            class="second-progress"
+                          ></div>
+                        </div>
+                      </div>
+                      <div class="text-center">
+                        {{ media.FileProgessSize }} of {{ media.FileSize }}
+                      </div>
+                    </div>
+                  </td>
+                  <!--<td style="vertical-align:middle;text-align: right;">
+                    <div class="media-upload-check">
+                      <span *ngIf="media.FileProgress === 100"> Completed</span>
+                    </div>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <a class="remove-media-txt" (click)="removeImage(i)"> Remove </a>
+                  </td>-->
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-sm-4 col-form-label ">File Name</label>
+              <div class="col-sm-6">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-4">
+                <label class="col-form-label">File Data</label>
+              </div>
+              <div class="col-sm-6" >
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-4">
+                <label class="col-form-label">Upload Status</label>
+              </div>
+              <div class="col-sm-6" >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-dark" data-dismiss="modal" (click)="closeFileUploadModal()"><i class="fas fa fa-times"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

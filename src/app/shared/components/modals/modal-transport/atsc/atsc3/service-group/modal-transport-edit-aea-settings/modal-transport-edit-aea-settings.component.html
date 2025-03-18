@@ -1,0 +1,178 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="modalEditAEASettings" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Edit AEA Settings</h5>
+        <button
+          (click)="closeModal()"
+          aria-label="Close"
+          class="close"
+          type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body ">
+        <div class="card nopad-top">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeaEnabled">AEAT Enabled</label>
+            <div class="col-md-6">
+              <div class="custom-control custom-checkbox">
+                <input
+                  (change)="inputAEA()"
+                  (keypress)="numberOnly($event)"
+                  [(ngModel)]="localAEASettings.aeatEnabled"
+                  class="mt10 custom-control custom-checkbox"
+                  id="aeaEnabled"
+                  type="checkbox"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeatInterval">AEAT Interval (ms)</label>
+            <div class="col-md-6">
+              <input
+                (input)="inputAEA()"
+                [(ngModel)]="localAEASettings.aeatInterval"
+                [disabled]="!localAEASettings.aeatEnabled"
+                class="form-control l"
+                id="aeatInterval"
+                title="Value range 1000-300000"
+                type="number"/>
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled" class="mt10 col-sm-1 text-center">
+              <span><i [ngClass]="aeaIntervalIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label">Ingest Type</label>
+            <div class="col-md-6">
+              <select
+                (change)="onIngestTypeChanged()"
+                [(ngModel)]="localAEASettings.aeaIngestType"
+                [disabled]="!localAEASettings.aeatEnabled"
+                class="form-control">
+                <option
+                  *ngFor="let aeaIngestType of aeaIngestTypes"
+                  [ngValue]="aeaIngestType"> {{ AEA_INGEST_TYPES[aeaIngestType].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeaUserName">FTP Username</label>
+            <div class="col-md-6">
+              <input
+                (input)="inputAEA()"
+                [(ngModel)]="localAEASettings.aeaUserName"
+                [disabled]="!localAEASettings.aeatEnabled || !ftpBasedIngestType"
+                class="form-control l"
+                id="aeaUserName"
+                type="text"
+              />
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled && ftpBasedIngestType"
+                 class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="usernameIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeaPassword">Password</label>
+            <div class="col-md-6">
+              <input
+                (input)="inputAEA()"
+                [(ngModel)]="localAEASettings.aeaPassword"
+                [disabled]="!localAEASettings.aeatEnabled || !ftpBasedIngestType"
+                class="form-control l"
+                id="aeaPassword"
+                type="{{ !showPassword ? 'password' : 'text' }}"/>
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled && ftpBasedIngestType"
+                 class="col-sm-1 text-center  fL">
+              <i [ngClass]="passwordIconText" aria-hidden="true"
+                 class="fa fa-check-circle"></i>
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled" class="col-sm-1 text-center fL">
+              <label
+                (click)="toggleShowPassword()"
+                id="showPass">
+                <i aria-hidden="true"
+                   class="fa {{showPassword ? 'fa-eye' : 'fa-eye-slash'}}"></i>
+              </label>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="authenticationKeyField">Authentication Key</label>
+            <div class="col-md-6">
+              <input
+                (input)="inputAEA()"
+                [(ngModel)]="localAEASettings.aeaAuthenticationKey"
+                [disabled]="!localAEASettings.aeatEnabled || localAEASettings.aeaIngestType !== AEAIngestType.API"
+                class="form-control l"
+                id="authenticationKeyField"
+                type="text"
+              />
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled && !ftpBasedIngestType"
+                 class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="authenKeyIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeatNrtEnabled">NRT Enabled</label>
+            <div class="col-md-6">
+              <div class="custom-control custom-checkbox">
+                <input
+                  (change)="inputAEA()"
+                  [(ngModel)]="localAEASettings.aeatNrtEnabled"
+                  [disabled]="!localAEASettings.aeatEnabled"
+                  class="mt10 custom-control custom-checkbox"
+                  id="aeatNrtEnabled"
+                  type="checkbox"/>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="aeatNrtBitrate">NRT BitRate</label>
+            <div class="col-md-6">
+              <input
+                (input)="inputAEA()"
+                (keypress)="numberOnly($event)"
+                [(ngModel)]="localAEASettings.aeatNrtBitrate"
+                [disabled]="!localAEASettings.aeatNrtEnabled || !localAEASettings.aeatEnabled"
+                class="form-control l"
+                id="aeatNrtBitrate"
+                title="Value range 1000-30000"
+                type="number"/>
+            </div>
+            <div *ngIf="localAEASettings.aeatEnabled && localAEASettings.aeatNrtEnabled"
+                 class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="nrtBitrateIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            (click)="setDefaultSettings()"
+            class="btn btn-default">
+            <i class="fa fas fa-undo"></i> Defaults
+          </button>
+          <button (click)="closeModal()" class="btn btn-outline-dark">
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button (click)="updateAEASettings()" [disabled]="!updateEnabled" class="btn btn-outline-dark">
+            <i class="fas fa fa-check"></i> Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

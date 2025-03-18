@@ -1,0 +1,242 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title w-100" >System Health Status/ Control</h4>
+  </div>
+  <div class="col-md-12">
+    <div class=" table-bordered tabcontent-border " style="border-radius:12px;padding:15px;">
+      <div class="col-md-5 form-group row">
+        <h4 class="card-header">System Control</h4>
+        <div class="button-group">
+          <button (click)="showRestartConfirmation(false)"
+                  class="btn waves-effect waves-light btn-rounded btn-success btnFormat btnWidth border-thin"
+                  data-target="#restartRebootModal" data-toggle="modal" type="button">Restart
+          </button>
+          <button (click)="showRestartConfirmation(true)"
+                  class="btn waves-effect waves-light btn-rounded btn-success btnFormat btnWidth border-thin"
+                  data-target="#restartRebootModal" data-toggle="modal" type="button">Reboot
+          </button>
+          <button (click)="showShutdownConfirmation()"
+                  class="btn waves-effect waves-light btn-rounded btn-success btnFormat btnWidth border-thin "
+                  data-target="#shutdownModal" data-toggle="modal" type="button">Shutdown
+          </button>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <br/>
+        <div class="table-bordered tabcontent-border triveniBorder ">
+          <h4 class="card-header">Resource Statistics</h4>
+          <div class="row">
+            <div class="col-sm-5 align-self-start">
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label" for="totalMemory">Total Memory</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="totalMemory" readonly type="text" value="{{totalMemory}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label" for="helpMemory">Total Heap Memory</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="helpMemory" readonly type="text"
+                         value="{{formatBytes(serverInfo.maxHeap)}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label" for="heapMemory">Free Heap Memory</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="heapMemory" readonly
+                         type="text" value="{{formatBytes(serverStatus?.freeHeap)}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label" for="processorCount">Processor Count</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="processorCount" readonly type="text"
+                         value="{{serverInfo?.processorCount}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-5 col-form-label" for="powerSupplyState">Power Supply State</label>
+                <div class="col-sm-7">
+                  <input [value]="POWER_SUPPLY_STATES[serverStatus?.powerSupplyState]?.displayName" class="form-control"
+                         id="powerSupplyState"
+                         readonly type="text">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-7 align-self-end">
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="uptime">GuideBuilder Uptime</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="uptime" readonly type="text" value="{{serverStatus?.serverUptime}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="systemUptime">System Uptime</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="systemUptime" readonly type="text"
+                         value="{{serverStatus?.systemUptime}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="loadAverage">Load Average</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="loadAverage" readonly style="text-overflow: ellipsis;"
+                         type="text" value="{{serverStatus?.loadAverage}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="totalCoreCount">Total Core Count</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="totalCoreCount" readonly type="text"
+                         value="{{serverInfo?.coreCount}}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label" for="raidState">RAID State</label>
+                <div class="col-sm-7">
+                  <input class="form-control" id="raidState" readonly
+                         type="text"
+                         value="{{serverStatus?.raidState === RAIDState.UNKNOWN ? 'RAID not detected': serverStatus?.raidState}}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <br/>
+        <app-nav-slider
+          (activeIdChanged)=activeIdChangedHandler($event)
+          [activeId]=activeId
+          [headerTabs]=headerTabs
+        >
+        </app-nav-slider>
+        <div class="tab-content tabcontent-border" style="min-height:400px;overflow-y:auto;">
+          <ng-container>
+            <div [hidden]="activeId !== 1" class="p-20">
+              <app-modal-simple-table
+                [columnIdentifier]="'fileSystem'"
+                [enableScroll]="true"
+                [enableSearch]=true
+                [multiSelect]=false
+                [objectTableType]="'DiskPartitions'"
+                [tableData]=diskPartitions
+                [tableHeaders]=diskTableHeaders
+                [tableMaxHeight]="'300px'">
+              </app-modal-simple-table>
+            </div>
+          </ng-container>
+          <ng-container>
+            <div [hidden]="activeId !== 2" class="p-20">
+              <div class="actionButtons">
+                <button (click)="refreshPackagesTable()"
+                        class="btn waves-effect waves-light btn-rounded btn-success btnFormat btnWidth btnRefresh"
+                        type="button">Refresh
+                </button>
+                <br/>
+              </div>
+              <br/>
+              <app-modal-simple-table
+                [columnIdentifier]="'name'"
+                [enableScroll]="true"
+                [enableSearch]=true
+                [objectTableType]="'DebianPackages'"
+                [tableData]=debianPackages
+                [tableHeaders]=packagesTableHeaders
+                [tableMaxHeight]="'300px'">
+              </app-modal-simple-table>
+            </div>
+          </ng-container>
+        </div>
+        <br/>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- // Modal System Contorls-->
+  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade modal-holder" id="restartRebootModal"
+       role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ restartGuideBuilderTitle }}</h5>
+          <button aria-label="Close" class="close" data-dismiss="modal" type="button" (click)="resetRestartValue()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h5 class="card-title">{{ restartGuideBuilderTitleHead }} GuideBuilder Server?</h5>
+          <fieldset>
+            <legend>{{ restartGuideBuilderTitleHead }} Options</legend>
+            <div class="form-group row">
+              <label class="col-md-6 col-form-label no-padding" for="clearDatabase">Clear Database</label>
+              <div class="col-md-6 col-checkbox">
+                <div class="custom-control custom-checkbox">
+                  <input [(ngModel)]=this.restartOptionsRequest.clearDatabase class="mt11 custom-control custom-checkbox"
+                         id="clearDatabase"
+                         type="checkbox">
+                  <label class="custom-control-label" for="clearDatabase"></label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-6 col-form-label no-padding" for="removeLicense">Remove License</label>
+              <div class="col-md-6 col-checkbox">
+                <div class="custom-control custom-checkbox">
+                  <input [(ngModel)]=this.restartOptionsRequest.removeLicense (change)="toggleRemoveLicense()" class="mt11 custom-control custom-checkbox"
+                         id="removeLicense" type="checkbox">
+                  <label class="custom-control-label" for="removeLicense"></label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-6 col-form-label">Server Restart Mode</label>
+              <div class="col-sm-6">
+                <select [(ngModel)]="restartOptionsRequest.restartServerMode" class="form-control">
+                  <option *ngFor="let restartServerMode of restartServerModes"
+                          [ngValue]="restartServerMode">{{ RESTART_SERVER_MODES[restartServerMode].displayName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          <button (click)="requestRestart()" class="btn btn-outline-dark" data-dismiss="modal">OK</button>
+          <button class="btn btn-outline-dark" data-dismiss="modal" (click)="resetRestartValue()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- // Modal Shutdown System Contorls-->
+  <div aria-hidden="true" aria-labelledby="shutdownModal" class="modal fade shutdownModal modal-holder"
+       id="shutdownModal"
+       role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <form class="form-horizontal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ restartGuideBuilderTitle }}</h5>
+            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <!-- end of modal header -->
+          <div class="modal-body shutdownModal-body">
+            <h5 class="card-title">Shutdown GuideBuilder Server?</h5>
+          </div>
+          <div class="modal-footer">
+            <button (click)="requestShutdown()" class="btn btn-outline-dark" data-dismiss="modal">OK</button>
+            <button class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

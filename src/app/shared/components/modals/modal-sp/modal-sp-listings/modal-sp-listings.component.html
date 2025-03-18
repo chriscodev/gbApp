@@ -1,0 +1,56 @@
+<!--
+  ~ Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<h5 class="card-header" style="padding-left:0px;">FTP Settings</h5>
+<div class="tab-content tabcontent-border triveniBorder" style="padding:10px;">
+  <div class="form-bottom">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label" for="callLetterField">Call Letters</label>
+      <div class="col-sm-2">
+        <input
+          (input)="inputSettings()"
+          (keydown)="validateLowerCaseOnly($event)"
+          (keyup)="updateUserPassword()"
+          [(ngModel)]="callLetters"
+          class="form-control l"
+          id="callLetterField"
+          type="text"
+        />
+      </div>
+      <div class="col-sm-1 validImage">
+        <span
+        ><i
+          [ngClass]="callLetters?.length > 0 ? 'text-success' : ''"
+          aria-hidden="true"
+          class="fa fa-check-circle"
+        ></i
+        ></span>
+      </div>
+
+      <div class="col-md-3">
+        <button
+          (click)="doTestConnection()"
+          [disabled]="!callLettersValid"
+          class="btn btn-sm"
+          data-backdrop="static"
+          data-keyboard="false"
+          data-target="#testConnectionModal"
+          data-toggle="modal"
+        >
+          Test Connection
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-sp-testconnection (testConnectionClosed)="testConnectionClosedHandler($event)"
+                             *ngIf="showTestConnection"
+                             [scheduleProvider]="localScheduleProvider"
+                             [showTestConnection]="showTestConnection">
+</app-modal-sp-testconnection>
+
+<app-modal-sp-schedule-download-settings
+  [scheduleProvider]="localScheduleProvider">
+</app-modal-sp-schedule-download-settings>

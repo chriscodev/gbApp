@@ -1,0 +1,195 @@
+.actionButton{
+  top:5%;
+  position:absolute;
+  width:20%;
+}
+.tableButton {
+  float: right;
+}
+.pull-left {
+  float: left !important;
+}
+
+button.btnFormat.btnWidth {
+  width: 100%;
+}
+
+.nav-tabs .nav-link.active {
+  color: #5a6364;
+}
+
+a {
+  color: black;
+}
+
+.activity-table {
+  float: left;
+
+}
+
+fieldset {
+  border-width: 2px;
+  border-style: groove;
+  border-color: threedface;
+  border-image: initial;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+legend {
+  width: auto;
+  margin-left: 5px;
+  margin-bottom: 0;
+}
+
+#myModal_EventLogMessage .modal-body #myTabContent .tab-pane.fade {
+  display: none;
+}
+
+#myModal_EventLogMessage .modal-body #myTabContent .tab-pane.fade.show {
+  display: block !important;
+}
+
+.tabBorder {
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding-bottom: 10px;
+}
+
+.noBorder {
+  border: none;
+}
+
+.noBorderLeft {
+  border-left: none;
+}
+
+.noBorderRight {
+  border-right: none;
+}
+
+.noPad {
+  padding: 0;
+}
+
+#event .dataTables_wrapper .dataTables_filter {
+  float: left !important;
+  border-radius: 50rem!important;
+
+}
+#event .dataTables_wrapper .dataTables_filter input{
+  text-align: right;
+  border-radius: 50rem!important;
+  background-color: #241a1a!important;
+  background-clip: padding-box;
+  border: 1px solid #272c36;
+  width:auto;
+}
+
+#event .table-responsive {
+  overflow: hidden !important;
+}
+#event table.dataTable thead{
+  height:26px;
+  text-transform: uppercase;
+  background-color:#515454!important;
+}
+#event table {
+  display: inline-table;
+  overflow-x: hidden;
+
+  width: 100% !important;
+}
+
+.nav-tabs li.disabled a {
+  pointer-events: none;
+}
+.nav-tabs li.exception a {
+  color: red;
+}
+
+.form-control.exception {
+  color: red !important;
+}
+
+.nav-item.disabled {
+  background: transparent;
+  opacity: 0.5;
+}
+
+#mes {
+  color: #000;
+}
+#message{
+  width: 100%;
+}
+#exception{
+  width: 100%;
+
+}
+
+.mar5 {
+  margin-right: 5px !important;
+}
+
+.boxUpdates {
+  height: 20px;
+  padding: 4px;
+  font-size: 10px;
+  font-weight: normal;
+}
+
+
+.btnExportFiles {
+  margin-top: 33px;
+}
+
+
+.activity-table {
+  .dataTables_wrapper {
+    padding: 0px;
+  }
+
+  #DataTables_Table_1_wrapper {
+    position: absolute;
+  }
+
+  #DataTables_Table_1_filter {
+    position: absolute;
+  }
+}
+
+.tableFixHead {
+  overflow: auto;
+  height: 500px;
+
+}
+
+#event .dataTables_length label{
+  margin-left: 20px!important;
+}
+
+.tab-content{
+  height:auto;
+}
+
+
+.actionButton{
+  margin-top:10px;
+  margin-bottom:0px;
+  margin-left:5px;
+  min-width:20%;
+}
+.form-group {
+  margin:5px;
+}
+.actionButtons{
+  right: -1%;
+  position:absolute;
+  width:43%;
+}
+
+
+.tab-content {
+  height: auto;
+}

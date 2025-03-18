@@ -1,0 +1,32 @@
+.add-media-text {
+  color: #000000;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.media-upload-table {
+  font-size: 13px;
+  color: #222222;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-top: -10px;
+}
+.media-upload-table tbody > tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+.remove-media-txt {
+  color: #363636;
+  font-size: 13px;
+  cursor: pointer;
+}
+.first-progress {
+  height: 10px;
+  width: 100%;
+  background: #ddd;
+  border-radius: 4px;
+}
+.second-progress {
+  height: 10px;
+  background: #43ade5;
+  border-radius: 4px;
+}

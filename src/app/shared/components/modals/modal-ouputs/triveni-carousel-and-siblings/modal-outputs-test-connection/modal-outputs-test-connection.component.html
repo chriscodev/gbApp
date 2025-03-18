@@ -1,0 +1,67 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div
+        aria-hidden="true"
+        aria-labelledby="test-connection-modal"
+        class="modal fade"
+        data-backdrop="static"
+        data-keyboard="false"
+        id="test-connection-modal"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="test-connection-modal-title">
+                    {{ modalTitle }}
+                </h5>
+                <button (click)="closeModal()"
+                        aria-label="Close"
+                        class="close"
+                        data-dismiss="test-connection-modal"
+                        type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="p-20">
+                    <div class="form-bottom">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="output-address">Address</label>
+                            <div class="col-md-8">
+                                <input [value]="addressPortString"
+                                       class=" form-control l"
+                                       disabled
+                                       id="output-address"
+                                       name="output-address"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label">Test Status</label>
+                            <div class="col-md-3">
+                              <div [hidden]="!testLoading" class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                                <div [hidden]="testLoading" class="content-loader">
+                                    <i aria-hidden="true" class="fa fa-circle {{cssClass}} fa-2x"></i>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="modal-title">Test Connection Result</h4>
+                    <div class="form-group row p-20">
+                        <textarea class="w-100 text-danger form-control">{{ messageText }}</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button (click)="closeModal()"
+                        class="btn btn-default"
+                        type="button">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

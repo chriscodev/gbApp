@@ -1,0 +1,160 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div
+  aria-hidden="true"
+  aria-labelledby="myModalLabel"
+  class="modal fade"
+  id="channelModal"
+  role="dialog"
+  tabindex="-1"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{ modalTitle }}</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeModalNew()">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <h4 class="card-header">Channel Settings</h4>
+        <div class="tab-content tabcontent-border triveniBorder">
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Name</label>
+            <div class="col-md-4">
+              <input name="form-name" class=" form-control l" type="text"
+                     [(ngModel)]="localChannel.name">
+            </div>
+            <div class="col-sm-1 text-center">
+                            <span><i aria-hidden="true" class="mt10 fa fa-check-circle "
+                                     [ngClass]="localChannel.name?'text-success':''"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <app-select-timezone
+              [required]="true"
+              [icon]="isTimezone"
+              [data]="localChannel.timeZone"
+              [btnLabel]="'Select Timezone'"
+              (updateParent)="updateParentHandler($event)"
+            ></app-select-timezone>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Linked Transport</label>
+            <div class="col-md-4">
+              <input placeholder="Unlinked" name="form-linked" class=" form-control l" type="text"
+                     value="{{selectedLinkTransport?.name}}" disabled>
+            </div>
+            <div class="button-group col-md-3">
+              <button type="button" data-toggle="modal" data-target="#modalTransportLink"
+                      [disabled]="selectedLinkTransport !== null " (click)="linkTransport()"
+                      class="btn btn-default btnWidth btn-rounded linkButton">
+                Link
+              </button>
+              <button type="button" data-toggle="modal" data-target="#" data-backdrop="static"
+                      [disabled]=" selectedLinkTransport === null "
+                      data-keyboard="false" (click)="unlinkTransport()"
+                      class="btn btn-default btnWidth btn-rounded linkButton">
+                Unlink
+              </button>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="networkStream.networkType==='ATSC_CABLE'">
+            <label class="col-md-2 col-form-label">Modulation</label>
+            <div class="col-md-4">
+              <select class="form-control" [(ngModel)]="localChannel.modulation">
+                <option *ngFor="let modulation of modulations" [ngValue]="modulation">
+                  {{ MODULATION_TYPES[modulation].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <!-- start slide -->
+        <app-nav-slider
+          [headerTabs]=headerTabs
+          [activeId]=activeId
+          (activeIdChanged)=activeIdChangedHandler($event)
+        >
+        </app-nav-slider>
+        <div class="tab-content tabcontent-border">
+          <div class="content-table" [hidden]="activeId !== 1">
+            <app-modal-dynamic-tb-translate *ngIf="!isHiddenServiceTab"
+                                            [tableHeaders]=tableHeaders
+                                            [tableData]=localATSCChannelServices
+                                            [objectTableType]="'Channel-Services'"
+                                            [buttonList]=buttonList
+                                            [modalName]=modalNameService
+                                            [enableSearch]=true
+                                            [enableScroll]="true"
+                                            [multiSelect]=true
+                                            [showMoveRowSelection]="true"
+                                            [translateTableData]="translatedServices"
+                                            (rowClicked)="showSelectedRows()"
+                                            (buttonClicked)=onButtonClickedService($event)>
+            </app-modal-dynamic-tb-translate>
+          </div>
+
+          <div class="content-table" [hidden]="activeId !== 2">
+            <app-modal-dynamic-tb-translate *ngIf="isHiddenServiceTab"
+                                            [tableHeaders]=tableHeadersDescriptor
+                                            [tableData]=clonedDescriptorExtension
+                                            [objectTableType]="'Channel-Descriptors'"
+                                            [buttonList]=buttonList
+                                            [modalName]=modalNameDescriptor
+                                            [enableSearch]=true
+                                            [enableScroll]="true"
+                                            [multiSelect]=true
+                                            (buttonClicked)=onButtonClickedDescriptor($event)>
+            </app-modal-dynamic-tb-translate>
+          </div>
+        </div>
+
+
+        <!-- slide end -->
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-next" (click)="clickAddEditChannel()"
+                [disabled]="!(localChannel.name && isTimezone)"><i class="fa fas fa-check"></i> OK
+        </button>
+        <button type="button" class="btn btn-default" (click)="closeModalNew()"><i class="fa fas  fa-times"></i>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-modal-networks-descriptor *ngIf="isHiddenServiceTab && networkStream.networkType !== 'ATSC_3'"
+                                 (descriptorChanged)="descriptorChangeHandler($event)"
+                                 [descriptorEditMode]="descriptorEditMode"
+                                 [descriptors]="localATSCChannelDescriptors"
+                                 [descriptor]="currentDescriptor"
+                                 [sourceData]="'DescCallFromChannel'">
+  </app-modal-networks-descriptor>
+  <app-modal-networks-descriptor *ngIf="isHiddenServiceTab && networkStream.networkType === 'ATSC_3'"
+                                 (extensionChanged)="extensionChangeHandler($event)"
+                                 [extensionEditMode]="extensionEditMode"
+                                 [extensions]="localATSCChannelExtensions"
+                                 [extension]="currentExtension"
+                                 [sourceData]="'DescCallFromChannelExt'">
+  </app-modal-networks-descriptor>
+  <app-modal-networks-atsc-service *ngIf="!isHiddenServiceTab"
+                                   (serviceChanged)="serviceChangeHandler($event)"
+                                   (serviceLinkChanged)="serviceLinksChangedHandler($event)"
+                                   [serviceEditMode]="serviceEditMode"
+                                   [services]="localATSCChannelServices"
+                                   [service]="currentService"
+                                   [networkStream]="networkStream"
+                                   [channel]="localChannel"
+                                   [selectedTransport]="selectedLinkTransport"
+                                   [isMajorReplaceable]="isMajorReplaceable"
+                                   [activeTabs]="networkStream.networkType !== 'ATSC_3' ? 3 : 2"
+  >
+  </app-modal-networks-atsc-service>
+  <app-modal-networks-transport-link-program *ngIf="isFromChannel"
+                                             (transportLinkChanged)="transportLinkChangeHandler($event)"
+                                             [linkTransportData]="linkTransportData"
+                                             [sourceData]="'TransCallFromChannel'">
+  </app-modal-networks-transport-link-program>
+</div>

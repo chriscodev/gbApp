@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<ng-container *ngIf="headerTabs.length > 1">
+  <nav ngbNav #nav="ngbNav" [(activeId)]="activeId" class="nav-pills nav-justified" (navChange)="onNavChange($event)">
+    <ng-container *ngFor="let header of headerTabs">
+      <ng-container [ngbNavItem]="header.activeId" [disabled]="header?.disabled">
+        <a ngbNavLink [ngClass]="{'disabled':header?.disabled}">{{ header.tabName }}</a>
+      </ng-container>
+    </ng-container>
+    <div class="slider">
+      <div class="slider-identifier" [ngClass]="sliderBorder" [ngStyle]="sliderStyles"></div>
+    </div>
+  </nav>
+</ng-container>
+
+
+<ng-container *ngIf="headerTabs.length === 1">
+  <h4 class="card-title">
+    {{ headerTabs[0].tabName }}
+  </h4>
+</ng-container>

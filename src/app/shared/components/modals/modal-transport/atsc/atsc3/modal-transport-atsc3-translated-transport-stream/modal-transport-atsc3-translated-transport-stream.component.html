@@ -1,0 +1,93 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div>
+  <div class="table-bordered  triveniBorder ">
+    <div class="tab-content">
+      <h5 class="card-title align-content-center">Settings</h5>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Original Transport</label>
+        <div class="col-sm-3">
+          <input
+            class="form-control l"
+            placeholder='unlinked'
+            type="text"
+            value="{{ transportName }}"/>
+        </div>
+        <div class="col-sm-2 row">
+          <button (click)="openModalLinkTransport()"
+                  [disabled]="transportName!==null"
+                  class="btn btn-default btnWidth btn-rounded linkButton" data-target="#modalTransportLink"
+                  data-toggle="modal" type="button"> Link
+          </button>
+        </div>&nbsp;&nbsp;
+        <div class="col-sm-2 row">
+          <button (click)="openWarningModal()" [disabled]="transportName===null"
+                  class="btn btn-default btnWidth btn-rounded linkButton" type="button"> Unlink
+          </button>
+        </div>&nbsp;&nbsp;
+      </div>
+      <div class="row">
+        <br/>
+      </div>
+      <div class="tab-content tabcontent-border triveniBorder" style="padding:15px;">
+        <div class="form-group row">
+          <h5 class="card-title align-content-center" style="padding-left:20px;">Targets</h5>
+          <app-modal-dynamic-tb-translate
+            (buttonClicked)="onButtonClicked($event)"
+            [buttonList]="buttonList"
+            [enableSearch]="true"
+            [modalName]="modalName"
+            [multiSelect]="true"
+            [objectTitle]="'Targets'"
+            [objectTableType]="'ATSC3-Translated-Targets'"
+            [tableData]="localATSC3TranslatorTargets"
+            [tableHeaders]="tableHeaders">
+          </app-modal-dynamic-tb-translate>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" id="translatedTargetModal" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{ modalTitle }}</h5>
+        <button type="button" (click)="closeModal()"
+                class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label">Target Id</label>
+          <div class="col-md-6">
+            <input
+              [(ngModel)]="currentTranslatedTarget.targetId"
+              class=" form-control l"
+              maxlength="5"
+              name="form-first-name"
+              title="Max value Input 65535"
+              type="text">
+          </div>
+          <div class="col-sm-1 validImage">
+            <span><i aria-hidden="true" class="fa fa-check-circle "
+                     [ngClass]="targetIdIconText"></i></span>
+            &nbsp;&nbsp;<label class="col-form-label"> {{ currentTranslatedTarget.targetId }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" (click)="addUpdateTargetData()">Ok</button>
+        <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-atsc3-view-transports-list
+  [serverATSC3Transports]="serverATSC3Transports"
+  (transportRecordChanged)="transportChangeHandler($event)">
+</app-modal-atsc3-view-transports-list>

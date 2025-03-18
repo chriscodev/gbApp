@@ -1,0 +1,117 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="modalElemStream"
+        role="dialog"
+        tabindex="-1"
+>
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">{{ modalTitle }}</h5>
+                <button
+                        (click)="closeModal()"
+                        aria-label="Close"
+                        class="close"
+                        type="button"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <br/>
+                <ng-container *ngIf="initialPage">
+                    <div class="card nopad-top">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="form-PID"
+                            >PID</label
+                            >
+                            <div class="col-md-7">
+                                <input
+                                        (input)="inputPid()"
+                                        (keydown)="onKeydown($event)"
+                                        (keypress)="numberOnly($event)"
+                                        [(ngModel)]="localElementaryStream.pid"
+                                        appBlockCopyPaste
+                                        autocomplete="off"
+                                        class="form-control tooltip-test"
+                                        id="form-PID"
+                                        maxlength="10"
+                                        title="Max value 1-2147483647"
+                                        type="number"
+                                />
+                                <div *ngIf="pidExists" class="retype">PID already exists</div>
+                            </div>
+                            <div class="col-md-1">
+                                <label class="col-form-label">{{numberToHex(localElementaryStream.pid)}}</label>
+                            </div>
+                            <div class="col-sm-1 text-center">
+                                <span><i [ngClass]="iconTextPID" aria-hidden="true"
+                                         class="fa fa-check-circle"></i></span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-sm-3" for="streamType">Stream Type</label>
+                            <div class="col-md-7">
+                                <select (change)="onChangeStreamType()"
+                                        [(ngModel)]="localElementaryStream.streamType"
+                                        [disabled]="editMode"
+                                        class="form-control"
+                                        id="streamType">
+                                    <option *ngFor="let elementaryStreamType of elementaryStreamTypes"
+                                            [ngValue]="elementaryStreamType"> {{ ELEMENTARY_STREAM_TYPES[elementaryStreamType].displayName }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!initialPage">
+                    <app-modal-transport-ac3-elem-stream
+                            (okButtonEnabledChanged)="ac3OkButtonChange($event)"
+                            [ac3ElementaryStream]="localAC3ElementaryStream"
+                            [elementaryStreams]="elementaryStreams"
+                            [editMode]="editMode">
+                    </app-modal-transport-ac3-elem-stream>
+                </ng-container>
+            </div>
+            <div class="modal-footer">
+                <button
+                        (click)="clickPrev()"
+                        [hidden]="initialPage"
+                        class="btn btn-default btn-prev"
+                        type="button">
+                    <i class="fa fas fa-chevron-left"></i>
+                    Prev
+                </button>
+
+                <button
+                        (click)="clickNext()"
+                        [disabled]="ac3NextDisabled"
+                        [hidden]="!initialPage"
+                        class="btn btn-default btn-next"
+                        type="button">
+                    <i class="fa fas fa-chevron-right"></i>
+                    Next
+                </button>
+                <button
+                        (click)="addUpdateElementaryStream()"
+                        [disabled]="!okButtonEnabled"
+                        class="btn btn-default btn-next"
+                        type="button">
+                    <i class="fa fas fa-plus"></i> {{editMode ? 'Update' : 'Add'}}
+                </button>
+                <button
+                        (click)="closeModal()"
+                        class="btn btn-default"
+                        type="button">
+                    <i class="fa fas  fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

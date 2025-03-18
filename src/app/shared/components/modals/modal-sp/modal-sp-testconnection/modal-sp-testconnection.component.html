@@ -1,0 +1,199 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div
+  aria-hidden="true"
+  aria-labelledby="myModalLabel"
+  class="modal fade"
+  id="testConnectionModal"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-xs">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }} </h5>
+          <button (click)="closeModal()" aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <ng-container *ngIf="ftpBaseTest">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="hostField">Host</label>
+              <div class="col-md-5">
+                <input
+                  [(ngModel)]="scheduleProvider.host"
+                  autocomplete="off"
+                  class="form-control l"
+                  disabled
+                  id="hostField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="portField">Port</label>
+              <div class="col-md-5">
+                <input
+                  [(ngModel)]="scheduleProvider.port"
+                  autocomplete="off"
+                  class="form-control l"
+                  disabled
+                  id="portField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="pathField">Directory</label>
+              <div class="col-md-5">
+                <input
+                  [(ngModel)]="scheduleProvider.path"
+                  autocomplete="off"
+                  class="form-control"
+                  disabled
+                  id="pathField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="userField">Username</label>
+              <div class="col-md-5">
+                <input
+                  [(ngModel)]="scheduleProvider.user"
+                  autocomplete="disabled"
+                  class="form-control"
+                  disabled
+                  id="userField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="passwordField">Password</label>
+              <div class="col-md-5">
+                <input
+                  [(ngModel)]="scheduleProvider.password"
+                  autocomplete="disabled"
+                  class="form-control l"
+                  disabled
+                  id="passwordField"
+                  type="{{ !showPassword ? 'password' : 'text' }}"
+                />
+              </div>
+              <div class="col-sm-3 text-left">
+                                <span (click)="togglePass()"><i aria-hidden="true" class="fa fa-eye"></i>
+                                  {{ !showPassword ? "Show pass" : "Hide pass" }}</span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="form-first-name">Test Status </label>
+              <div class="col-md-5">
+                <div [hidden]="!loading" class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div [hidden]="loading" class="content-loader">
+                  <i aria-hidden="true" class="fa fa-circle text-{{ cssClass }} fa-2x"></i>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="graceNoteTest">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="graceNoteTestConnectionAddressField">Address</label>
+              <div class="col-md-9">
+                <input
+                  [(ngModel)]="testConnectionAddress"
+                  autocomplete="off"
+                  class="form-control l"
+                  disabled
+                  id="graceNoteTestConnectionAddressField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="form-first-name">Test Status </label>
+              <div class="col-md-9">
+                <div [hidden]="!loading" class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div [hidden]="loading" class="content-loader">
+                  <i aria-hidden="true" class="fa fa-circle text-{{ cssClass }} fa-2x"
+                  ></i>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="pmcpTcpTest">
+            <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="pmcpTcpTestConnectionAddressField">Port</label>
+              <div class="col-md-9">
+                <input
+                  [(ngModel)]="scheduleProvider.port"
+                  autocomplete="off"
+                  class="form-control l"
+                  disabled
+                  id="pmcpTcpTestConnectionAddressField"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="form-first-name">Test Status </label>
+              <div class="col-md-3">
+                <div [hidden]="!loading" class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div [hidden]="loading" class="content-loader">
+                  <i aria-hidden="true" class="fa fa-circle text-{{ cssClass }} fa-2x"
+                  ></i>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </ng-container>
+          <h5 class="card-header">Test Connection Result</h5>
+          <div class="table-bordered tabcontent-border triveniBorder"
+               style="min-height:300px;height:auto;">
+            <div class="form-group row">
+              <div [hidden]="tableHide"
+                   class="content-table table-responsive col-md-10">
+                <ng-container *ngIf="ftpBaseTest">
+                  <div *ngIf="!tableHide" class="">
+                    <p class="text-{{ cssClass }}">{{ errorMessage }}</p>
+                  </div>
+                  <app-modal-dynamic-tb-translate
+                    [buttonList]="buttonList"
+                    [enableSearch]="true"
+                    [tableData]="ftpFiles"
+                    [tableHeaders]="tableHeaders"
+                    [enableScroll]="true"
+                    [tableMaxHeight]="tableMaxHeight">
+                  </app-modal-dynamic-tb-translate>
+                </ng-container>
+                <ng-container *ngIf="!ftpBaseTest">
+                  <div class="p-20">
+                    {{ onConnectMessage }}
+                  </div>
+                </ng-container>
+              </div>
+              <div [hidden]="!tableHide" class="message col-md-12">
+                <label class="col-form-label" for="form-first-name">Error Message</label>
+                <div class="clearfix"></div>
+                <textarea
+                  class="w-100 text-danger form-control"
+                  id="form-first-name"
+                >{{ errorMessage }}</textarea>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

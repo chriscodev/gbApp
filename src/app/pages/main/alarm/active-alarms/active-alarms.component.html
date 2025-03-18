@@ -1,0 +1,25 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Active Alarms</h4>
+  </div>
+  <br/>
+  <div class="col-md-12">
+    <div class="table-bordered tabcontent-border triveniBorder ">
+        <div class="content-table">
+          <app-modal-dynamic-tb-translate
+            [tableHeaders]="tableHeaders"
+            [tableData]="activeAlarms"
+            [buttonList]="buttonList"
+            [enableSearch]="true"
+            [enableScroll]="true"
+            [tableMaxHeight]="'460px'"
+            [objectTitle]="'Active Alarms'"
+            [objectTableType]="'Active-Alarms'">
+          </app-modal-dynamic-tb-translate>
+        </div>
+
+    </div>
+  </div>
+</div>

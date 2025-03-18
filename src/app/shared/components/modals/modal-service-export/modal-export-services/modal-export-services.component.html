@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<br/>
+<h4 class="card-header">Services</h4>
+<div class="tab-content tabcontent-border triveniBorder">
+  <div class="card-body-small">
+    <app-modal-dynamic-tb-translate
+      [objectTableType]="'add-service-links'"
+      [tableData]="localServiceExportLinks"
+      [tableHeaders]="tableHeaders"
+      [buttonList]="buttonList"
+      [enableScroll]="true"
+      [enableSearch]="true"
+      [multiSelect]="true"
+      [modalName]=modalName
+      (buttonClicked)="onButtonClicked($event)">
+    </app-modal-dynamic-tb-translate>
+  </div>
+</div>
+
+<app-modal-service-export-list
+  [currentExportProfile]="currentExportProfile"
+  [serviceLinksList]="serviceLinksList"
+  (serviceLinksChanged)="serviceLinksHandler($event)">
+</app-modal-service-export-list>

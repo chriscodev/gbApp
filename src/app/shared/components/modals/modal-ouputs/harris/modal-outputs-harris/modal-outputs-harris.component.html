@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="ipAddressField">Address</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()"
+           [(ngModel)]="slotMuxOutput.outputAddress"
+           appIpAddress
+           class="form-control l"
+           id="ipAddressField"
+           placeholder="0.0.0.0"
+           type="text">
+  </div>
+  <div class="col-sm-1 validImage">
+    <span><i [ngClass]="ipAddressIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+  </div>
+  <div class="col-md-4">
+    <button (click)="testConnection()"
+            [disabled]="!okEnabled"
+            class="btn btn-sm"
+            data-target="#test-connection-modal"
+            data-toggle="modal">
+      Test Connection
+    </button>
+  </div>
+</div>
+<div class="row form-group">
+  <label class="col-md-2 col-form-label" for="slotIdField">Slot ID</label>
+  <div class="col-md-4">
+    <select [(ngModel)]="slotMuxOutput.slotId" class="form-control"
+            id="slotIdField">
+      <option *ngFor="let slot of slots" [ngValue]="slot"> {{ slot }}
+      </option>
+    </select>
+  </div>
+</div>
+<div class="row">
+  <label class="col-md-2 col-form-label" for="multiplexerIdField">Multiplexer ID</label>
+  <div class="col-md-4">
+    <input (input)="inputSettings()" [(ngModel)]="slotMuxOutput.multiplexerId" class="form-control l"
+           id="multiplexerIdField"
+           type="text"/>
+  </div>
+  <div class="col-md-1 validImage ">
+    <span><i [ngClass]="muxIdIconText" aria-hidden="true" class="fa fa-check-circle "></i></span>
+  </div>
+</div>
+<app-modal-outputs-transport-select
+  [output]="output"
+  [selectedTransport]="selectedTransport">
+</app-modal-outputs-transport-select>
+
+<app-modal-outputs-test-connection
+  (modalClosed)="closeModalEventHandler()"
+  *ngIf="showTestConnection"
+  [output]="slotMuxOutput">
+</app-modal-outputs-test-connection>
+

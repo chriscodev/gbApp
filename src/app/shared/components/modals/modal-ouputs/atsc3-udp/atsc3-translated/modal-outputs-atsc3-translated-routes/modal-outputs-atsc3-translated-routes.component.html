@@ -1,0 +1,100 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+<div aria-hidden="true" aria-labelledby="addTranslatedRoute" class="modal fade" data-backdrop="static"
+     data-keyboard="false" id="addTranslatedRoute" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalTitle }} </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="min-height:100px;">
+        <div class="row">
+          <label class="col-md-2 col-form-label" for="enabledField">Enable</label>
+          <div class="col-md-4">
+            <input (change)="inputSettings()"
+                   [(ngModel)]="currentRoute.enabled"
+                   class="mt10 custom-control custom-checkbox"
+                   id="enabledField"
+                   type="checkbox"/>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label">LLS Source Port</label>
+          <div class="col-md-4">
+            <input
+              (input)="inputSettings()"
+              [(ngModel)]="currentRoute.llsSrcPort"
+              class="form-control l"
+              numbersOnly
+              title="Value range 1025-65535"
+              type="number"/>
+          </div>
+          <div class="mt10 col-sm-1">
+            <i [ngClass]="llsPortIconText" aria-hidden="true"
+               class="fa fa-check-circle ">
+            </i>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-md-2 col-form-label">Select Translated Transport</label>
+          <div class="col-md-8">
+            <button (click)="addTranslatedTransport()"
+                    [disabled]="disableAdd"
+                    class="btn waves-effect waves-light btn-default  btn-rounded  m-1 "> &nbsp;
+              <i class="fa fa-plus"></i> Add
+            </button>
+            <button (click)="removeTransport()"
+                    [disabled]="!disableAdd"
+                    class="btn waves-effect waves-light btn-default  btn-rounded  m-1  ">&nbsp;
+              <i class="fa fa-trash"></i> Remove
+            </button>
+            <button (click)="viewSelectTransportMaterial()"
+                    [disabled]="!disableAdd"
+                    class="btn waves-effect waves-light btn-default  btn-rounded m-1  ">&nbsp;
+              <i class="fa fa-search"></i> View
+            </button>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Transport Name</label>
+            <div class="col-md-4" style="padding-top:5px;">
+              <input [value]="selectedTranslatedTransport !== null ? selectedTranslatedTransport?.name : '' "
+                     class="form-control" type="text" disabled/>
+            </div>
+            <div class="mt10 col-sm-1">
+              <i [ngClass]="transportIdIconText" aria-hidden="true"
+                 class="fa fa-check-circle ">
+              </i>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label">Transport TSID</label>
+            <div class="col-md-4" style="padding-top:5px;">
+              <input [value]="selectedTranslatedTransport !== null ? selectedTranslatedTransport?.tsid : '' "
+                     class="form-control" type="text" disabled/>
+            </div>
+            <div class="mt10 col-sm-1">
+              <i [ngClass]="transportIdIconText" aria-hidden="true"
+                 class="fa fa-check-circle ">
+              </i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-light" [disabled]="!okEnabled" (click)="addUpdateRoute()">Ok</button>
+        <button class="btn btn-outline-light" (click)="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-atsc3-view-transports-list
+  [serverATSC3Transports]="unusedTransports"
+  (transportRecordChanged)="transportChangeHandler($event)">
+</app-modal-atsc3-view-transports-list>
+<app-modal-outputs-view-selected-transports-material
+  (modalClosed)="closeModalHandler($event)"
+  [transport]="selectedTransport"
+  [mediaStreams]="mediaStreams">
+</app-modal-outputs-view-selected-transports-material>

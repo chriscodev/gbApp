@@ -1,0 +1,87 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+  class="modal fade"
+  id="modal-progress-bar"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal-progress-bar"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content"  *ngIf="progressBarData?.type !== ProgressBarType.ERROR">
+      <div class="modal-header">
+        <h5 class="modal-title" >{{progressBarData?.type === ProgressBarType.IMPORT ? 'Uploading': progressBarData?.type === ProgressBarType.EXPORT ? 'Exporting': 'Downloading'}} File</h5>
+        <button
+          (click)="closeProgressBarModal()"
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="m-3">
+          <h2 class="text-center">{{progressBarData?.type === ProgressBarType.IMPORT ? 'Uploading': progressBarData?.type === ProgressBarType.EXPORT ? 'Exporting': 'Downloading'}} File. Please wait...</h2>
+          <!-- <h3 class="text-center">Total uploaded: {{progressBarData?.loaded}}/{{progressBarData?.total}}</h3>-->
+          <div class="progress">
+            <div class="progress-bar progress-bar-animated"
+                 [ngClass]="{
+                       'bg-danger': progressBarData?.progress === 0,
+                       'bg-warning': progressBarData?.progress > 0 && progressBarData?.progress < 100,
+                       'bg-success': progressBarData?.progress === 100
+                    }"
+                 role="progressbar"
+                 [style.width]="progressBarData?.progress + '%'"
+                 [attr.aria-valuenow]="progressBarData?.progress"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+              {{progressBarData?.progress}}%
+            </div>
+          </div>
+          <h5 class="mt-5">File name: {{progressBarData?.fileName}}</h5>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-content" *ngIf="progressBarData?.type === ProgressBarType.ERROR">
+      <div class="modal-header">
+        <h5 class="modal-title" >Error Importing File</h5>
+        <button
+          (click)="closeProgressBarModal()"
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="m-3">
+          <h4 class="text-center">{{progressBarData?.resultReturn?.errorDetails}}</h4>
+          <div class="progress">
+            <div class="progress-bar progress-bar-animated"
+                 [ngClass]="{
+                       'bg-danger': progressBarData?.progress === 0,
+                       'bg-warning': progressBarData?.progress > 0 && progressBarData?.progress < 100,
+                       'bg-success': progressBarData?.progress === 100
+                    }"
+                 role="progressbar"
+                 [style.width]="progressBarData?.progress + '%'"
+                 [attr.aria-valuenow]="progressBarData?.progress"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+              {{progressBarData?.progress}}%
+            </div>
+          </div>
+          <h5 class="mt-5">File name: {{progressBarData?.fileName}}</h5>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

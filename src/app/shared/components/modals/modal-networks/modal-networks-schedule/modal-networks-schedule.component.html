@@ -1,0 +1,36 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="modal hide fade" id="modalSchedSources" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <form class="form-horizontal ">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Select a Schedule</h5>
+          <button (click)="closeModal()" type="button" class="close" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <fieldset class="tabcontent-border">
+            <app-modal-dynamic-tb-translate
+              [tableHeaders]=tableHeaders
+              [tableData]=scheduleList
+              [objectTableType]="'Service-Schedule-Sources'"
+              [buttonList]=buttonList
+              [enableSearch]=true
+              [enableScroll]="true"
+              [modalName]="modalViewSched"
+              [pagination]=true
+              (buttonClicked)=onButtonClicked($event)>
+            </app-modal-dynamic-tb-translate>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+<app-modal-view-schedule
+  *ngIf="openModalViewSchedule"
+  [schedule]="selectedSchedule"
+></app-modal-view-schedule>

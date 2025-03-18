@@ -1,0 +1,460 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+  aria-hidden="true"
+  aria-labelledby="myModalLabel"
+  class="modal fade"
+  id="modalAddDescriptors"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ modalDescriptorTitle }}</h5>
+        <button (click)="closeModalNew()"
+                aria-label="Close"
+                class="close"
+                type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="descriptorExtensionType === 'default'">
+          <div class="form-group row">
+            <label *ngIf="dataSourceDesc!=='DescCallFromChannelExt' && dataSourceDesc!=='DescCallFromServiceExt'"
+                   class="col-md-3 col-form-label">Descriptor Type</label>
+            <label *ngIf="dataSourceDesc==='DescCallFromChannelExt' || dataSourceDesc==='DescCallFromServiceExt'"
+                   class="col-md-3 col-form-label">Extension Type</label>
+            <div class="col-md-9">
+              <select [(ngModel)]="networksDataObject['selectedDescriptorType']">
+                <option *ngFor="let type of descriptorTypes; let i = index;" [ngValue]="type"
+                        [innerHtml]="descriptorIcons[i]">
+                </option>
+              </select>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'ATSC'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Format Identifier</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-control form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     maxlength='4' (keyup)="allowAnyInput($event)" [(ngModel)]="localDescriptor.formatIdentifier">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Private Data (Hex Bytes)</label>
+            <div class="col-md-6">
+              <textarea name="" cols="10" rows="5" class="form-control descriptor" (keydown)="validateHexBytes($event)"
+                        [(ngModel)]="localDescriptor.privateData"></textarea>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'User'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">User Tag</label>
+            <div class="col-md-6">
+              <input title="Max value 254" name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     maxlength='3' (keyup)="convertToHex($event,'usertag',255)" (keydown)="validateInputs($event,25)"
+                     [(ngModel)]="localDescriptor.userTag">
+            </div>
+            {{ hexValueUserTag }}
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">User Defined Data (Hex Bytes)</label>
+            <div class="col-md-6">
+              <textarea name="" cols="10" rows="5" class="form-control descriptor" (keydown)="validateHexBytes($event)"
+                        [(ngModel)]="localDescriptor.payload"></textarea>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Conditional'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">System Id</label>
+            <div class="col-md-6">
+              <input title="Max value 65535" name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     maxlength='5' (keyup)="convertToHex($event,'id',65536)" (keydown)="validateInputs($event,6553)"
+                     [(ngModel)]="localDescriptor.systemId">
+            </div>
+            <div class="col-sm-1 text-center">
+                                <span><i aria-hidden="true" class="fa fa-check-circle "
+                                         [ngClass]="localDescriptor.systemId?'text-success':''"></i></span>
+            </div>
+            {{ hexValueId }}
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">PID</label>
+            <div class="col-md-6">
+              <input title="Max value 57344" name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     maxlength='5' (keyup)="convertToHex($event,'pid',57345)" (keydown)="validateInputs($event,5734)"
+                     [(ngModel)]="localDescriptor.pid">
+            </div>
+            <div class="col-sm-1 text-center">
+                                <span><i aria-hidden="true" class="fa fa-check-circle "
+                                         [ngClass]="localDescriptor.pid?'text-success':''"></i></span>
+            </div>
+            {{ hexValuePID }}
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Private Data</label>
+            <div class="col-md-6">
+              <textarea name="" cols="10" rows="5" class="form-control descriptor" (keydown)="validateHexBytes($event)"
+                        [(ngModel)]="localDescriptor.privateData"></textarea>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Extended'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Extended Channel Name</label>
+            <div class="col-md-6">
+              <input name="form-name" class=" form-input" type="text" (keyup)="allowExtended()"
+                     [(ngModel)]="localDescriptor.longChannelName">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Capabilities'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Capabilities</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.capabilities">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'DRM System Id'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">DRM System Id</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.drmSystemId">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Simulcast TSID'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">TSID</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste autocomplete="off" title="Max value 65535" name="form-name" class="form-input"
+                     type="text" pattern="/^-?\d+\.?\d*$/" maxlength='5' (keydown)="allowNumberOnly($event)"
+                     (keyup)="controlMaxLimit('tsid')" [(ngModel)]="localExtension.tsid">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="isTSIDInvalid ? 'fa fa-check-circle text-muted' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Service Id</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste autocomplete="off" title="Major-Minor" name="form-name" class=" form-input"
+                     type="text" maxlength="7" placeholder="Major-Minor" [(ngModel)]="localExtension.virtual"
+                     (keydown)="checkBackspace($event)" (keypress)="checkNumberWithDash($event)"
+                     (keyup)="validateVirtualChannel()">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Other BSID'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Type</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.otherType">
+                <option *ngFor="let bsidType of otherTypes" [ngValue]="bsidType" [innerHtml]="OTHER_BSID_TYPES[bsidType].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Essential</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.essential">
+                <option *ngFor="let essential of essentials" [ngValue]="essential"
+                        [innerHtml]="ESSENTIAL_TYPES[essential].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Other BSIDs</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste autocomplete="off" numbersOnly [numbersOnlyType]="'port'" title="Max value 65535"
+                     name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/" maxlength='5'
+                     (keyup)="checkOtherBSID()"
+                     [(ngModel)]="localExtension.otherBsids">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="checkSymbolInvalid ? 'fa fa-times-circle text-danger' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Genre'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Genre</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.genre">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Broadband Service Icon'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">URL</label>
+            <div class="col-md-8">
+              <input name="form-name" class="form-input" type="text" (keyup)="allowURL($event)"
+                     [(ngModel)]="localExtension.url">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="checkSymbolInvalid ? 'fa fa-times-circle text-danger' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Width</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste placeholder="optional" numbersOnly [numbersOnlyType]="'packetCount'"
+                     title="Max value 2147483647" name="form-name" class="form-input" type="text"
+                     pattern="/^-?\d+\.?\d*$/" maxlength='10' [(ngModel)]="localExtension.width">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Height</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste placeholder="optional" numbersOnly [numbersOnlyType]="'packetCount'"
+                     title="Max value 2147483647" name="form-name" class="form-input" type="text"
+                     pattern="/^-?\d+\.?\d*$/" maxlength='10' [(ngModel)]="localExtension.height">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">MIME Type</label>
+            <div class="col-md-8">
+              <input placeholder="based on file extension" name="form-name" class="form-input" type="text"
+                     pattern="/^-?\d+\.?\d*$/" [(ngModel)]="localExtension.mimeType">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Broadcast Service Icon'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Icon</label>
+            <div class="col-md-6">
+              <input readonly placeholder="None" name="form-name" class="form-input" type="text"
+                     pattern="/^-?\d+\.?\d*$/" [(ngModel)]="localExtension.url">
+            </div>
+            <div class="col-md-3">
+              <button type="button" data-toggle="modal" data-target="#linkIcon" data-backdrop="static"
+                      data-keyboard="false"
+                      (click)="linkIcon()"
+                      class="label btn waves-effect waves-light btn-rounded btn-dark btnFormat">
+                <i class="fa fa-link"></i> Link
+              </button>
+            </div>
+          </div>
+        </ng-container>
+        <div *ngIf="isShowEsgModal" class="modal fade" id="linkIcon" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Select a Preview Resource</h5>
+                <button type="button" class="close" (click)="cancelEsgPreviewModal()"><span
+                  aria-hidden="true">&times;</span></button>
+
+              </div>
+
+              <div class="modal-body">
+                <app-modal-dynamic-tb-translate
+                  [tableHeaders]=tableHeaders
+                  [tableData]=resourceData
+                  [objectTableType]="'XSLT'"
+                  [buttonList]=buttonList
+                  [enableSearch]=true
+                  [enableScroll]="true"
+                  [pagination]=false
+                  (buttonClicked)=onButtonClicked($event)>
+                </app-modal-dynamic-tb-translate>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-next" [disabled]="!isSelectedEsg"
+                        (click)="selectEsgPreview()"><i class="fa fas fa-check"></i> OK
+                </button>
+                <button type="button" class="btn btn-default" (click)="cancelEsgPreviewModal()"><i
+                  class="fa fas  fa-times"></i> Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="descriptorExtensionType === 'Base URL'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">URL</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.url">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Base Pattern'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">App Service Type</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.appServiceType">
+                <option *ngFor="let appType of appServiceTypes" [ngValue]="appType"
+                        [innerHtml]="APP_SERVICE_TYPE[appType].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Pattern</label>
+            <div class="col-md-8">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.pattern">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="(checkSymbolInvalid || !localExtension.pattern) ? 'fa fa-check-circle text-muted' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'User Defined ATSC3 Message'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Content Type</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste autocomplete="off" title="Max value 65535" name="form-name" class="form-input"
+                     type="text" pattern="/^-?\d+\.?\d*$/" maxlength='5' (keydown)="allowNumberOnly($event)"
+                     (keyup)="controlMaxLimit('atsc3Message')" [(ngModel)]="localExtension.contentType">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="(checkSymbolInvalid || !localExtension.contentType)? 'fa fa-check-circle text-muted' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">GZIP Compress</label>
+            <div class="col-md-1  fL col-form-label">
+              <input type="checkbox" [(ngModel)]="compression">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Hex Payload</label>
+            <div class="col-md-8">
+              <textarea appBlockCopyPaste name="" cols="10" rows="5" class="form-control descriptor"
+                        (keydown)="validateHexBytes($event,'atsc3Message')"
+                        [(ngModel)]="localExtension.hexPayload"></textarea>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'LCT Codepoint'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Codepoint</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste autocomplete="off" title="Value range 128 - 255" name="form-name"
+                     class="form-input" type="text" pattern="/^-?\d+\.?\d*$/" maxlength='3'
+                     (keydown)="allowNumberOnly($event)" (keyup)="controlMaxLimit('codePoint')"
+                     [(ngModel)]="localExtension.codePoint">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="checkSymbolInvalid ? (localExtension.codePoint.toString() !== '') ? 'fa fa-times-circle text-danger' : 'fa fa-check-circle text-muted' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">PayloadFormat</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.format">
+                <option *ngFor="let format of payloadFormats" [ngValue]="format"
+                        [innerHtml]="PAYLOAD_FORMATS[format].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Fragmentation</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.fragmentation">
+                <option *ngFor="let fragmentation of payloadFragmentations"
+                        [ngValue]="fragmentation" [innerHtml]="PAYLOAD_FRAGMENTATIONS[fragmentation].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">In Order</label>
+            <div class="col-md-1  fL col-form-label">
+              <input type="checkbox" [(ngModel)]="localExtension.inOrder">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'LCT CCI'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">CCI Payload (hex)</label>
+            <div class="col-md-8">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/" maxlength='8'
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.cci">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="(checkSymbolInvalid || !localExtension.cci) ? 'fa fa-check-circle text-muted' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Packet Count</label>
+            <div class="col-md-8">
+              <input appBlockCopyPaste numbersOnly [numbersOnlyType]="'packetCount'" title="Max value 2147483647"
+                     name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/" maxlength='10'
+                     [(ngModel)]="localExtension.count">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Language'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Language</label>
+            <div class="col-md-6">
+              <input name="form-name" class="form-input" type="text" pattern="/^-?\d+\.?\d*$/"
+                     (keyup)="allowAnyInput($event)" [(ngModel)]="localExtension.languageCode">
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="descriptorExtensionType === 'Broadband'">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Type</label>
+            <div class="col-md-8">
+              <select [(ngModel)]="localExtension.urlType">
+                <option *ngFor="let url of urlTypes" [ngValue]="url" [innerHtml]="INET_URL_TYPES[url].displayName">
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">URL</label>
+            <div class="col-md-8">
+              <input name="form-name" class="form-input" type="text" (keyup)="allowURL($event)"
+                     [(ngModel)]="localExtension.url">
+            </div>
+            <div class="col-sm-1 text-center col-form-label">
+              <span><i aria-hidden="true"
+                       [ngClass]="(checkSymbolInvalid || !localExtension.url) ? 'fa fa-times-circle text-danger' : 'fa fa-check-circle text-success' "></i></span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="closeModalNew()"><i class="fa fas  fa-times"></i> Cancel
+        </button>
+        <button type="button" *ngIf="networksDataObject['selectedDescriptorType'] !== 'Redistribution Control'"
+                class="btn btn-default btn-next" [hidden]="isHideOkButton"
+                (click)="clickPanel(networksDataObject['selectedDescriptorType'])"><i class="fa fas fa-check"></i> OK
+        </button>
+        <button type="button" *ngIf="networksDataObject['selectedDescriptorType'] === 'Redistribution Control'"
+                class="btn btn-default btn-next" [hidden]="isHideOkButton" (click)="clickAddEditDescriptor()"><i
+          class="fa fas fa-check"></i> OK
+        </button>
+        <button type="button" class="btn btn-default btn-next" [hidden]="isHideAddButton"
+                (click)="clickAddEditDescriptor()"
+                [disabled]="!(!checkSymbolInvalid && (localDescriptor && (localDescriptor.formatIdentifier || localDescriptor.userTag || localDescriptor.longChannelName || (localDescriptor.systemId && localDescriptor.pid)) || (localExtension && (localExtension.capabilities || localExtension.urlType || localExtension.url || localExtension.drmSystemId || localExtension.gsid || localExtension.tsid || localExtension.otherType || localExtension.genre || localExtension.pattern || localExtension.contentType || localExtension.codePoint || localExtension.languageCode || localExtension.cci))))">
+          <i class="fa fas fa-check"></i> {{ addUpdateButtonLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

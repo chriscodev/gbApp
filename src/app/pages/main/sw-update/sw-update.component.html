@@ -1,0 +1,140 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Software Update</h4>
+  </div>
+  <div class="active form-group">
+
+    <div class="tab-content tabcontent-border triveniBorder" style="min-height:400px;">
+      <br/>
+      <div class="content-table" style="min-height:400px;position:absolute;left:100px; width: 800px;">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="currentVersion">Current Version</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="currentVersion" readonly type="text"
+                   value="{{softwareVersionInfo?.currentVersion}}">
+          </div>
+        </div>
+        <div class=" form-group row">
+          <label class="col-sm-2 col-form-label" for="buildDate">Build Date</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="buildDate" readonly type="text" value="{{softwareVersionInfo?.buildDate}}">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label" for="entitledVersion">Entitled Version</label>
+          <div class="col-sm-4">
+            <input class="form-control" id="entitledVersion" readonly
+                   type="text"
+                   value="{{softwareVersionInfo?.entitledVersion}}">
+          </div>
+          <div class="col-md-6">
+            <button (click)="resetFileImport(fileInput)" class="btn btn-info btn-rounded btn-primary btn-dark btnFormat"
+                    type="button">Upload S/W Update
+              <input #fileInput (change)="onFileInput($event)" accept=".deb" style="display:none;" type="file"/>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal ADD UPDATE DELETE-->
+<div #myModal aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade modal-holder"
+     data-backdrop="static"
+     id="myModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Software Update Confirmation</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- end of modal header -->
+      <div class="modal-body  triveniBorder" style="height:350px;">
+        <h5 class="card-title" style="width:100%;">Install the selected Software Update {{ newSoftwareVersion }}?</h5>
+        <h5 class="card-title">Restart Options</h5>
+        <div>
+          <div class="form-group m-t-10 row">
+            <label class="col-6 col-form-label no-padding" for="purgeOldInstallation">Purge Old
+              Installation</label>
+            <div class="col-6 align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input (change)=togglePurge() [(ngModel)]=restartOptionsRequest.purgeInstallation
+                       class="custom-control-input"
+                       id="purgeOldInstallation"
+                       type="checkbox">
+              </div>
+            </div>
+          </div>
+          <div class="form-group m-t-10 row">
+            <label class="col-6 col-form-label no-padding" for="clearDatabase">Clear Database</label>
+            <div class="col-6 align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input [(ngModel)]=restartOptionsRequest.clearDatabase
+                       [disabled]=restartOptionsRequest.purgeInstallation class="custom-control-input"
+                       id="clearDatabase"
+                       type="checkbox">
+              </div>
+            </div>
+          </div>
+          <div class="form-group m-t-10 row">
+            <label class="col-6 col-form-label no-padding" for="removeLicense">Remove
+              License</label>
+            <div class="col-6 align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input (change)=toggleRemoveLicense() [(ngModel)]=restartOptionsRequest.removeLicense
+                       [disabled]="restartOptionsRequest.purgeInstallation"
+                       class="custom-control-input"
+                       id="removeLicense"
+                       type="checkbox">
+              </div>
+            </div>
+          </div>
+          <div class="form-group m-t-10 row">
+            <label class="col-6 col-form-label no-padding" for="rebootWhenComplete">Reboot When Complete</label>
+            <div class="col-6 align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input [(ngModel)]=restartOptionsRequest.rebootWhenComplete class="custom-control-input"
+                       id="rebootWhenComplete"
+                       type="checkbox"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-6 col-form-label">Server Restart Mode</label>
+            <div class="col-6">
+
+              <select [(ngModel)]=restartOptionsRequest.restartServerMode class="form-control"
+                      id="restartOptions">
+                <option
+                  *ngFor="let restartServerMode of restartServerModes"
+                  [ngValue]="restartServerMode">{{ RESTART_SERVER_MODES[restartServerMode].displayName }}</option>
+
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="doSoftwareUpdate()" class="btn btn-outline-dark" data-dismiss="modal">
+          OK
+        </button>
+        <button class="btn btn-outline-dark" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+      <!-- end of modal footer -->
+    </div>
+    <!-- end of modal content -->
+  </div>
+</div>
+
+<app-modal-progress-bar
+  (progressBarEmit)=fileProgressModalHandler()
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+></app-modal-progress-bar>

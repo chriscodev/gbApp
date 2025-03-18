@@ -1,0 +1,145 @@
+.form-group {
+  margin-bottom: 10px;
+}
+.btnFormat{
+  margin:0 2px!important;
+}
+
+.form-body{
+  padding:10px;
+}
+
+#dataElementModal{
+  overflow-y: auto;
+}
+.retype {
+  font-size: 12px;
+  color: red;
+}
+.media-legend{
+  font-size: 1rem;
+}
+.modal-body{
+  font-size:12px;
+}
+label.disabledLabel{
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+  opacity: .65;
+}
+:host ::ng-deep.mat-tab-label {
+  font-weight: bold;
+  opacity:1;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:20%;
+  //transition: background-color 0.2s ease-in-out;
+}
+
+.modal-footer{
+  margin-top:10px;
+}
+:host ::ng-deep .mat-tab-label-active {
+  font-weight: bold;
+  border-radius: 5px 5px 0 0;
+  padding: 10px;
+  opacity:1;
+  width:20%;
+  justify-content: center;
+  align-items: center;
+  background-color: #01c0c8;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+.mat-tab-group {
+  mat-align-tabs:start;
+
+}
+.row{
+  margin-left:10px;
+}
+.errorImageClass{
+  margin-top:12px;
+  padding-left:0px;
+}
+#summary{
+  padding-top:5px;
+}
+:host ::ng-deep.mat-tab-body-content-active {
+  padding-top:10px;
+  padding-left:20px;
+  height: 100%;
+  overflow: hidden;
+  border:solid 1px #01c0c8;
+}
+
+:host ::ng-deep.mat-tab-body-content {
+  padding-top:10px;
+  height: 100%;
+  overflow: hidden;
+  border:solid 1px #01c0c8;
+}
+
+::ng-deep .mat-tab-label {
+  width:120px!important;
+  padding: 28px !important;
+  justify-content: left !important;
+}
+.checkBoxPadding{
+  padding-left: 5px;
+  padding-right:10px;
+}
+::ng-deep .mat-tab-disabled{
+  color: #888;
+  width:120px!important;
+  pointer-events: none; /* This prevents clicks on the disabled label */
+}
+::ng-deep .mat-tab-label-active{
+  text-align: center;
+}
+.mat-slider {
+  width: 200px;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+::ng-deep.mat-slider-horizontal {
+  min-width: 128px;
+  height:0px!important;
+}
+::ng-deep.mat-slider-horizontal .mat-slider-track-wrapper {
+  border-radius: 10px;
+  height:15px!important;
+  border: 2px solid #CED4DA;
+}
+::ng-deep.mat-slider.mat-slider-horizontal .mat-slider-track-background .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+  height: 100%;
+}
+::ng-deep.mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+  background-color: #01c0c8;
+  height:15px;
+}
+::ng-deep.mat-accent .mat-slider-thumb {
+  height: 30px;
+  width: 30px;
+  background-color: #CED4DA;
+  border: solid 2px gray;
+  bottom: -20px;
+  right: -20px;
+}
+/*::ng-deep.mat-slider-horizontal .mat-slider-thumb-label-text{
+  display:none;
+}*/
+.sliderDiv{
+  padding-top: 12px;
+}
+.valid-Values span {
+  color:mediumseagreen;
+  padding-left:20px;
+}
+.btn:disabled {
+  color: #ECECEC;
+  opacity: change-color(grey);
+}

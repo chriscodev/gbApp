@@ -1,0 +1,197 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<script src="footer.component.ts"></script>
+<footer class="page-footer">
+  <hr class="footer-seperator"/>
+  <div class="row">
+    <div class="col-8">
+      <div class="system-info-wrapper">
+        <label class="fL mx-1"> &nbsp; © {{ currentDate | date:'yyyy' }} Triveni Digital </label>
+        <label class="fL mx-1"> <span class="fst-italic mx-1">user:</span> <strong>{{ userName }}</strong> </label>
+        <label class="fL mx-1"> <span class="fst-italic mx-1">privilege level:</span>
+          <strong>{{ privilegeLevel }}</strong>
+        </label>
+        <label class="fL mx-1"> <span class="fst-italic mx-1">system mode:</span>
+          <strong>{{ INIT_LEVELS[systemMode]?.displayName }}</strong>
+        </label>
+        <label class="fL"> <span class="fst-italic mx-1">system type:</span>
+          <strong>{{ SYSTEM_TYPES[systemType]?.displayName }}</strong> </label>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="fR pe-5 version-wrap">
+        <span class="mx-1">Version: {{ versionInfo?.currentVersion }}</span>
+        <span class="iconMedia mx-2" data-target="#mediaResourcesModal" data-toggle="modal"><i
+          class="ti-harddrives " title="Media Resources"></i></span>
+        <span class="iconMedia mx-2"><a (click)="onLinkClick($event)"><i
+          class="fa fa-file-pdf" style="color:white;" title="User Manual"></i></a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+     id="mediaResourcesModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Media Resources</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <input #fileInput (change)="addMediaResources($event)" [hidden]="true" type="file">
+          <app-nav-slider
+            (activeIdChanged)=activeIdChangedHandler($event)
+            [activeId]=activeId
+            [headerTabs]=headerTabs
+          ></app-nav-slider>
+          <!-- Tab panes -->
+          <div class="tab-content tabcontent-border">
+            <div class="tab-pane active" role="tabpanel">
+              <div class="clearfix"></div>
+              <div class="content-table">
+                <app-modal-dynamic-tb-translate
+                  (buttonClicked)=onButtonClickedFooter($event)
+                  (rowClicked)="clickResourceRow($event)"
+                  [buttonList]=buttonList
+                  [enableSearch]=true
+                  [multiSelect]=true
+                  [objectTableType]="'File'"
+                  [pagination]=false
+                  [tableData]=resourceFileNodes
+                  [tableHeaders]=tableHeaders>
+                </app-modal-dynamic-tb-translate>
+                <span class="file-count">{{ fileCountString }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+     id="editPropertiesModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Properties</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card-body">
+          <app-modal-simple-table
+            (buttonClicked)=onButtonClickedProps($event)
+            [buttonList]=buttonListProps
+            [columnIdentifier]="'key'"
+            [enableScroll]="true"
+            [enableSearch]="true"
+            [modalName]="'editProperties'"
+            [objectTableType]="'Properties'"
+            [tableData]=localProperties
+            [tableHeaders]=tableHeadersProps>
+          </app-modal-simple-table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+        <button (click)="showRestartConfirmation()" [disabled]="!propertiesDirty" class="btn btn-default" type="button">
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+     id="editPropertyModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Properties</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button"><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-4">
+            <label>{{ currentKey }}</label>
+          </div>
+          <div class="col-8">
+            <input [(ngModel)]="currentValue" class="form-control" type="text">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+        <button (click)="updateEditProperties()" class="btn btn-default" data-dismiss="modal" type="button">Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade modal-holder" id="restartSystemModal"
+     role="dialog" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ restartGuideBuilderTitle }}</h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="card-title">{{ restartGuideBuilderTitleHead }} GuideBuilder Server?</h5>
+        <fieldset>
+          <legend>{{ restartGuideBuilderTitleHead }} Options</legend>
+          <div class="form-group row">
+            <label class="col-6 col-form-label no-padding" for="clearDatabase">Clear Database</label>
+            <div class="col-6 col-checkbox align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input [(ngModel)]="restartOptionsRequest.clearDatabase" class="custom-control-input" id="clearDatabase"
+                       type="checkbox">
+                <label class="custom-control-label" for="clearDatabase"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-6 col-form-label no-padding" for="removeLicense">Remove License</label>
+            <div class="col-6 col-checkbox align-content-center">
+              <div class="custom-control custom-checkbox">
+                <input (change)="toggleRemoveLicense()" [(ngModel)]="restartOptionsRequest.removeLicense"
+                       class="custom-control-input" id="removeLicense" type="checkbox">
+                <label class="custom-control-label" for="removeLicense"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-6 col-form-label">Server Restart Mode</label>
+            <div class="col-6">
+              <select [(ngModel)]="restartOptionsRequest.restartServerMode" class="form-control">
+                <option *ngFor="let restartServerMode of restartServerModes" [ngValue]="restartServerMode">
+                  {{ RESTART_SERVER_MODES[restartServerMode].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      <div class="modal-footer">
+        <button (click)="updatePropsAndRestart()" class="btn btn-outline-dark" data-dismiss="modal">OK</button>
+        <button class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,302 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Service Export</h4>
+    <div class="row singleLayout">
+      <!-- COMMIT_REVERT COMPONENT-->
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <!--DYNAMIC TABLE COMPONENT WITH add,delete,update button
+  the list of fields including the dataChanged should exist in the parent component including this modal for implementation -->
+
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder" style="min-height:380px;">
+      <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          [tableHeaders]=tableHeaders
+          [tableData]="localExportProfiles"
+          [translateTableData]="translatedExportStatus"
+          [objectTitle]="'Service Export'"
+          [objectTableType]=objectType
+          [buttonList]=buttonList
+          [modalName]=modalName
+          [enableSearch]=true
+          [multiSelect]=true
+          (buttonClicked)=onButtonClicked($event)
+          (rowClicked)=onRowClicked($event)>
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+  </div>
+
+
+  <div aria-hidden="true"
+       aria-labelledby="exportProfileModalLabel"
+       class="modal fade"
+       data-backdrop="static"
+       data-keyboard="false"
+       id="exportProfileModal"
+       role="dialog"
+       tabindex="-1">
+    <div class="modal-dialog modal-lg" style="width:auto">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="titleLabel">{{ modalTitle }}</h5>
+          <button (click)="closeModal()"
+                  aria-label="Close"
+                  class="close"
+                  data-dismiss="modal"
+                  type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <ng-container *ngIf="initialPage">
+            <div class="form-bottom">
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="form-name">Name</label>
+                <div class="col-md-6">
+                  <input (keyup)="updateNameValid()"
+                         appNoSpecialChars
+                         [(ngModel)]="currentExportProfile.name"
+                         class="form-control l"
+                         id="form-name"
+                         type="text"/>
+                  <div *ngIf="nameExists" class="retype text-danger">Name already exists</div>
+                </div>
+                <div class="col-sm-1 validImage ">
+                                <span><i [ngClass]="nameIconText" aria-hidden="true"
+                                         class="fa fa-check-circle "></i></span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="form-online">Online</label>
+                <div class="col-md-6 fL col-form-label">
+                  <input [(ngModel)]="currentExportProfile.onLine"
+                         class="mt5 fL"
+                         id="form-online"
+                         type="checkbox"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="exportType">Type</label>
+                <div class="col-md-6">
+                  <select [(ngModel)]="currentExportProfile.type"
+                          [disabled]="editMode"
+                          (change)="onChangeExportType()"
+                          class="form-control" id="exportType">
+                    <option *ngFor="let exportType of exportTypes" [ngValue]="exportType">
+                      {{ EXPORT_TYPES[exportType].displayName }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">Transformer</label>
+                <div class="col-md-3 fL col-form-label">
+                  <input (input)="updateSettingsValid()" [(ngModel)]="currentExportProfile.XSLT"
+                         class="form-control" type="text" disabled/>
+                </div>
+                <div class="col-md-1 text-center" style="padding-top:10px;">
+                  <button
+                    (click)="doChooseTransformer()"
+                    class="btn btn-sm"
+                    data-backdrop="static"
+                    data-keyboard="false"
+                    data-target="#selectXSLTModal"
+                    data-toggle="modal">Choose
+                  </button>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">Interval</label>
+                <div class="col-md-1 fL col-form-label text-center">
+                  <button class="btn btn-default btn-prev" type="button" (click)="openSettings()">
+                    Settings
+                  </button>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">Days of Export</label>
+                <div class="col-md-6 fL col-form-label">
+                  <input type="number" class="form-control" style="font-size :10px;"
+                         (input)="updateSettingsValid()" [(ngModel)]="currentExportProfile.numberOfDaysToExport"/>
+                </div>
+                <div class="col-sm-1 validImage">
+                  <span><i [ngClass]="exportDaysIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!initialPage && showTCPExport">
+            <app-modal-tcp-export
+              (okEnabledChanged)="okEnabledChangedHandler($event)"
+              [currentExportProfile]="currentExportProfile">
+            </app-modal-tcp-export>
+          </ng-container>
+          <ng-container *ngIf="!initialPage && showFTPExport">
+            <app-modal-ftp-export
+              (okEnabledChanged)="okEnabledChangedHandler($event)"
+              [currentExportProfile]="currentExportProfile">
+            </app-modal-ftp-export>
+          </ng-container>
+          <ng-container *ngIf="!initialPage && showStreamScopeExport">
+            <app-modal-stream-scope-export
+              (okEnabledChanged)="okEnabledChangedHandler($event)"
+              [currentExportProfile]="currentExportProfile">
+            </app-modal-stream-scope-export>
+          </ng-container>
+        </div>
+
+        <!-- //FOOTER -->
+        <div class="modal-footer">
+          <button (click)="clickPrev()"
+                  [hidden]="initialPage"
+                  class="btn btn-default btn-prev"
+                  type="button">
+            <i class="fa fas fa-chevron-left"></i>
+            Prev
+          </button>
+          <button (click)="clickNext()"
+                  [disabled]="!initialPage || !nameValid"
+                  [hidden]="!initialPage"
+                  class="btn btn-default btn-next"
+                  type="button">
+            <i class="fa fas fa-chevron-right"></i>
+            Next
+          </button>
+
+          <button (click)="closeModal()"
+                  class="btn btn-default"
+                  data-dismiss="modal"
+                  type="button">
+            <i class="fa fas fa-times"></i>
+            Cancel
+          </button>
+          <button (click)="addUpdateCurrentExportProfile()"
+                  [disabled]="!addUpdateEnabled"
+                  class="btn btn-default btn-next"
+                  data-dismiss="modal"
+                  type="button">
+            <i [ngClass]="!editMode ? 'fa-plus' :'fa-check' "
+               class="fa fas"></i>{{ !editMode ? 'Add' : 'Update' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- status Modal-->
+  <div class="modal fade modal-holder" id="viewServiceExportStatus" tabindex="-1" role="dialog"
+       aria-labelledby="viewServiceExportStatus" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalStatusTitle }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body lg" style="min-height:200px;">
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Export State</label>
+            <div class="col-md-7">
+              <input type="text" class="form-control"
+                     value="{{currentExportStatus.exportState}}" disabled/>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Last Export Date</label>
+            <div class="col-md-7">
+              <input type="text" class="form-control"
+                     value="{{currentExportStatus?.lastExportTime |  date: 'EEE MMM dd hh:mm:ss a yyyy'}}" disabled/>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Status Message</label>
+            <div class="col-md-7">
+                <textarea
+                  id="form-StatueMessage"
+                  disabled="true"
+                  cols="3"
+                  rows="5"
+                  class="form-control"
+                  [(ngModel)]="currentExportStatus.lastExportMessage"
+                ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--Settings Modal-->
+  <div class="modal fade modal-holder" id="settingsModal" tabindex="-1" role="dialog"
+       aria-labelledby="settingsModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Set Interval Settings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Export Frequency</label>
+            <div class="col-sm-3">
+              <select (change)="updateExportFrequencyFields()"
+                      [(ngModel)]="currentExportProfile.exportFrequency"
+                      class="form-control"
+                      id="exportFrequency">
+                <option *ngFor="let exportFreq of exportFrequencies" [ngValue]="exportFreq">
+                  {{ EXPORT_FREQUENCY_TYPES[exportFreq].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Interval (minutes)</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="interval" placeholder="60"
+                     (input)="updateSettingsValid()"
+                     [(ngModel)]="currentExportProfile.intervalInMinutes"/>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Daily Export Time</label>
+            <div class="col-sm-3">
+              <input
+                (change)="updateSettingsValid()"
+                [(ngModel)]="currentExportProfile.initialTime"
+                class="form-control"
+                id="exportTime"
+                type="time">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-dismiss="modal" (click)="updateSettings()">Ok</button>
+          <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-sp-selectxslt
+  (xlstSelected)="xlstSelectedHandler($event)"
+  (xsltClosed)="xlstClosedHandler()"
+  *ngIf="showSelectTransformer">
+</app-modal-sp-selectxslt>

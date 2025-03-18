@@ -1,0 +1,74 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="form-bottom">
+  <div class="row">
+        <div class="col-md-2">
+            <label class="col-form-label text-start mt-left10">Enable PSI</label>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-1 fL col-form-label text-center">
+                    <input
+                            [(ngModel)]="localPSIPTransportStream.psiEnabled"
+                            type="checkbox"
+                    />
+                </div>
+                <div class="col-md-11 p-0">
+                    <button
+                            [disabled]="!localPSIPTransportStream.psiEnabled"
+                            class="btn btn-sm"
+                            data-target="#editPsiSettings" data-toggle="modal"
+                    >Edit PSI Settings
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-1"></div>
+                <div class="col-md-11 p-0">
+                    <button
+                            class="btn btn-sm"
+                            data-target="#editPsipTableSettings" data-toggle="modal">
+                        Edit PSIP Table Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    <h4 class="card-header">Programs</h4>
+    <div class="tab-content tabcontent-border triveniBorder" style="min-height:400px;">
+        <div class="content-table">
+            <app-modal-dynamic-tb-translate
+                    (buttonClicked)="onButtonClickedPrograms($event)"
+                    [buttonList]="buttonListProgram"
+                    [enableSearch]="true"
+                    [modalName]="modalNameProgram"
+                    [multiSelect]="true"
+                    [objectTableType]="objectTitleProgram"
+                    [tableData]="localPrograms"
+                    [tableHeaders]="tableHeadersProgram"
+            >
+            </app-modal-dynamic-tb-translate>
+        </div>
+    </div>
+    <app-modal-edit-psi-settings
+            (psiSettingsChanged)="psiChangedHandler($event)"
+            [psipTransportStream]="localPSIPTransportStream">
+    </app-modal-edit-psi-settings>
+
+    <app-modal-edit-psip-table-settings
+            (psipSettingsChanged)="psipChangedHandler($event)"
+            [psipTransportStream]="localPSIPTransportStream">
+    </app-modal-edit-psip-table-settings>
+
+    <app-modal-transport-add-edit-program
+            (programChanged)="programChangeHandler($event)"
+            [programEditMode]="editMode"
+            [programs]="localPrograms"
+            [program]="currentProgram">
+    </app-modal-transport-add-edit-program>
+</div>
+
+

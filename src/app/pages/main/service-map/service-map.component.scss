@@ -1,0 +1,39 @@
+// Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved.
+
+.dataTables_wrapper .dataTables_length {
+  margin-bottom: 0px !important;
+  border: none;
+}
+
+.dataTables_length {
+  width: 100%;
+}
+
+.dataTables_length label {
+  width: 100px;
+  position: relative;
+  float: left;
+  border: none;
+  display: inline-flex;
+}
+
+.dataTables_length select {
+  width: 100px;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: -5px 10px;
+  padding: 5px;
+}
+
+.dataTables_length label {
+  margin-left: 20px !important;
+}
+
+
+.txtLeft {
+  text-align: left !important;
+}
+
+
+

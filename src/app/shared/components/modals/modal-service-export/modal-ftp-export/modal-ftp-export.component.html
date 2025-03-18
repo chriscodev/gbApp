@@ -1,0 +1,116 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="hostField">Host</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      [(ngModel)]="currentExportProfile.host"
+      class="form-control l"
+      id="hostField"
+      type="text"
+    />
+  </div>
+  <div class="col-sm-1 validImage ">
+    <span><i [ngClass]="hostIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+  </div>
+  <label class="col-sm-2 col-form-label" for="userField">User Name</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      [(ngModel)]="currentExportProfile.user"
+      class="form-control l"
+      id="userField"
+      type="text"
+    />
+  </div>
+  <div class="col-sm-1 validImage">
+    <span><i [ngClass]="userIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+  </div>
+
+</div>
+<div class="form-group row">
+  <label class="col-sm-2 col-form-label" for="portField">Port</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      (keypress)="numberOnly($event)"
+      [(ngModel)]="currentExportProfile.port"
+      autocomplete="disabled"
+      class="form-control l"
+      id="portField"
+      placeholder="21"
+      title="Value range 1-65535"
+      type="number"
+    />
+  </div>
+  <div class="col-sm-1 validImage ">
+    <i [ngClass]="portIconText" aria-hidden="true" class="fa fa-check-circle"></i>
+  </div>
+  <label class="col-sm-2 col-form-label" for="passwordField">Password</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      [(ngModel)]="currentExportProfile.password"
+      autoComplete="new-password"
+      class="form-control l"
+      id="passwordField"
+      type="{{ !shown ? 'password' : 'text' }}"
+    />
+  </div>
+  <div class="col-sm-1 validImage">
+    <i [ngClass]="passwordIconText" aria-hidden="true" class="fa fa-check-circle"></i>&nbsp;&nbsp;
+    <span (click)="togglePass()">
+      <i aria-hidden="true"
+         class="fa {{!shown ? 'fa-eye' : 'fa-eye-slash'}}"></i></span>
+  </div>
+</div>
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="directoryField">Directory</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      [(ngModel)]="currentExportProfile.path"
+      class="form-control l"
+      id="directoryField"
+      type="text"
+    />
+  </div>
+  <div class=" col-sm-1 validImage">
+    <i [ngClass]="pathIconText" aria-hidden="true" class="fa fa-check-circle"></i>
+  </div>
+  <label class="col-md-2 col-form-label" for="directoryField">File Name</label>
+  <div class="col-md-3">
+    <input
+      (input)="inputSettings()"
+      [(ngModel)]="currentExportProfile.fileName"
+      class="form-control l"
+      type="text"
+    />
+  </div>
+  <div class="col-sm-1 validImage">
+    <i [ngClass]="fileNameIconText" aria-hidden="true" class="fa fa-check-circle"></i>
+  </div>
+</div>
+<div class="col-md-4 fL col-form-label text-center">
+  <button type="button" (click)="doTestConnection()"
+          class="btn btn-sm"
+          data-backdrop="static"
+          data-keyboard="false"
+          data-target="#testFTPConnectionModal"
+          data-toggle="modal">
+    Test Connection
+  </button>
+</div>
+<br/>
+<app-modal-export-services
+  [currentExportProfile]="currentExportProfile"
+  (serviceLinksChanged)="serviceLinksHandler($event)">
+</app-modal-export-services>
+<app-modal-ftp-test-connection (testConnectionClosed)="testConnectionClosedHandler($event)"
+                               *ngIf="showTestConnection"
+                               [currentExportProfile]="currentExportProfile"
+                               [showTestConnection]="showTestConnection">
+</app-modal-ftp-test-connection>

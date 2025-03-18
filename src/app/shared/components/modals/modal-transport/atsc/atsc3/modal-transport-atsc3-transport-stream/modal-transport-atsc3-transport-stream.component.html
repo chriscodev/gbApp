@@ -1,0 +1,24 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+<div>
+  <!-- dynamic nav -->
+  <app-nav-slider
+    [headerTabs] = headerTabs
+    [activeId] = activeId
+    (activeIdChanged) = activeIdChangedHandler($event)
+  >
+  </app-nav-slider>
+  <div class="tab-content tabcontent-border p-20" style="min-height:400px;overflow-y:auto;">
+    <div class="content-table" [hidden]="activeId !==1">
+      <app-modal-transport-service-group
+        (serviceGroupChanged)="serviceGroupChangeHandler($event)"
+        [atsc3TransportStream]="atsc3TransportStream">
+      </app-modal-transport-service-group>
+    </div>
+    <div class="content-table" [hidden]="activeId !== 2">
+      <app-modal-transport-select-extension-type
+        (tableExtensionsChanged)="extensionChangeHandler($event)"
+        [atsc3TransportStream]="atsc3TransportStream">
+      </app-modal-transport-select-extension-type>
+    </div>
+  </div>
+ </div>

@@ -1,0 +1,240 @@
+/*!
+ * Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+ */
+
+@import '../../../../assets/eliteadmin/dist/css/pages/login-register-lock.css';
+
+#main-logo {
+  width: 150px;
+}
+
+.header-seperator {
+  width: 100%;
+  color: white;
+  height: 3px;
+  padding-bottom: 0px;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.headerIcons {
+  color: white;
+  padding-right: 10px;
+  paddding-top: 5px;
+}
+
+.rightIcon {
+  padding: 20px;
+}
+
+.topbar .top-navbar .navbar-header {
+  background-color: #fff;
+}
+
+.logbar {
+  width: 460px;
+  padding-left: 10px;
+  height: auto;
+}
+
+/*.middlebar{
+  position:absolute;
+  left: 50%;
+  top:20px;
+}
+*/
+
+.navbar-header {
+  position: fixed;
+  background-color: #2b2b2b;
+  width: 100%;
+  padding-bottom: 0px;
+}
+
+.collapsenavbar {
+  position: absolute;
+  left: 235px;
+  top: 20px;
+  color: white;
+}
+
+.signoutbar {
+  position: absolute;
+  right: 1%;
+  color: white;
+  top: 12px;
+  padding-top: 5px;
+  width: 4%;
+}
+
+.userCount {
+  font-size: 10px;
+  color: white;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.alarmLoggedbar {
+  position: absolute;
+  right: 0%;
+  color: white;
+  top: 12px;
+  padding-top: 5px;
+  padding-right: 10px;
+  width: 15%;
+  font-size: 8px;
+  font-color: white;
+}
+
+.userLoggedbar {
+  position: absolute;
+  right: -5%;
+  color: white;
+  top: 12px;
+  padding-top: 5px;
+  padding-right: 10px;
+  width: 15%;
+  font-size: 8px;
+  font-color: white;
+}
+
+.rightbar {
+  position: fixed;
+  right: 8px;
+  top: 8px;
+  opacity: 85%;
+  background-blend-mode: hard-light;
+  font-color: white;
+}
+
+.topbar .top-navbar .navbar-header {
+  background-color: #fff;
+}
+
+.mt-space {
+  margin: 0 5px;
+}
+
+.logOut {
+  cursor: pointer;
+}
+
+.switchery {
+  background-color: #fff;
+  border: 1px solid #dfdfdf;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-block;
+  height: 30px;
+  position: relative;
+  vertical-align: middle;
+  width: 50px;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: content-box;
+  background-clip: content-box;
+}
+
+.switchery > small {
+  background: #fff;
+  border-radius: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  height: 30px;
+  position: absolute;
+  top: 0;
+  width: 30px;
+}
+
+.switchery-small {
+  border-radius: 20px;
+  height: 20px;
+  width: 33px;
+}
+
+.switchery-small > small {
+  height: 20px;
+  width: 20px;
+}
+
+.switchery-large {
+  border-radius: 40px;
+  height: 40px;
+  width: 66px;
+}
+
+.switchery-large > small {
+  height: 40px;
+  width: 40px;
+}
+
+/* -----------------------------------------
+  Notif Badge
+----------------------------------------- */
+.notif-badge {
+  margin-top: 3px;
+  margin-left: -4px;
+  height: 23px;
+  width: 23px;
+  position: absolute;
+  background: #ff6f68;
+  color: white;
+  border-radius: 50%;
+  animation: shake 1.7s infinite;
+  text-align: center;
+
+  &:hover {
+    background: #ff968a;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: skewX(-15deg);
+  }
+  5% {
+    transform: skewX(15deg);
+  }
+  10% {
+    transform: skewX(-15deg);
+  }
+  15% {
+    transform: skewX(15deg);
+  }
+  20% {
+    transform: skewX(0deg);
+  }
+  100% {
+    transform: skewX(0deg);
+  }
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: -90px;
+  background: #a2a0a0;
+  min-width: 160px;
+  min-height: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  font-size: 11px;
+}
+
+.dropdown-content.show {
+  display: block;
+  top: 50px;
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 7px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content div:hover {
+  background-color: #d4cfcf;
+}

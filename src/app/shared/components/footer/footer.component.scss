@@ -1,0 +1,55 @@
+// Copyright (c) 2025 Triveni Digital, Inc. All rights reserved.
+
+.version-wrap{
+  white-space: nowrap;background-color: #2b2b2b
+}
+.system-info-wrapper{
+  overflow: hidden!important;min-width: 800px;white-space: nowrap;
+}
+.page-footer {
+  position: fixed!important;
+  z-index: 999999!important;
+  width:100%;
+  //min-width: 1200px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  background-color: #2b2b2b;
+  color: #edf1f5;
+  overflow: hidden!important;
+  label {
+    display: block;
+    margin: 0;
+  }
+}
+.guideIcon{
+  margin-right:10px;
+}
+.footer-seperator{
+  width:100%;
+  color:#fff;
+  height:3px;
+  padding:0;
+  margin:8px;
+}
+
+.table-responsive {
+  padding: 5px;
+}
+
+.table.displayXsltMedia td {
+  cursor: pointer;
+}
+
+.file-count{
+  color: #fff;
+  font-size: 10px;
+  position: relative;
+  left: 20px;
+}
+
+.custom-checkbox{
+  padding-top: 3px;
+}
+

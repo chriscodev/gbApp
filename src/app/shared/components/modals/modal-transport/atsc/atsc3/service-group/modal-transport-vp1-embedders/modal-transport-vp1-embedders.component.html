@@ -1,0 +1,153 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div
+        aria-hidden="true"
+        aria-labelledby="myModalLabel"
+        class="modal fade"
+        id="modalV1Embedders"
+        role="dialog"
+        tabindex="-1">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ modalTitle }}</h5>
+                    <button
+                            (click)="closeModal()"
+                            aria-label="Close"
+                            class="close"
+                            type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mh-100">
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="nameField">Name</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    [(ngModel)]="localVP1Embedder.name"
+                                    class="form-control l"
+                                    id="nameField"
+                                    type="text"/>
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="nameIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="hostField">Host</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    [(ngModel)]="localVP1Embedder.host"
+                                    class="form-control l"
+                                    id="hostField"
+                                    name="form-first-name"
+                                    type="text"/>
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="hostIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="portField">Port</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    (keypress)="numberOnly($event)"
+                                    [(ngModel)]="localVP1Embedder.port"
+                                    class="form-control l"
+                                    id="portField"
+                                    title="Value range 1-65535"
+                                    type="number"
+                            />
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="portIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="processingInstanceField">Processing Instance</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    (keypress)="numberOnly($event)"
+                                    [(ngModel)]="localVP1Embedder.processingInstance"
+                                    class="form-control l"
+                                    id="processingInstanceField"
+                                    title="Value range 1-8191"
+                                    type="number"
+                            />
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="processingInstanceIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="serverCodeField">Server Code</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    (keypress)="numberOnly($event)"
+                                    [(ngModel)]="localVP1Embedder.serverCode"
+                                    class="form-control l"
+                                    id="serverCodeField"
+                                    name="form-first-name"
+                                    title="Value range 1-65535"
+                                    type="number"
+                            />
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="serverCodeIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="epochYearField">Epoch Year</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    (keypress)="numberOnly($event)"
+                                    [(ngModel)]="localVP1Embedder.epochYear"
+                                    class="form-control l"
+                                    id="epochYearField"
+                                    title="Value range 2000-9999"
+                                    type="number"
+                            />
+                        </div>
+                        <div class="mt10 col-sm-1 text-center">
+                            <span><i [ngClass]="epochYearIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-md-4 col-form-label" for="aeatUelField">AET URL</label>
+                        <div class="col-md-6">
+                            <input
+                                    (input)="inputVP1()"
+                                    [(ngModel)]="localVP1Embedder.aeatUrl"
+                                    class="form-control l"
+                                    id="aeatUelField"
+                                    type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button (click)="closeModal()" class="btn btn-outline-dark">
+                        <i class="fas fa fa-times"></i> Cancel
+                    </button>
+                    <button (click)="updateVP1Embedder()" [disabled]="!updateEnabled" class="btn btn-outline-dark">
+                        <i class="fas fa fa-check"></i> Ok
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

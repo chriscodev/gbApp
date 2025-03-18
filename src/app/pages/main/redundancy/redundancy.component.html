@@ -1,0 +1,316 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Redundancy Settings</h4>
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <!--  Primary System Settings-->
+  <div class="col-md-12">
+    <div *ngIf="localRedundancySettings && systemType === SystemType.REDUNDANT" >
+      <div class=" table-bordered tabcontent-border triveniBorder gpiSettings">
+        <h4 class="card-header">Primary System Settings</h4>
+        <div class="col-md-8 form-group">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="enableRedundancyField">Enable Redundancy</label>
+            <div class="col-md-1">
+              <div class="custom-control custom-checkbox">
+                <input [(ngModel)]="localRedundancySettings.enabled" class="mt10 custom-control custom-checkbox"
+                       disabled
+                       id="enableRedundancyField"
+                       type="checkbox"
+                >
+                <label class="custom-control-label"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="hostField">Server IP</label>
+            <div class="col-md-7">
+              <div class="custom-control custom-checkbox">
+                <input class="form-control"
+                       disabled
+                       id="hostField"
+                       placeholder="0.0.0.0"
+                       type="text"
+                       value="{{localRedundancySettings.host}}">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row ">
+            <label class="col-3 col-form-label" for="portField">Port</label>
+            <div class="col-7">
+              <input class="form-control" disabled id="portField"
+                     type="text" value="{{localRedundancySettings.port}}">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="targetField">Target Mode</label>
+            <div class="col-7">
+              <input class="form-control" disabled
+                     id="targetField"
+                     type="text"
+                     value="{{RESTART_SERVER_MODES[localRedundancySettings.target]?.displayName}}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 actionButtonsRedundancy">
+      <div class="form-group row m-l-5">
+        <button (click)="openModalEditRedundancySettings()"
+                *ngIf="localRedundancySettings && systemType === SystemType.REDUNDANT"
+                class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+                data-target="#editRedundancySettings" data-toggle="modal"
+                type="button"
+        >
+          <i aria-hidden="true" class="fa fa-edit"></i>
+          Edit
+        </button>
+        <button (click)="switchDialog()"
+                *ngIf="localRedundancySettings && systemType === SystemType.REDUNDANT"
+                class="mt-5 btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+                type="button"
+        >
+          <i aria-hidden="true" class="fa fa-edit"></i>
+          Switch
+        </button>
+      </div>
+    </div>
+
+    <!--//Connection Status- Redundancy System Status-->
+    <div *ngIf="localRedundancySettings" >
+      <div class="col-md-10">
+      <div *ngIf="redundancyStatus" class=" table-bordered tabcontent-border triveniBorder">
+        <h4 class="card-header">Redundancy System Status</h4>
+        <div class="col-md-8 form-group">
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="connectStatField">Connection Status</label>
+            <div class="col-7">
+              <input class="form-control"
+                     disabled id="connectStatField"
+                     type="text"
+                     value="{{REDUNDANCY_SYSTEM_STATE_TYPES[redundancyStatus.redundancySystemState].displayName}}">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="lastUpdateTimeField">Last Update time</label>
+            <div class="col-7">
+              <input class="form-control"
+                     disabled id="lastUpdateTimeField"
+                     type="text" value="{{redundancyStatus.lastUpdateTime |  date: 'EEE MMM dd hh:mm:ss a yyyy'}}">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="backupStatusField">Backup Status</label>
+            <div class="col-7">
+              <input class="form-control"
+                     disabled id="backupStatusField"
+                     type="text" value="{{REDUNDANCY_STATE_TYPES[redundancyStatus.redundancyState].displayName}}">
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-3 col-form-label" for="lastStatsMessageField">Last Status Message</label>
+            <div class="col-7">
+              <input class="form-control" disabled id="lastStatsMessageField"
+                     type="text" value="{{redundancyStatus.lastUpdateMessage}}">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 form-group"></div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Edit Redundancy Setting -->
+  <div *ngIf="editRedundancySettings" aria-hidden="true" aria-labelledby="editRedundancySettings"
+     class="modal fade modal-holder"
+     data-backdrop="static" data-keyboard="false" id="editRedundancySettings" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Redundancy Settings </h5>
+        <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div *ngIf="systemType === SystemType.REDUNDANT"
+             class="row table-bordered tabcontent-border triveniBorder gpiSettings">
+          <h4 class="card-header">Primary System Settings</h4>
+          <div class="col-md-12 form-group">
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label" for="editEnableRedundancyField">Enable Redundancy</label>
+              <div class="col-md-1">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    (click)="toggleRedundancyEnabled()"
+                    [(ngModel)]="editRedundancySettings.enabled"
+                    class="mt10 custom-control custom-checkbox"
+                    id="editEnableRedundancyField"
+                    type="checkbox"
+                  >
+                  <label class="custom-control-label"></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row ">
+              <label class="col-4 col-form-label" for="editRedundancyHostField">Server IP</label>
+              <div class="col-7">
+                <input
+                  (input)="inputRedundancy()"
+                  (keypress)="validateIP($event)"
+                  [(ngModel)]="editRedundancySettings.host"
+                  [disabled]="!editRedundancySettings.enabled"
+                  class="form-control"
+                  id="editRedundancyHostField"
+                  placeholder="0.0.0.0"
+                  type="text">
+              </div>
+              <div *ngIf="editRedundancySettings.enabled" class="col-sm-1 validImage">
+                          <span><i [ngClass]="checkHostValid()" aria-hidden="true"
+                                   class="fa fa-check-circle "></i></span>
+              </div>
+            </div>
+
+            <div class="form-group row ">
+              <label class="col-4 col-form-label" for="editRedundancyPortField">Port</label>
+              <div class="col-7">
+                <input
+                  (input)="inputRedundancy()"
+                  [(ngModel)]="editRedundancySettings.port"
+                  [disabled]="!editRedundancySettings.enabled"
+                  class="form-control"
+                  id="editRedundancyPortField"
+                  type="text">
+              </div>
+              <div *ngIf="editRedundancySettings.enabled" class="col-sm-1 validImage">
+                          <span><i [ngClass]="checkPortValid()" aria-hidden="true"
+                                   class="fa fa-check-circle "></i></span>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-4 col-form-label" for="editRedundancyTargetField">Target Mode</label>
+              <div class="col-7">
+                <select [(ngModel)]="editRedundancySettings.target"
+                        class="form-control"
+                        id="editRedundancyTargetField"
+                        name="">
+                  <option *ngFor="let restartServerMode of restartServerModes" [ngValue]="restartServerMode">
+                    {{ RESTART_SERVER_MODES[restartServerMode].displayName }}
+                  </option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-4"></div>
+              <div class="col-1">
+                <button (click)="openTestDialog()" [disabled]="!enableTestButton" class="btn btn-outline-dark"
+                        data-target="#myEmailTestModal" data-toggle="modal">Test
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="doUpdateEditRedundancySettings()" class="btn btn-outline-light" data-dismiss="modal">Ok
+        </button>
+        <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div *ngIf="editRedundancySettings" aria-hidden="true" aria-labelledby="testConnectionRedundancy"
+       class="modal fade modal-holder"
+       data-backdrop="static" data-keyboard="false" id="testConnectionRedundancy" role="dialog"
+       tabindex="-1">
+    <div class="modal-dialog modal-xs">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Test Connection - {{editRedundancySettings.host}}
+            : {{editRedundancySettings.port}}</h5>
+        </div>
+        <div class="modal-body mh-100">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="testConnectionHost">Host</label>
+            <div class="col-md-8">
+              <input
+                [(ngModel)]="editRedundancySettings.host"
+                autocomplete="off"
+                class="form-control l"
+                disabled
+                id="testConnectionHost"
+                type="text"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="testConnectionPort">Port</label>
+            <div class="col-md-8">
+              <input
+                [(ngModel)]="editRedundancySettings.port"
+                autocomplete="off"
+                class="form-control l"
+                disabled
+                id="testConnectionPort"
+                type="text"
+              />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label">Test Status </label>
+            <div class="col-md-8">
+              <div [hidden]="!loading" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <div [hidden]="loading" class="content-loader">
+                <i aria-hidden="true" class="fa fa-circle text-{{ cssClass }} fa-2x"
+                ></i>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <h5 class="card-header">Test Connection Result</h5>
+            <div class="message col-md-12">
+              <label class="col-form-label" for="form-first-name">Error Message</label>
+              <div class="clearfix"></div>
+              <textarea
+                class="w-100 text-danger form-control"
+                id="form-first-name"
+              >{{ errorMessage }}</textarea>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button (click)="closeTestDialog()" class="btn btn-outline-light">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div>
+  <!-- dynamic nav -->
+  <app-nav-slider
+    [headerTabs]=headerTabs
+    [activeId]=activeId
+    (activeIdChanged)=activeIdChangedHandler($event)>
+  </app-nav-slider>
+  <div class="tab-content tabcontent-border p-0-20" style="min-height:400px;overflow-y:auto;">
+    <div class="content-table" [hidden]="activeId !== 1">
+      <app-service-group-settings
+        (okEnabledChanged)="okEnabledChangedHandler($event)"
+        [atsc3TransportStream]="localATSC3TransportStream"
+        [serviceGroup]="localServiceGroup"
+        [editMode]="editMode">
+      </app-service-group-settings>
+    </div>
+    <div class="content-table" [hidden]="activeId !== 2">
+      <br/>
+      <app-service-group-ip-streams
+        [serviceGroup]="localServiceGroup"
+        [atsc3TransportStream]="localATSC3TransportStream"
+      ></app-service-group-ip-streams>
+    </div>
+  </div>
+</div>
+

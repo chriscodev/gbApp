@@ -1,0 +1,224 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title w-100" >Certificate Signing Request</h4>
+    <div class="row singleLayout">
+      <!-- COMMIT_REVERT COMPONENT-->
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-12">
+      <div class="table-bordered tabcontent-border triveniBorder ">
+        <div class="content-table">
+          <app-modal-dynamic-tb-translate
+            (buttonClicked)=onButtonClicked($event)
+            (rowClicked)="rowClicked($event)"
+            [buttonList]=buttonList
+            [enableSearch]=true
+            [modalName]=modalName
+            [multiSelect]=true
+            [objectTableType]=currentType
+            [tableData]=localCertData
+            [tableHeaders]=tableHeaders>
+          </app-modal-dynamic-tb-translate>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Modal-->
+  <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade  modal-holder" id="viewCertificateModal"
+       role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Certificate Request - {{currentCertReq.name}}</h5>
+          <button (click)="closeModal('#viewCertificateModal')" aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-container">
+          <textarea [(ngModel)]="currentCertReq.csr" class="form-control" cols="15" rows="15"> </textarea>
+        </div>
+        <div class="modal-footer">
+          <span (click)="copyClipBoard(currentCertReq.csr)" class="btn btn-outline-dark" style="color: #ffffff;">Copy to Clipboard</span>
+          <span (click)='download(currentCertReq.csr, currentCertReq.name)' class="btn btn-outline-dark"
+                style="color: #ffffff;">Download</span>
+          <span (click)="closeModal('#viewCertificateModal')" class="btn btn-outline-dark"
+                style="color: #ffffff;">Close</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Export Modal-->
+  <div aria-hidden="true" aria-labelledby="exportCertModal" class="modal fade modal-holder" data-backdrop="static"
+       data-keyboard="false" id="exportCertModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Password Protect the CSR Key </h5>
+          <button (click)="closeModal('#exportCertModal')" aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="min-height:100px;">
+          <div class="form-group row">
+            <label class="col-sm-5 col-form-label">Key Password</label>
+            <div class="col-sm-3">
+              <input [(ngModel)]=passKey class="form-control" minlength="4"
+                     placeholder="Password"
+                     type="{{showPassword ? 'text' : 'password'}}">
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="exportCertFile()" class="btn btn-outline-light">Next</button>
+          <button (click)="closeModal('#exportCertModal')" class="btn btn-outline-light">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div aria-hidden="true" aria-labelledby="exportCertDownloadModal" class="modal fade modal-holder"
+       data-backdrop="static"
+       data-keyboard="false" id="exportCertDownloadModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Certificate Request Key Id - {{csrId}}</h5>
+          <button (click)="closeModal('#exportCertDownloadModal')" aria-label="Close" class="close" type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-container">
+          <textarea [(ngModel)]="exportData" class="form-control" cols="15" rows="15"> </textarea>
+        </div>
+        <div class="modal-footer">
+          <span (click)="copyClipBoard(exportData)" class="btn btn-outline-dark" style="color: #ffffff;">Copy to Clipboard</span>
+          <span (click)='download(exportData, csrId.toString())' class="btn btn-outline-dark" style="color: #ffffff;">Download</span>
+          <span (click)="closeModal('#exportCertDownloadModal')" class="btn btn-outline-dark"
+                style="color: #ffffff;">Ok</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Add/update Modal-->
+  <div aria-hidden="true" aria-labelledby="addEditCertificateModal" class="modal fade modal-holder"
+       data-backdrop="static"
+       data-keyboard="false" id="addEditCertificateModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="certReqTitle">{{title}}</h5>
+          <button (click)="closeModal('#addEditCertificateModal')" aria-label="Close" class="close" data-dismiss="modal"
+                  type="button">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h5 class="card-title align-content-center">CSR Information</h5>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Name</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.name"
+                     class="form-control" placeholder="Signaling Signer 1"
+                     title="Signaling Signer 1" type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                          <span><i [ngClass]="nameIconText" aria-hidden="true"
+                                   class="fa fa-check-circle "></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Key Type</label>
+            <div class="col-sm-6">
+              <select [(ngModel)]="currentCertReq.keyType" class="form-control" id="keyType">
+                <option *ngFor="let type of keyType" [ngValue]="type.keyType">
+                  {{ type.displayName}}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Country Name (2 letter Code)</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.country" class="form-control"
+                     maxlength="2"
+                     placeholder="US" title="US" type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                            <span><i [ngClass]="countryIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">State or Province Name</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.state" class="form-control"
+                     placeholder="New Jersey" title="New Jersey" type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                          <span><i [ngClass]="stateIconText" aria-hidden="true"
+                                   class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">City</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.locality" class="form-control"
+                     placeholder="Princeton" title="Princeton" type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                            <span><i [ngClass]="cityIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Organization</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.organization" class="form-control"
+                     placeholder="Triveni Digital Broadcasting" title="Triveni Digital Broadcasting"
+                     type="text"/>
+
+            </div>
+            <div class="col-sm-1 validImage">
+                          <span><i [ngClass]="organizationIconText" aria-hidden="true"
+                                   class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label">Common Name</label>
+            <div class="col-sm-6">
+              <input (input)="validateCertRequest()" [(ngModel)]="currentCertReq.commonName" class="form-control"
+                     placeholder="WTRV" title="WTRV" type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                          <span><i [ngClass]="commonNameIconText" aria-hidden="true"
+                                   class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="closeModal('#addEditCertificateModal')" class="btn btn-outline-dark"
+                    data-dismiss="modal">Cancel
+            </button>
+            <button (click)="addCertRequest()" [disabled]="!okButtonEnabled" class="btn btn-outline-dark">Ok
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-progress-bar
+  (progressBarEmit)=fileProgressModalHandler($event)
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+></app-modal-progress-bar>
+

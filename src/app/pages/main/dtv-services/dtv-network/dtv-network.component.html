@@ -1,0 +1,47 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title" >DTV Network</h4>
+    <div class="row singleLayout">
+      <!-- COMMIT_REVERT COMPONENT-->
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty"
+      ></app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <!-- start Rnd -->
+  <div class="col-md-12" >
+    <!-- dynamic slider component passed headerTabs array and emits activeIdChange when the user changes tabs
+     use handler if there are some functions to fire on nav change-->
+    <app-nav-slider
+      (activeIdChanged)=activeIdChangedHandler($event)
+      [activeId]=activeId
+      [headerTabs]=headerTabs
+    >
+    </app-nav-slider>
+    <div class="tab-content tabcontent-border" >
+      <!-- we can have multiple ways to render the component; Used hidden directives here so that the parent component loads the children component simultaneously
+       compared to the the *ngif directives which destroys the component and rerender it on call.
+       depending on the way we want it to behave, we can also use *ngIf-->
+      <app-transport
+        #transport
+        (transportsChanged)="transportsChangedHandler($event)"
+        [hidden]="activeId !== 1"
+      ></app-transport>
+      <app-networks
+        #networks
+        (networksChangedEmitter)="networkChangedHandler($event)"
+        [hidden]="activeId !== 2"
+      ></app-networks>
+      <app-output
+        #output
+        (outputsChanged)="outputsChangedHandler($event)"
+        [hidden]="activeId !== 3"
+      ></app-output>
+    </div>
+    <!-- End Rnd -->
+  </div>
+</div>

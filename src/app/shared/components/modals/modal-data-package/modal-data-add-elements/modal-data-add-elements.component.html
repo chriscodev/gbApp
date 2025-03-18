@@ -1,0 +1,587 @@
+<!-- Copyright (c) 2023 Triveni Digital, Inc. All rights reserved. -->
+
+<!--DYNAMIC TABLE COMPONENT -->
+  <div class="col-md-12">
+    <div class="content-table" >
+      <br/>
+      <app-modal-dynamic-tb-translate
+        [tableHeaders]="tableElementHeaders"
+        [tableData]="localDataElements"
+        [objectTableType]=""
+        [buttonList]="buttonList"
+        [modalName]="modalName"
+        [enableSearch]="false"
+        (buttonClicked)="onButtonClicked($event)">
+      </app-modal-dynamic-tb-translate>
+    </div>
+  </div>
+<div class="modal fade" id="dataElementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg2">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{title}}</h5>
+        <button
+          type="button"
+          class="close" aria-label="Close" (click)="closeModal()"><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <!-- //CONTAINER PANEl -->
+        <div class="form-bottom">
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label" >Data Element Name</label>
+            <div class="col-sm-6">
+              <input
+                name="form-mediastream-name"
+                class=" form-control l"
+                type="text"
+                required
+                [(ngModel)]="currentDataElement.name"
+                (keyup)=updateOkButtonEnabled()>
+            </div>
+          </div>
+          <mat-tab-group id="dataElementTab" [selectedIndex]="dataTabIndex" disableScroll="true"  animationDuration="0ms" >
+            <mat-tab label="Ingest" >
+              <div>
+                <div class="form-group row ">
+                  <label class="col-md-4 col-form-label">Protocol </label>
+                  <div class="col-md-6">
+                    <select class="form-control l"
+                            [(ngModel)]="currentDataElement.ingestAttributes.ingestProtocol" (ngModelChange)="onChangeIngestProtocolType()">
+                      <option
+                        *ngFor="let ingestProtocolType of ingestProtocols" [ngValue]="ingestProtocolType.ingestProtocol">{{ ingestProtocolType.displayName }}</option>
+                    </select>
+                  </div>
+                </div>
+                <ng-container *ngIf="(currentDataElement.ingestAttributes!== null)">
+                      <ng-container *ngIf="( currentDataElement.ingestAttributes.ingestProtocol === 'HTTP_GET' || currentDataElement.ingestAttributes.ingestProtocol === 'SIG_AWS_S3'||currentDataElement.ingestAttributes.ingestProtocol === 'AWS_S3')">
+                        <div class="form-group row">
+                          <label class="col-md-4 col-form-label" >URL </label>
+                          <div class="col-md-6">
+                            <textarea
+                              class="form-control l"
+                              spellcheck="false" wrap="soft"
+                              (keyup)=updateOkButtonEnabled()
+                              (input) = "isValidURL()"
+                              [(ngModel)]="currentDataElement.ingestAttributes.url"></textarea>
+                          </div>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="( currentDataElement.ingestAttributes.ingestProtocol === 'HTTP_PUT' ||currentDataElement.ingestAttributes.ingestProtocol === 'WEBDAV' || currentDataElement.ingestAttributes.ingestProtocol === 'FILE_UPLOAD')">
+                        <div class="form-group row" >
+                          <label class="col-md-4 col-form-label" >Ingress URL</label>
+                          <div class="col-md-6" >
+                            {{getIngressURL()}}
+                          </div>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="( currentDataElement.ingestAttributes.ingestProtocol === 'WEBDAV')">
+                        <div class="form-group row" >
+                          <label class="col-md-4 col-form-label" >User name</label>
+                          <div class="col-md-6">
+                            <input
+                              name="username"
+                              class="form-control l"
+                              type="text"
+                              (keyup)=updateOkButtonEnabled()
+                              [(ngModel)]="currentDataElement.ingestAttributes.username"/>
+                          </div>
+                        </div>
+                        <div class="form-group row" >
+                          <label class="col-md-4 col-form-label" >Password</label>
+                          <div class="col-md-6">
+                            <input
+                              name="password"
+                              class="form-control l"
+                              type="password"
+                              (keyup)=updateOkButtonEnabled()
+                              [(ngModel)]="currentDataElement.ingestAttributes.password"/>
+                          </div>
+                          <div class="col-sm-1">
+                            <i aria-hidden="true"
+                               class="fa errorImageClass errspan {{currentDataElement.ingestAttributes ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                          </div>
+                        </div>
+                      </ng-container>
+                  <ng-container *ngIf="currentDataElement.ingestAttributes.ingestProtocol === 'SIG_AWS_S3'">
+                    <div class="form-group row" >
+                      <label class="col-md-4 col-form-label" >API Key ID</label>
+                      <div class="col-md-6">
+                        <input
+                          name="apiKeyId"
+                          class="form-control l"
+                          type="text"
+                          (keyup)=updateOkButtonEnabled()
+                          [(ngModel)]="currentDataElement.ingestAttributes.apiKeyId"/>
+                      </div>
+                    </div>
+                    <div class="form-group row" >
+                      <label class="col-md-4 col-form-label" >API Key Value</label>
+                      <div class="col-md-6">
+                        <input
+                          name="apiKeyValue"
+                          class="form-control l"
+                          type="text"
+                          (keyup)=updateOkButtonEnabled()
+                          [(ngModel)]="currentDataElement.ingestAttributes.apiKeyValue"/>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="(currentDataElement.ingestAttributes.ingestProtocol === 'SIG_AWS_S3'||currentDataElement.ingestAttributes.ingestProtocol === 'AWS_S3')">
+                    <div class="form-group row" >
+                      <label class="col-md-4 col-form-label" >Access Key ID</label>
+                      <div class="col-md-6">
+                        <input
+                          name="accessKeyId"
+                          class="form-control l"
+                          type="text"
+                          (keyup)=updateOkButtonEnabled()
+                          [(ngModel)]="currentDataElement.ingestAttributes.accessKeyId"/>
+                      </div>
+                    </div>
+                    <div class="form-group row" >
+                      <label class="col-md-4 col-form-label" >Secret Key Value</label>
+                      <div class="col-md-6">
+                        <input
+                          name="accessKeyValue"
+                          class="form-control l"
+                          type="text"
+                          (keyup)=updateOkButtonEnabled()
+                          [(ngModel)]="currentDataElement.ingestAttributes.accessKeyValue"/>
+                      </div>
+                    </div>
+                    <div class="form-group row" >
+                      <label class="col-md-4 col-form-label" >AWS Region</label>
+                      <div class="col-md-6">
+                        <select class="form-control l"
+                                [(ngModel)]="currentDataElement.ingestAttributes.region" >
+                          <option
+                            *ngFor="let region of awsRegions" [value]="region.awsRegion">{{ region.displayName }}</option>
+                        </select>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="currentDataElement.ingestAttributes.ingestProtocol === 'HTTP_GET' || currentDataElement.ingestAttributes.ingestProtocol === 'AWS_S3' || currentDataElement.ingestAttributes.ingestProtocol === 'SIG_AWS_S3'">
+                    <div class="form-group row" >
+                      <div class="col-md-4">
+                        <label class="col-form-label" >Fetch Interval</label> (seconds)
+                      </div>
+                      <div class="col-md-6">
+                        <input
+                          name="fetchInterval"
+                          class="form-control l"
+                          type="text"
+                          (keyup)=updateOkButtonEnabled()
+                          [(ngModel)]="currentDataElement.ingestAttributes.pollIntervalInSeconds"/>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-4 col-form-label" >Fetch Data</label>
+                      <div class="col-md-6  col-form-label">
+                        <button id="fetchNow" class="btn btn-outline-dark" [disabled]=disableActionButton>Fetch Now</button>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div class="form-group row" *ngIf="currentDataElement.ingestAttributes.ingestProtocol === 'SIG_AWS_S3'">
+                    <label class="col-md-4 col-form-label" >Re-create Stream</label>
+                     <div class="col-md-6  col-form-label">
+                       <button id="recreateNow" class="btn btn-outline-dark" [disabled]=disableActionButton>Recreate Now</button>
+                     </div>
+                  </div>
+                  <div class="form-group row" *ngIf="currentDataElement.ingestAttributes.ingestProtocol === 'FILE_UPLOAD'">
+                    <label class="col-md-4 col-form-label" >Ingest Upload</label>
+                    <div class="col-md-6  col-form-label">
+                      <button id="uploadButton" class="btn btn-outline-dark" [disabled]=disableActionButton (click)="uploadFile()">Upload</button>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="(currentDataElement.ingestAttributes!== null)">
+                      <div class="form-group row">
+                          <label class="col-md-4 col-form-label" >Auto-expand zip</label>
+                          <div class="col-md-6  col-form-label">
+                            <input
+                              type="checkbox"
+                              id = "autoExpand"
+                              name = "form-enabled"
+                              (keyup)=updateOkButtonEnabled()
+                              [(ngModel)]="currentDataElement.ingestAttributes.disableAutoExpandZip"/>
+                          </div>
+                        </div>
+                      <div class="form-group row">
+                          <label class="col-md-4 col-form-label" >Append files</label>
+                          <div class="col-md-6  col-form-label">
+                            <input
+                              type="checkbox"
+                              id = "appendFiles"
+                              name = "form-enabled"
+                              (keyup)=updateOkButtonEnabled()
+                              [(ngModel)]="currentDataElement.ingestAttributes.appendFile"/>
+                          </div>
+                        </div>
+                  <ng-container *ngIf="currentDataPackage.packageType === 'ATSC3_APP_NRT'">
+                  <div class="form-group row">
+                          <label class="col-md-4 col-form-label" >Create Multipart Encoding</label>
+                          <div class="col-md-6  col-form-label">
+                            <input
+                              type="checkbox"
+                              id = "mulitpartEncoding"
+                              name = "form-enabled"
+                              disabled="true"
+                              (keyup)=updateOkButtonEnabled()
+                              [(ngModel)]="currentDataElement.ingestAttributes.createMultipart"/>
+                          </div>
+                        </div>
+                  </ng-container>
+                  <div class="form-group row ">
+                          <label class="col-md-4 col-form-label">Payload Format</label>
+                          <div class="col-md-6">
+                            <select class="form-control l"
+                                    [(ngModel)]="currentDataElement.ingestAttributes.payloadFormat" >
+                              <option
+                                *ngFor="let payloadFormatType of payloadFormats" [value]="payloadFormatType.payloadFormat">{{ payloadFormatType.displayName }}</option>
+                            </select>
+                          </div>
+                      </div>
+                  <div class="form-group row ">
+                            <label class="col-md-4 col-form-label">Signing</label>
+                        <div class="col-md-6">
+                        <select class="form-control l"
+                                [(ngModel)]="currentDataElement.signingAttributes.signingType" >
+                          <option
+                            *ngFor="let signingObject of signing" [value]="signingObject.signingType">{{ signingObject.displayName }}</option>
+                        </select>
+                        </div>
+                      </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </mat-tab>
+            <mat-tab label="Transmit">
+              <div >
+                <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >Start</label>
+                  <div class="col-md-6">
+                    <input
+                      name="startTime"
+                      class="form-control l"
+                      type="datetime-local"
+                      (change)="currentDataElement.transmitAttributes.startTime =convertDateTime($event);"
+                      [ngModel]="currentDataElement.transmitAttributes.startTime!=null?
+                      (currentDataElement.transmitAttributes.startTime| date: 'yyyy-MM-ddTHH:mm') : null "/>
+                  </div>
+                </div>
+                <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >End</label>
+                  <div class="col-md-6">
+                    <input
+                      name="endTime"
+                      class="form-control l"
+                      type="datetime-local"
+                      (change)="this.currentDataElement.transmitAttributes.endTime=convertDateTime($event);"
+                      [ngModel]="currentDataElement.transmitAttributes.endTime!=null?
+                      (currentDataElement.transmitAttributes.endTime| date: 'yyyy-MM-ddTHH:mm') : null "/>
+                  </div>
+                </div>
+                <ng-container *ngIf="currentDataPackage.broadcastAttributes.elementSchedulingMode === 'RATE'">
+                  <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >Minimum Bitrate</label>
+                  <div class="col-md-6 ">
+                    <input
+                      type="checkbox"
+                      name = "bitrateCheckbox"
+                      [checked]="this.currentDataElement.transmitAttributes.bitratePercent>0"/>
+                    <span class="checkBoxPadding" >
+                      use fixed percentage bitrate
+                    </span>
+                    <div class="sliderDiv">
+                    <mat-slider
+                      [(ngModel)]=this.currentDataElement.transmitAttributes.bitratePercent
+                      [min]="sliderOptions.floor"
+                      [max]="sliderOptions.ceil"
+                      [step]="sliderOptions.step"
+                      [showTickMarks]="sliderOptions.step"
+                      [discrete]="true">
+                    </mat-slider> {{this.currentDataElement.transmitAttributes.bitratePercent}} %
+                    </div>
+                  </div>
+                </div>
+                </ng-container>
+                <ng-container *ngIf="currentDataPackage.broadcastAttributes.elementSchedulingMode === 'INTERVAL'">
+                  <div class="form-group row ">
+                    <label class="col-md-4 col-form-label">Priority</label>
+                    <div class="col-md-6">
+                      <select class="form-control l"
+                              [(ngModel)]="currentDataElement.transmitAttributes.transmitPriority" (ngModelChange)="getSummary()"> >
+                        <option
+                          *ngFor="let priority of transmitPriority" [value]="priority">{{ priority }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group row" >
+                    <div class="col-md-4">
+                      <label class="col-form-label" >Interval</label> (seconds)
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        name="interval"
+                        class="form-control l"
+                        type="number"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.transmitAttributes.intervalInSeconds"/>
+                    </div>
+                  </div>
+                  <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Count</label>
+                    <div class="col-md-6">
+                      <input
+                        name="count"
+                        class="form-control l"
+                        type="number"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.transmitAttributes.count"/>
+                    </div>
+                  </div>
+                </ng-container>
+                <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >Summary</label>
+                  <div class="col-md-6">
+                    <div class="col-md-6" >
+                      <span id="summary">
+                      {{transmitSummary}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row ">
+                  <label class="col-md-4 col-form-label">FEC Mode</label>
+                  <div class="col-md-6">
+                    <select class="form-control l" [(ngModel)]="currentDataElement.transmitAttributes.fecAttributes.fecMode">
+                      <option
+                        *ngFor="let fecMode of fecModes" [value]="fecMode">{{ fecMode }}</option>
+                    </select>
+                  </div>
+                </div>
+                <ng-container *ngIf="currentDataElement.transmitAttributes.fecAttributes.fecMode === 'RAPTOR_Q'">
+                  <div class="form-group row" >
+                    <div class="col-sm-4">
+                      <label class="col-form-label" >Max FEC Block Size</label>
+                      <label class="valid-Values"><span>  (1 - 56403)</span></label>
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        name="fecBlockSize"
+                        class="form-control l"
+                        type="number"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.transmitAttributes.fecAttributes.maxBlockSize"/>
+                    </div>
+                  </div>
+                  <div class="form-group row" >
+                    <div class="col-sm-4">
+                      <label class="col-form-label" >FEC Percent File Size</label>
+                      <label class="valid-Values"><span>  (0 - 100)</span></label>
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        name="fecPercentFileSize"
+                        class="form-control l"
+                        type="number"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.transmitAttributes.fecAttributes.percent"/>
+                    </div>
+                  </div>
+                  <div class="form-group row" >
+                    <div class="col-sm-4">
+                    <label class="col-form-label" >FEC Block Interleave</label>
+                    <label class="valid-Values"><span>  (1 - 255)</span></label>
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        name="fecBlockInterleave"
+                        class="form-control l"
+                        type="number"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.transmitAttributes.fecAttributes.maxPartitionSize"/>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </mat-tab>
+            <mat-tab label="App"  [disabled]="currentDataPackage.packageType === 'USER_DEFINED_NDP'">
+              <div >
+                <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >Context IDs</label>
+                  <div class="col-md-6">
+                    <input
+                      name="contextIds"
+                      class="form-control l"
+                      type="text"
+                      (keyup)=updateOkButtonEnabled()
+                      [(ngModel)]="currentDataElement.appAttributes.appContextIdList"/>
+                  </div>
+                </div>
+                <div class="form-group row" >
+                  <label class="col-md-4 col-form-label" >Filter Codes</label>
+                  <div class="col-md-6">
+                    <textarea
+                      class="form-control l"
+                      spellcheck="false" wrap="soft" placeholder="1 2 3"
+                      (keyup)=updateOkButtonEnabled()
+                      [(ngModel)]="currentDataElement.appAttributes.filterCodes"></textarea>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label" >HELD</label>
+                  <div class="col-md-6  col-form-label">
+                    <input
+                      type="checkbox"
+                      name = "heldValue"
+                      (keyup)=updateOkButtonEnabled()
+                      [(ngModel)]="currentDataElement.appAttributes.b64XmlHeld" (change)="updateHeld($event)"/> Generate HELD
+                  </div>
+                </div>
+                <ng-container *ngIf="currentDataElement.appAttributes.b64XmlHeld === 'true'">
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >App ID</label>
+                    <div class="col-md-6">
+                      <input
+                        name="appID"
+                        class="form-control l"
+                        type="text"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.appAttributes.appId"/>
+                    </div>
+                  </div>
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label" >Default App</label>
+                    <div class="col-md-6  col-form-label">
+                      <input
+                        type="checkbox"
+                        name = "defaultApp"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.appAttributes.defaultApp"/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Broadcast Package URL</label>
+                    <div class="col-md-6">
+                      <input
+                        name="broadcastURL"
+                        class="form-control l"
+                        type="text"
+                        placeholder="/app/index.html"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.appAttributes.bcastEntryPageUrl"/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Broadband URL</label>
+                    <div class="col-md-6">
+                       <textarea
+                         class="form-control l"
+                         spellcheck="false" wrap="soft"
+                         placeholder="http://service/app/app.html"
+                         (keyup)=updateOkButtonEnabled()
+                         (input) = "isValidURL()"
+                         [(ngModel)]="currentDataElement.appAttributes.bbandEntryPageUrl"></textarea>
+                    </div>
+                  </div>
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label" >Rendering</label>
+                    <div class="col-md-6  col-form-label">
+                      <input
+                        type="checkbox"
+                        name = "rendering"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)]="currentDataElement.appAttributes.appRendering"/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Valid From</label>
+                    <div class="col-md-6">
+                      <input
+                        name="validFrom"
+                        class="form-control l"
+                        type="datetime-local"
+                        (change)="this.currentDataElement.appAttributes.validFromTime = convertDateTime($event);"
+                        [ngModel]="currentDataElement.appAttributes.validFromTime!=null?
+                        (currentDataElement.appAttributes.validFromTime| date: 'yyyy-MM-ddTHH:mm') : null "/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Valid Until</label>
+                    <div class="col-md-6">
+                      <input
+                        name="validUntil"
+                        class="form-control l"
+                        type="datetime-local"
+                        (change)="this.currentDataElement.appAttributes.validUntilTime = convertDateTime($event);"
+                        [ngModel]="currentDataElement.appAttributes.validUntilTime!=null?
+                        (currentDataElement.appAttributes.validUntilTime| date: 'yyyy-MM-ddTHH:mm') : null "/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Clear Cache</label>
+                    <div class="col-md-6">
+                      <input
+                        name="clearCache"
+                        class="form-control l"
+                        type="datetime-local"
+                        (change)="this.currentDataElement.appAttributes.clearAppContextCacheTime=convertDateTime($event);"
+                        [ngModel]="currentDataElement.appAttributes.clearAppContextCacheTime!=null?
+                        (currentDataElement.appAttributes.clearAppContextCacheTime| date: 'yyyy-MM-ddTHH:mm') : null "/>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Coupled Services</label>
+                    <div class="col-md-6">
+                       <textarea
+                         class="form-control l"
+                         spellcheck="false" wrap="soft"  placeholder="1 2 3"
+                         (keyup)=updateOkButtonEnabled()
+                         [(ngModel)] ="currentDataElement.appAttributes.coupledServices"></textarea>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >LCT TSI Refs</label>
+                    <div class="col-md-6">
+                      <textarea
+                        class="form-control l"
+                        spellcheck="false" wrap="soft"  placeholder="1 2 3"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)] ="currentDataElement.appAttributes.lctTSIRef"></textarea>
+                    </div>
+                  </div>
+                <div class="form-group row" >
+                    <label class="col-md-4 col-form-label" >Required Capabilities</label>
+                    <div class="col-md-6">
+                      <input
+                        name="requiredCapablities"
+                        class="form-control l"
+                        type="text"
+                        placeholder="050E 058E |"
+                        (keyup)=updateOkButtonEnabled()
+                        [(ngModel)] ="currentDataElement.appAttributes.requiredCapabilities"/>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-dark" [disabled]=!updateOkButtonEnabled() (click)="addUpdateCurrentDataElement()">
+          <i class="fas fa fa-check"></i> Ok</button>
+        <button class="btn btn-outline-dark" (click)="closeModal()">
+          <i class="fas fa fa-check"></i>Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-file-upload
+  [currentDataPackage]="currentDataPackage"
+  [currentDataElement]="currentDataElement"
+  (updateFileUploadStatus)="uploadFile()">
+</app-modal-file-upload>

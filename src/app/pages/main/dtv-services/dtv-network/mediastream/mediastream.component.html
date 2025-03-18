@@ -1,0 +1,305 @@
+<!-- Copyright (c) 2023 Triveni Digital, Inc. All rights reserved. -->
+<div class="card-body " xmlns="http://www.w3.org/1999/html">
+  <br>
+  <!--DYNAMIC TABLE COMPONENT -->
+  <div class="col-md-12">
+    <div class="clearfix"></div>
+    <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          [tableHeaders]="tableHeaders"
+          [tableData]="localMediaStreams"
+          [objectTableType]="currentMediaStream.constructor.name"
+          [buttonList]="buttonList"
+          [modalName]="modalName"
+          [enableSearch]="true"
+          [multiSelect]="true"
+          (buttonClicked)="onButtonClicked($event)">
+        </app-modal-dynamic-tb-translate>
+    </div>
+  </div>
+
+<!-- //MODAL ADD Mediastream Stream -->
+<div class="modal fade" id="mediaStreamModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">{{title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                <!-- //CONTAINER PANEl -->
+                    <div class="form-bottom">
+                      <div class="form-group row">
+                            <label class="col-md-4 col-form-label" >Stream Name</label>
+                            <div class="col-md-6">
+                                <input
+                                      name="streamName"
+                                      class=" form-control l"
+                                      type="text"
+                                      required
+                                      [(ngModel)]="currentMediaStream.name"
+                                      (keyup)=updateOkButtonEnabled()
+                                />
+                                <div class="retype" *ngIf="icon">Name already exists</div>
+                            </div>
+                        <div class="col-sm-1">
+                          <i aria-hidden="true"
+                             class="fa errorImageClass errspan {{currentMediaStream?.name ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                        </div>
+                        </div>
+                      <div class="form-group row">
+                        <label class="col-md-4 col-form-label" >Enabled</label>
+                        <div class="col-md-6  col-form-label">
+                          <input
+                                type="checkbox"
+                                id = "enabled"
+                                name = "form-enabled"
+                                [(ngModel)]="currentMediaStream.enabled"/>
+                        </div>
+                        <br/>
+                        <!--TAB CONTENT--->
+                        <mat-tab-group selectedIndex="0" disableScroll="true"  animationDuration="0ms" >
+                        <mat-tab label="Ingest" >
+                          <div>
+                          <div class="form-group row ">
+                              <label class="col-md-4 col-form-label">Protocol</label>
+                              <div class="col-md-6">
+                                <select class="form-control l" id="privilegeField" (change)="onChangeIngestProtocolType(0, $event)"
+                                        [(ngModel)]="currentMediaStream.ingestProtocol">
+                                  <option disabled [ngValue]="undefined">Select protocol</option>
+                                  <option
+                                    *ngFor="let ingestProtocol of ingestProtocols" [value]="ingestProtocol">{{ ingestProtocol }}</option>
+                                </select>
+                              </div>
+                          </div>
+                          <ng-container *ngIf="( currentMediaStream.ingestProtocol === 'HTTP_GET')">
+                          <div class="form-group row">
+                            <label class="col-md-4 col-form-label" >URL</label>
+                            <div class="col-md-6">
+                              <input
+                                    name="ingestUrl"
+                                    class="form-control l"
+                                    type="text"
+                                    [(ngModel)]="currentMediaStream.ingestUrl"
+                                    (input) = "isValidURL()"
+                                    (keyup)=updateOkButtonEnabled() />
+                            </div>
+                            <span class="col-sm-1">
+                              <i aria-hidden="true"
+                                 class="fa errorImageClass errspan {{currentMediaStream.ingestUrl ? (!isValidURL() ? 'fa-times-circle text-danger' : 'fa-check-circle text-success') : 'fa-check-circle'}}" ></i>
+                            </span>
+                          </div>
+                          </ng-container>
+                          <ng-container *ngIf="( currentMediaStream.ingestProtocol === 'HTTP_PUT')">
+                          <div class="form-group row" >
+                              <label class="col-md-4 col-form-label" >Ingress Path</label>
+                              <div class="col-md-6">
+                                <input
+                                      name="ingestPath"
+                                      class="form-control l"
+                                      type="text"
+                                      [(ngModel)]="currentMediaStream.ingestPath"
+                                      (input)="isValidURL()"
+                                      (keyup)=updateOkButtonEnabled() />
+                              </div>
+                            </div>
+                          </ng-container>
+                            <ng-container *ngIf="( currentMediaStream.ingestProtocol === 'HTTP_PUT' ||currentMediaStream.ingestProtocol === 'WEBDAV' )">
+                              <div class="form-group row" >
+                                <label class="col-md-4 col-form-label" >Ingress URL</label>
+                                <div class="col-md-6" >
+                                  <span id="ingressURL">
+                                  {{getIngressURL()}}
+                                  </span>
+                                  <!-- //TODO
+                                  <button class="btn btn-outline-light" (click)="copyURL()">Copy URL <i class="fas fa-chevron-down"></i></button>
+                                  -->
+                                </div>
+                              </div>
+
+                            </ng-container>
+                          <ng-container *ngIf="( currentMediaStream.ingestProtocol === 'WEBDAV')">
+                            <div class="form-group row" >
+                              <label class="col-md-4 col-form-label" >Ingress Path</label>
+                              <div class="col-md-6">
+                                <input
+                                      name="ingestPath"
+                                      class="form-control l"
+                                      id="ingressPath"
+                                      type="text"
+                                      [(ngModel)]="currentMediaStream.ingestPath"
+                                      (keyup)=updateOkButtonEnabled() />
+                              </div>
+                              <div class="col-sm-1">
+                                <i aria-hidden="true"
+                                   class="fa errorImageClass errspan {{currentMediaStream?.ingestPath ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                              </div>
+                            </div>
+                            <div class="form-group row" >
+                              <label class="col-md-4 col-form-label" >User name</label>
+                              <div class="col-md-6">
+                                <input
+                                        name="username"
+                                        class="form-control l"
+                                        type="text"
+                                        [(ngModel)]="currentMediaStream.username"
+                                        (keyup)=updateOkButtonEnabled() />
+                              </div>
+                              <div class="col-sm-1">
+                                <i aria-hidden="true"
+                                   class="fa errorImageClass errspan {{currentMediaStream?.username ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                              </div>
+                            </div>
+                            <div class="form-group row" >
+                              <label class="col-md-4 col-form-label" >Password</label>
+                              <div class="col-md-6">
+                                <input
+                                      name="password"
+                                      class="form-control l"
+                                      type="password"
+                                      [(ngModel)]="currentMediaStream.password"
+                                      (keyup)=updateOkButtonEnabled() />
+                              </div>
+                              <div class="col-sm-1">
+                                <i aria-hidden="true"
+                                   class="fa errorImageClass errspan {{currentMediaStream?.password ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                              </div>
+                            </div>
+                          </ng-container>
+                          </div>
+                        </mat-tab>
+                        <mat-tab label="Transmit">
+                          <div >
+                            <div class="form-group row">
+                              <div class="col-md-4">
+                                <label class="col-form-label">Destination Address</label>
+                              </div>
+                              <div class="col-md-6">
+                                <input class="form-control l"
+                                       placeholder="0.0.0.0"
+                                       type="text"
+                                       (keydown)=ipAddressOnly($event)
+                                       (keyup)=updateOkButtonEnabled()
+                                       [(ngModel)]=currentMediaStream.dstAddress
+                                       [pattern]="ipPattern" />
+                              </div>
+                              <span class="col-sm-1">
+                              <i aria-hidden="true"
+                                 class="fa errorImageClass errspan {{currentMediaStream.dstAddress ? (!validIpAddress(currentMediaStream.dstAddress) ? 'fa-times-circle text-danger' : 'fa-check-circle text-success') : 'fa-check-circle'}}" ></i>
+                            </span>
+                            </div>
+                            <div class="form-group row">
+                              <div class="col-md-4">
+                                <label class="col-form-label" >Destination Port</label>
+                              </div>
+                              <div class="col-md-6">
+                                <input
+                                      class="form-control l"
+                                      name="destPort"
+                                      type="number"
+                                      pattern="[0-9]*"
+                                      required
+                                      minlength="2"
+                                      placeholder="8000"
+                                      (keyup)=updateOkButtonEnabled()
+                                      [(ngModel)]="currentMediaStream.dstPort"/>
+                              </div>
+                              <div class="col-sm-1">
+                                <i aria-hidden="true"
+                                   class="fa errorImageClass errspan {{currentMediaStream.dstPort ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label class="col-form-label col-md-4" >Network Interface</label>
+                              <div class="col-md-6">
+                                <select
+                                  class="form-control"
+                                  name="networkName"
+                                  [(ngModel)]="currentMediaStream.nic">
+                                  <option disabled [ngValue]="undefined">Select Network Interface</option>
+                                  <option *ngFor="let net of netInterface" [ngValue]="net.interfaceName">
+                                    {{ net?.interfaceName +' ('+ net?.ipaddress +' - '+ net?.displayName +' )' }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                              <div class="form-group row">
+                                <label class="col-md-4 col-form-label" >Encoding</label>
+                              <div class="col-sm-1">
+                                <input
+                                  class="mt10"
+                                  type="radio"
+                                  (change)="onEncodeTypeChangeHandler(0, $event )"
+                                  [value]="true"
+                                  [(ngModel)]="encodingType"
+                                >
+                              </div>
+                              <div class="col-md-1">
+                                <label class=" col-form-label " >ROUTE</label>
+                              </div>
+                              <div class="col-sm-1">
+                                <input
+                                  class="mt10"
+                                  type="radio"
+                                  [value]="false"
+                                  [(ngModel)]="encodingType">
+                              </div>
+                              <div class="col-md-1">
+                                  <label class="col-form-label" >MMTP</label>
+                              </div>
+                              <div class=" clearfix">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label class="col-form-label col-md-4" >TTL</label>
+                              <div class="col-md-6">
+                                <input
+                                  name="ttl"
+                                  class="form-control l"
+                                  type="number"
+                                  required
+                                  minlength="2"
+                                  placeholder="32"
+                                  [(ngModel)]="currentMediaStream.ttl"
+                                  (keyup)=updateOkButtonEnabled() />
+                              </div>
+                              <div class="col-sm-1">
+                                <i aria-hidden="true"
+                                   class="fa errorImageClass errspan {{currentMediaStream.ttl ? 'fa-check-circle text-success' : 'fa-check-circle'}}" ></i>
+                              </div>
+                            </div>
+                              <ng-container *ngIf="( encodingType )">
+                              <div class="form-group row">
+                                <label class="col-form-label col-md-4" >SLT Config</label>
+                                <div class="col-md-6">
+                                  <select
+                                    class="form-control"
+                                    name="sltConfig"
+                                    [(ngModel)]="currentMediaStream.sltConfiguration">
+                                    <option disabled [ngValue]="undefined">Select Config</option>
+                                    <option *ngFor="let configType of SLTConfig " [value]="configType">
+                                      {{configType}}
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+                        </mat-tab>
+                      </mat-tab-group>
+                    </div>
+            <div class="modal-footer">
+              <button class="btn btn-outline-light" data-dismiss="modal" [disabled]=!okButtonEnabled
+                      (click)=addUpdateCurrentMediaStream() >OK
+              </button>
+              <button class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>

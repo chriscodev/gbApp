@@ -1,0 +1,168 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title" style="padding-left:0px;">Schedule Providers</h4>
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)="onCommit()"
+        (parentRevert)="onRevert()"
+        [dirty]="dirty">
+      </app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder" style="min-height:380px">
+      <div class="content-table">
+        <app-modal-dynamic-tb-translate
+          (buttonClicked)="onButtonClicked($event)"
+          (rowClicked)="rowClicked($event)"
+          [buttonList]="buttonList"
+          [enableSearch]="true"
+          [modalName]="modalName"
+          [multiSelect]="true"
+          [objectTableType]="'ScheduleProvider'"
+          [objectTitle]="'Schedule Providers'"
+          [tableData]="localScheduleProviders"
+          [tableHeaders]="tableHeaders"
+          [translateTableData]="translatedSchProviders">
+        </app-modal-dynamic-tb-translate>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+     id="scheduleProviderModal" role="dialog" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ modalTitle }}</h4>
+        <button (click)="closeModal()" class="close" data-dismiss="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!--<ng-container *ngIf="showScheduleProviderModal">-->
+        <ng-container *ngIf="initialPage">
+          <div class="form-bottom">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="nameField">Name</label>
+              <div class="col-md-6">
+                <input (input)="validateName()" [(ngModel)]="currentScheduleProvider.name"
+                       class="form-control l"
+                       id="nameField"
+                       type="text"/>
+                <div *ngIf="nameExists" class="retype">Name already exists</div>
+              </div>
+              <div class="col-sm-1 validImage ">
+                                <span><i [ngClass]="nameIconText" aria-hidden="true"
+                                         class="fa fa-check-circle "></i></span>
+              </div>
+            </div>
+            <div class="form-group m-t-10 row">
+              <label class="col-md-3 col-form-label" for="onLineField">Online</label>
+              <div class="col-md-1">
+                <div class="custom-control custom-checkbox">
+                  <input [(ngModel)]="currentScheduleProvider.onLine"
+                         class="mt10 custom-control custom-checkbox"
+                         id="onLineField"
+                         type="checkbox"/>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label" for="scheduleProviderTypeField">Schedule Provider
+                Type</label>
+              <div class="col-md-6">
+                <select
+                  (change)="onChangeProviderType()"
+                  [(ngModel)]="currentScheduleProvider.scheduleProviderType"
+                  [disabled]="editMode"
+                  class="form-control"
+                  id="scheduleProviderTypeField">
+                  <option *ngFor="let providerType of scheduleProviderTypes"
+                          [ngValue]="providerType">
+                    {{ SCHEDULE_PROVIDER_TYPES[providerType].displayName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!initialPage && showListingsBasedScheduleProvider">
+          <app-modal-sp-listings
+            (okEnabledChanged)="okEnabledChangedHandler($event)"
+            [scheduleProvider]="currentScheduleProvider">
+          </app-modal-sp-listings>
+        </ng-container>
+        <ng-container *ngIf="!initialPage && showFtpSettingsBasedScheduleProvider">
+          <app-modal-sp-ftp
+            (okEnabledChanged)="okEnabledChangedHandler($event)"
+            [scheduleProvider]="currentScheduleProvider">
+          </app-modal-sp-ftp>
+        </ng-container>
+        <ng-container
+          *ngIf="!initialPage && currentScheduleProvider.scheduleProviderType === ScheduleProviderType.PMCP_TCP">
+          <app-pmcp-tcp
+            (okEnabledChanged)="okEnabledChangedHandler($event)"
+            [scheduleProvider]="currentScheduleProvider">
+          </app-pmcp-tcp>
+        </ng-container>
+        <ng-container *ngIf="!initialPage && showOnConnectScheduleProvider">
+          <app-modal-sp-onconnect
+            (okEnabledChanged)="okEnabledChangedHandler($event)"
+            (scheduleProviderChanged)="scheduleProviderChangedHandler($event)"
+            [scheduleProvider]="currentScheduleProvider">
+          </app-modal-sp-onconnect>
+        </ng-container>
+        <ng-container *ngIf="!initialPage && showOnV3ScheduleProvider">
+          <app-modal-sp-onv3
+            (okEnabledChanged)="okEnabledChangedHandler($event)"
+            [scheduleProvider]="currentScheduleProvider">
+          </app-modal-sp-onv3>
+        </ng-container>
+      </div>
+
+
+      <!-- //FOOTER -->
+      <div class="modal-footer">
+        <button
+          (click)="clickPrev()"
+          [hidden]="initialPage "
+          class="btn btn-default btn-prev"
+          type="button">
+          <i class="fa fas fa-chevron-left"></i>
+          Prev
+        </button>
+
+        <button
+          (click)="clickNext()"
+          [disabled]="!previousNextEnabled"
+          [hidden]="!initialPage "
+          class="btn btn-default btn-next"
+          type="button">
+          <i class="fa fas fa-chevron-right"></i>
+          Next
+        </button>
+
+        <button (click)="closeModal()" class="btn btn-default" data-dismiss="modal" type="button">
+          <i class="fa fas fa-times"></i>
+          Close
+        </button>
+
+        <button
+          (click)="addUpdateCurrentProvider()"
+          [disabled]="!addUpdateEnabled"
+          class="btn btn-default btn-next"
+          data-dismiss="modal"
+          type="button">
+          <i class="fa fas fa-plus"></i> {{ editMode ? 'Update' : 'Add' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-sp-status *ngIf="openModalScheduleProviderStatus"
+                     [scheduleProvider]="currentScheduleProvider">
+</app-modal-sp-status>

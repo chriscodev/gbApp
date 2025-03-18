@@ -1,0 +1,130 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+<div class="modal fade" id="modalEditLLSSettings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">Edit LLS Table Settings</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="sltField">SMT/SLT Interval (ms)</label>
+            <div class="col-md-5">
+              <input
+                id="sltField"
+                class="form-control l"
+                type="number"
+                [(ngModel)]="localLLSSettings.sltInterval"
+                (keypress)="numberOnly($event)"
+                (input)="inputLLS()"
+                title="Value range 100-5000"
+              />
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="sltIntervalIconText"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="sttField">SystemTime Interval (ms)</label>
+            <div class="col-md-5">
+              <input
+                id="sttField"
+                class="form-control l"
+                type="number"
+                [(ngModel)]="localLLSSettings.sttInterval"
+                (keypress)="numberOnly($event)"
+                (input)="inputLLS()"
+                title="Value range 100-5000"/>
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="sttIntervalIconText"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="cdtField">CDT Interval (ms)</label>
+            <div class="col-md-5">
+              <input
+                id="cdtField"
+                class="form-control l"
+                type="number"
+                [(ngModel)]="localLLSSettings.cdtInterval"
+                (keypress)="numberOnly($event)"
+                (input)="inputLLS()"
+                title="Value range 100-5000"/>
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="cdtIntervalIconText"></i></span>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="rrtEnabledField">Enable RRT</label>
+            <div class="col-md-5">
+              <div class="custom-control custom-checkbox">
+                <input
+                  id="rrtEnabledField"
+                  class="mt10 custom-control custom-checkbox"
+                  type="checkbox"
+                  [(ngModel)]="localLLSSettings.rrtEnabled"
+                  (change)="inputLLS()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label">RRT Region</label>
+            <div class="col-md-5">
+              <select
+                [disabled]="!localLLSSettings.rrtEnabled"
+                class="form-control"
+                [(ngModel)]="localLLSSettings.rrtRegion">
+                <option *ngFor="let rrtRatingRegion of rrtRatingRegions" [ngValue]="rrtRatingRegion">
+                  {{ RRT_RATING_REGIONS[rrtRatingRegion].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-md-4 col-form-label" for="rrtField">RRT Intervals (ms)</label>
+            <div class="col-md-5">
+              <input
+                [disabled]="!localLLSSettings.rrtEnabled"
+                id="rrtField"
+                class="form-control l"
+                type="number"
+                [(ngModel)]="localLLSSettings.rrtInterval"
+                (keypress)="numberOnly($event)"
+                (input)="inputLLS()"
+                title="Value range 1000-300000"/>
+            </div>
+            <div class="mt10 col-sm-1 text-center" *ngIf="localLLSSettings.rrtEnabled">
+              <span><i aria-hidden="true" class="fa fa-check-circle" [ngClass]="rrtIntervalIconText"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-dark" (click)="setDefaultSettings()">
+            <i class="fa fas fa-undo"></i> Defaults
+          </button>
+          <button class="btn btn-outline-dark" (click)="closeModal()">
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-outline-dark" [disabled]="!updateEnabled" (click)="updateLLSSettings()">
+            <i class="fas fa fa-check"></i> Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

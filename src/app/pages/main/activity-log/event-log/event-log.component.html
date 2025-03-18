@@ -1,0 +1,146 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="card-body">
+  <div class="col-md-16">
+    <div class="content-table" >
+      <ng-container *ngIf="dataLoading">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <h5>{{ spinnerText }}</h5>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!dataLoading">
+        <app-modal-dynamic-tb-translate
+          [tableHeaders]=tableHeaders
+          [tableData]=eventLogs
+          [objectTableType]=eventLogs.constructor.name
+          [objectTitle]="'Event Log Messages'"
+          [buttonList]=buttonList
+          [modalName]=modalName
+          [enableSearch]=true
+          [multiSelect]=false
+          [enableSort]=true
+          [tableMaxHeight]="'420px'"
+          (buttonClicked)=onButtonClicked($event)
+          (rowClicked)="onRowClicked($event)">
+        </app-modal-dynamic-tb-translate>
+      </ng-container>
+    </div>
+  </div>
+  <!-- // MODAL FOR VIEW EVENT MESSAGE  -->
+  <div class="modal fade mymodal modal-holder" id="myModal_EventLogMessage" tabindex="-1" role="dialog"
+       aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="true">
+    <div class="modal-dialog  modal-lg" style="height:300px;" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">View Event Log Message - {{ viewLogRecord.id }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-container tabcontent-border ">
+          <h4 class="card-title">Event Log Details</h4>
+          <div class="form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Type</label>
+              <div class="col-md-4">
+                <input type="text" [(ngModel)]="modalData.eventLogType" class="form-control" placeholder="Type"
+                       disabled/>
+              </div>
+              <label class=" col-form-label col-sm-2">Event ID</label>
+              <div class="col-md-4">
+                <input type="text" [(ngModel)]="viewLogRecord.id" class="form-control col-sm-1" placeholder="id"
+                       disabled/>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Date/Time</label>
+              <div class="col-md-4">
+                <input type="text" value="{{convertDate(viewLogRecord.timeStamp)}}"
+                       class="form-control"
+                       placeholder="Type" disabled/>
+              </div>
+              <label class="col-sm-2 col-form-label">Source</label>
+              <div class="col-md-4">
+                <input type="text" [(ngModel)]="viewLogRecord.sourceName" class="form-control"
+                       placeholder="Type" disabled/>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <app-nav-slider
+            [headerTabs]=headerTabs
+            [activeId]=activeId
+            (activeIdChanged)=activeIdChangedHandler($event)
+          ></app-nav-slider>
+          <div class="tab-content">
+            <ng-container>
+              <div class="content-table" [hidden]="activeId !== 1">
+                <div class="form-group row">
+                             <textarea name="eventMessage"
+                                       id="mes" cols="10" rows="10"
+                                       class="form-control "
+                                       [(ngModel)]="viewLogRecord.message">
+                             </textarea>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container>
+              <div class="content-table" [hidden]="activeId !== 2">
+                <div class="form-group row">
+                        <textarea name="" id="exp" cols="10" rows="10" class="form-control "
+                                  [(ngModel)]="viewLogRecord.thrown"></textarea>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat "
+                  [disabled]='!isPrev' (click)="prevDataContent()"><i
+            class="ti-angle-up"></i> prev
+          </button>
+          <button class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat "
+                  [disabled]='!isNext' (click)="nextDataContent()"><i
+            class="ti-angle-down"></i> next
+          </button>
+          <button class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat "
+                  data-dismiss="modal">Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- // MODAL FOR CLEAR LOGS-->
+<div class="modal fade modal-holder" id="clearLogsDialog" tabindex="-1" role="dialog"
+     aria-labelledby="clearLogsDialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="clearLogModal">Clear Log Confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <br/>
+      <div class="form-group row" style="padding:20px;text-align: center">
+        Are you sure you want to Clear the Event Log Messages?
+      </div>
+      <div class="modal-footer">
+        <button class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat"
+                (click)="clearLogs()">Yes
+        </button>
+        <button class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat"
+                data-dismiss="modal">No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

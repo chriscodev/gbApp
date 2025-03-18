@@ -1,0 +1,132 @@
+<!-- Copyright (c) 2023-2024 Triveni Digital, Inc. All rights reserved. -->
+<div *ngIf="sourceData === 'TransCallFromChannel'" class="modal fade" id="modalTransportLink" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form class="form-horizontal form-material">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModalNew()"><span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-modal-dynamic-tb-translate
+            [tableHeaders]=tableHeaders
+            [tableData]=linkTransportData
+            [objectTableType]="'Channel-Transport-Link'"
+            [buttonList]=buttonList
+            [enableScroll]="true"
+            [enableSearch]=false
+            [multiSelect]=false
+            (buttonClicked)=onButtonClicked()>
+          </app-modal-dynamic-tb-translate>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-next" (click)="onButtonClicked()"
+                  [disabled]="checkSelectedRowValues()"><i class="fa fas fa-check"></i> OK
+          </button>
+          <button type="button" class="btn btn-default" (click)="closeModalNew()"><i class="fa fas  fa-times"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="sourceData === 'ProgCallFromService' || sourceData === 'ProgCallFromServiceATSC3'" class="modal fade"
+     id="modalTransportProgramLink" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form class="form-horizontal form-material">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModalNew()"><span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label class="col-md-2 col-form-label" for="transportNameField">Transport</label>
+            <div class="col-md-6">
+              <input style="background-color: #272c36; color: #CED4DA;" type="text" [value]="transportName"
+                     [disabled]="true" id="transportNameField">
+            </div>
+          </div>
+          <div class="modal-body" *ngIf="sourceData === 'ProgCallFromService'">
+            <app-modal-dynamic-tb-translate
+              [tableHeaders]=tableHeaders
+              [tableData]=linkProgramData
+              [objectTableType]="'Service Program Link'"
+              [buttonList]=buttonList
+              [enableSearch]=false
+              [multiSelect]=false
+              (buttonClicked)=onButtonClicked()>
+            </app-modal-dynamic-tb-translate>
+          </div>
+          <div class="modal-body" *ngIf="sourceData === 'ProgCallFromServiceATSC3'">
+            <app-modal-dynamic-tb-translate
+              [tableHeaders]=tableHeaders
+              [tableData]=cloneIPData
+              [objectTableType]="'Service IP Link'"
+              [buttonList]=buttonList
+              [enableSearch]=false
+              [multiSelect]=false
+              (buttonClicked)=onButtonClicked()>
+            </app-modal-dynamic-tb-translate>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-next" (click)="onButtonClicked()"
+                  [disabled]="checkSelectedRowValues()"><i class="fa fas fa-check"></i> OK
+          </button>
+          <button type="button" class="btn btn-default" (click)="closeModalNew()"><i class="fa fas  fa-times"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="sourceData === 'RecCallFromServiceATSC3'" class="modal fade" id="modalTransportRecoveryLink" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form class="form-horizontal form-material">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select Recovery</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModalNew()"><span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <div class="col-md-3">
+              <label class=" col-form-label">Transport</label>
+            </div>
+            <div class="col-md-6">
+              <input style="background-color: #272c36; color: #CED4DA;" type="text" [value]="transportName"
+                     [disabled]="true">
+            </div>
+          </div>
+          <div class="modal-body">
+            <app-modal-dynamic-tb-translate
+              [tableHeaders]=tableHeaders
+              [tableData]=linkRecoveryData
+              [objectTableType]="'Service Recovery Link'"
+              [buttonList]=buttonList
+              [enableSearch]=false
+              [multiSelect]=false
+              (buttonClicked)=onButtonClicked()>
+            </app-modal-dynamic-tb-translate>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-next" (click)="onButtonClicked()"
+                  [disabled]="checkSelectedRowValues()"><i class="fa fas fa-check"></i> OK
+          </button>
+          <button type="button" class="btn btn-default" (click)="closeModalNew()"><i class="fa fas  fa-times"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

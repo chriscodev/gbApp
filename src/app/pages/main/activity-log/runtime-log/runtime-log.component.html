@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div class="card-body">
+    <div class="content-table" style="min-height:550px;">
+      <app-modal-simple-table
+        [tableHeaders] = tableHeaders
+        [columnIdentifier] = "'fileName'"
+        [tableData] = runTimeLogList
+        [buttonList] = buttonList
+        [objectTableType]="'Runtimelogs'"
+        [modalName] = modalName
+        [enableSearch]= false
+        [tableMaxHeight]="'530px'"
+        [enableScroll] = true
+        (buttonClicked)=onButtonClicked($event)>
+      </app-modal-simple-table>
+    </div>
+</div>
+
+<app-modal-progress-bar
+  *ngIf="viewProgressBar"
+  [progressBarData]=progressModalData
+  (progressBarEmit)=fileProgressModalHandler($event)
+></app-modal-progress-bar>
+

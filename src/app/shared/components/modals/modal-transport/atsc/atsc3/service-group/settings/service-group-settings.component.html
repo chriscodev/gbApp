@@ -1,0 +1,300 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div>
+    <div class="table-bordered  triveniBorder ">
+        <br/>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-7">
+                <input
+                        (input)="inputServiceGroup()"
+                        [(ngModel)]="localServiceGroup.name"
+                        autocomplete="off"
+                        class="form-control l"
+                        type="text"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                <span><i [ngClass]="nameIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Group ID</label>
+            <div class="col-sm-7">
+                <input
+                        (input)="inputServiceGroup()"
+                        (keypress)="numberOnly($event)"
+                        [(ngModel)]="localServiceGroup.groupId"
+                        appBlockCopyPaste
+                        autocomplete="off"
+                        class="form-control l"
+                        title="Max value of 255"
+                        type="number"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                            <span><i [ngClass]="groupIdIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Group Count</label>
+            <div class="col-sm-7">
+                <input
+                        (input)="inputServiceGroup()"
+                        (keypress)="numberOnly($event)"
+                        [(ngModel)]="localServiceGroup.groupCount"
+                        appBlockCopyPaste
+                        autocomplete="off"
+                        class="form-control l"
+                        title="Value range 1-256"
+                        type="number"/>
+            </div>
+            <div class="col-sm-1 validImage">
+                            <span><i [ngClass]="groupCountIconText" aria-hidden="true"
+                                     class="fa fa-check-circle"></i></span>
+            </div>
+        </div>
+        <!-- STATMUX -->
+        <hr/>
+        <h4 class="card-title align-content-center">Statmux</h4>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="statMuxEnabledField">Statmux
+                Enabled</label>
+            <div class="col-sm-7">
+                <div class="custom-control custom-checkbox">
+                    <input
+                            (change)="inputServiceGroup()"
+                            [(ngModel)]="localServiceGroup.statmuxed"
+                            class="mt10 custom-control custom-checkbox"
+                            id="statMuxEnabledField"
+                            type="checkbox"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Statmux Rate</label>
+            <div class="col-sm-7">
+                <input
+                        (input)="inputServiceGroup()"
+                        (keypress)="numberOnly($event)"
+                        [(ngModel)]="localServiceGroup.statmuxRate"
+                        [disabled]="!localServiceGroup.statmuxed"
+                        class="form-control l"
+                        name="statmuxRate"
+                        title="Value range 1-100000000"
+                        type="number"/>
+            </div>
+            <div *ngIf="localServiceGroup.statmuxed" class="col-sm-1 validImage">
+                <span><i [ngClass]="statMuxBitrateIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+        </div>
+        <hr/>
+
+        <div class="tab-content triveniBorder" style="padding-left:20px;">
+            <div class="form-group row col-md-12">
+                <div class="col-sm-3 row">
+                    <button (click)="openModalEditLLSSettings()"
+                            class="btn btn-default btn-rounded waves-effect waves-light  "
+                            data-target="#modalEditLLSSettings" data-toggle="modal"
+                            type="button">Edit LLS Settings
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-4 row">
+                    <button (click)="openModalEditBroadbandSettings()"
+                            class="btn waves-effect waves-light btn-default btn-rounded btnWidth100 "
+                            data-target="#modalEditBroadbandSettings" data-toggle="modal"
+                            type="button">Edit Broadband Settings
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-4 row">
+                    <button (click)="openModalEditRecoverySettings()"
+                            class="btn waves-effect waves-light btn-default  btn-rounded btnWidth100 "
+                            data-target="#modalEditRecoverySettings" data-toggle="modal"
+                            type="button">Edit Recovery Settings
+                    </button>
+                </div>
+            </div>
+            <div class="form-group row col-md-12" style="padding-top:10px;">
+                <br/>
+                <div class="col-sm-3 row">
+                    <button (click)="openModalEditESGSettings()"
+                            class="btn waves-effect waves-light btn-default  btn-rounded btnWidth100 "
+                            data-target="#modalEditESGSettings" data-toggle="modal"
+                            type="button">Edit ESG Settings
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-3 row">
+                    <button (click)="openModalEditAEASettings()" class="btn btn-default  btn-rounded btnWidth100 "
+                            data-target="#modalEditAEASettings" data-toggle="modal"
+                            type="button">Edit AEA Settings
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-3 row">
+                    <button (click)="openModalEditDSTPSettings()"
+                            class="btn waves-effect waves-light btn-default  btn-rounded btnWidth100 "
+                            data-target="#modalEditDSTPSettings" data-toggle="modal"
+                            type="button">Edit DSTP Settings
+                    </button>
+                </div>&nbsp;&nbsp;
+            </div>
+        </div>
+        <!-- //SIGNALING -->
+        <hr/>
+        <div class="form-group row" style="padding-left:20px;">
+            <h5 class="card-title align-content-center">Signaling Signing</h5>
+            <!--Current Cert-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Current Certificate</label>
+                <div class="col-sm-3">
+                    <input
+                            [disabled]="true"
+                            class="form-control l"
+                            placeholder="None"
+                            type="text"
+                            value="{{currentCDTCert?.name}}"/>
+                </div>
+                <div class="col-sm-2 row">
+                    <button (click)="openModalLinkCert('current')" [disabled]="currentCDTCert!==null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" data-target="#modalCertLink"
+                            data-toggle="modal" type="button"> Link
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row">
+                    <button (click)="unlinkCert('current')" [disabled]="currentCDTCert===null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" type="button"> Unlink
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row">
+                    <button (click)="viewCert('current')" [disabled]="currentCDTCert===null"
+                            class="btn btn-default btnWidth btn-rounded"
+                            type="button">&nbsp; <i aria-hidden="true" class="fa fa-search"></i>&nbsp;
+                    </button>
+                </div>&nbsp;&nbsp;
+            </div>
+            <!--Current Next Cert-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Next Certificate</label>
+                <div class="col-sm-3">
+                    <input
+                            [disabled]="true"
+                            class="form-control l"
+                            placeholder="None"
+                            type="text"
+                            value="{{currentNextCert?.name}}"/>
+                </div>
+                <div class="col-sm-2 row ">
+                    <button (click)="openModalLinkCert('current-next')"
+                            [disabled]="currentNextCert!==null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" data-target="#modalCertLink"
+                            data-toggle="modal" type="button"> Link
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row ">
+                    <button (click)="unlinkCert('current-next')" [disabled]="currentNextCert===null"
+                            class="btn btn-default btnWidth  btn-rounded linkButton" type="button"> Unlink
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row">
+                    <button (click)="viewCert('current-next')" [disabled]="currentNextCert===null"
+                            class="btn btn-default btnWidth btn-rounded" type="button">&nbsp;<i aria-hidden="true"
+                                                                                                class="fa fa-search"></i>&nbsp;
+                    </button>
+                </div>&nbsp;&nbsp;
+            </div>
+            <!--CDT Cert-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">CDT Certificate</label>
+                <div class="col-sm-3">
+                    <input
+                            [disabled]="true"
+                            class="form-control l"
+                            placeholder="None"
+                            type="text"
+                            value="{{cdtCert?.name}}"/>
+                </div>
+                <div class="col-sm-2 row ">
+                    <button (click)="openModalLinkCert('cdt')" [disabled]="cdtCert!==null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" data-target="#modalCertLink"
+                            data-toggle="modal" type="button"> Link
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row">
+                    <button (click)="unlinkCert('cdt')" [disabled]="cdtCert===null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" type="button"> Unlink
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row ">
+                    <button (click)="viewCert('cdt')" [disabled]="cdtCert===null"
+                            class="btn btn-default btnWidth btn-rounded"
+                            type="button">&nbsp;<i aria-hidden="true" class="fa fa-search"></i>&nbsp;
+                    </button>
+                </div>&nbsp;&nbsp;
+            </div>
+            <!--CDT Next Cert-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">CDT Next Certificate</label>
+                <div class="col-sm-3">
+                    <input
+                            [disabled]="true"
+                            class="form-control l"
+                            placeholder="None"
+                            type="text"
+                            value="{{cdtNextCert?.name}}"/>
+                </div>
+                <div class="col-sm-2 row ">
+                    <button (click)="openModalLinkCert('cdt-next')" [disabled]="cdtNextCert!==null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" data-target="#modalCertLink"
+                            data-toggle="modal" type="button"> Link
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row">
+                    <button (click)="unlinkCert('cdt-next')" [disabled]="cdtNextCert===null"
+                            class="btn btn-default btnWidth btn-rounded linkButton" type="button"> Unlink
+                    </button>
+                </div>&nbsp;&nbsp;
+                <div class="col-sm-2 row ">
+                    <button (click)="viewCert('cdt-next')" [disabled]="cdtNextCert===null"
+                            class="btn btn-default btnWidth btn-rounded"
+                            type="button">&nbsp;<i aria-hidden="true" class="fa fa-search"></i>&nbsp;
+                    </button>
+                </div>&nbsp;&nbsp;
+            </div>
+        </div>
+        <app-modal-transport-edit-lls-settings
+                (llsSettingsChanged)="llsSettingsChangedHandler($event)"
+                [llsSettings]="localLLSSettings">
+        </app-modal-transport-edit-lls-settings>
+        <app-modal-transport-edit-broadband-settings
+                (broadbandSettingsChanged)="broadbandSettingsChangedHandler($event)"
+                [broadbandSettings]="localBroadbandSettings">
+        </app-modal-transport-edit-broadband-settings>
+        <app-modal-transport-edit-esg-settings
+                (esgSettingsChanged)="esgSettingsChangedHandler($event)"
+                [esgSettings]="localESGSettings">
+        </app-modal-transport-edit-esg-settings>
+        <app-modal-transport-edit-aea-settings
+                (aeaSettingsChanged)="aeaSettingsChangedHandler($event)"
+                [aeaSettings]="localAEASettings">
+        </app-modal-transport-edit-aea-settings>
+        <app-modal-transport-edit-recovery-settings
+                (recoverySettingsChanged)="recoverySettingsChangedHandler($event)"
+                [recoverySettings]="localRecoverySettings">
+        </app-modal-transport-edit-recovery-settings>
+        <app-modal-transport-edit-dstp-settings
+                (dstpSettingsChanged)="dstpSettingsChangedHandler($event)"
+                [dstpSettings]="localDSTPSettings">
+        </app-modal-transport-edit-dstp-settings>
+        <app-view-cert
+                (certRecordChanged)="certRecordChangeHandler($event)"
+                [certType]="certType"
+                [currentCert]="viewCertRecord"
+                [localServiceGroup]="localServiceGroup"
+                [modalSelectCert]="modalSelectCert"
+                [serverCerts]="serverCerts">
+        </app-view-cert>
+
+    </div>
+</div>

@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="nicField">Network Interface</label>
+  <div class="col-md-9">
+    <select [(ngModel)]="atsc3TranslatorOutput.nic"
+            class="form-control"
+            id="nicField">
+      <option *ngFor="let nic of nics"
+              [ngValue]="nic.interfaceName"> {{ nic.verboseName }}
+      </option>
+    </select>
+  </div>
+</div>
+<div class="form-group row">
+  <label class="col-sm-2 col-form-label">Bouquet IP</label>
+  <div class="col-sm-3">
+    <input (input)="inputSettings()"
+           [(ngModel)]="atsc3TranslatorOutput.bouquetIP"
+           class="form-control l"
+           id="bouquetAddress"
+           placeholder="0.0.0.0"
+           type="text"
+    />
+  </div>
+  <div class="mt10 col-sm-1 ">
+    <i [ngClass]="bouquetIPIconText" aria-hidden="true"
+       class="fa fa-check-circle ">
+    </i>
+  </div>
+  <label class="col-sm-2 col-form-label">LLS Source Port</label>
+  <div class="col-sm-3">
+    <input (input)="inputSettings()"
+           [(ngModel)]="atsc3TranslatorOutput.srcPort"
+           class="form-control l"
+           numbersOnly
+           title="Value range 1025-65535"
+           type="number"
+    />
+  </div>
+  <div class="mt10 col-sm-1 ">
+    <span><i [ngClass]="llsPortIconText" aria-hidden="true"
+             class="fa fa-check-circle ">
+  </i></span>
+  </div>
+</div>
+
+<div class="form-group row">
+  <label class="col-sm-2 col-form-label">Bouquet Port</label>
+  <div class="col-sm-3">
+    <input (input)="inputSettings()"
+           [(ngModel)]="atsc3TranslatorOutput.bouquetPort"
+           class="form-control l"
+           numbersOnly
+           title="Value range 1025-65535"
+           type="number"
+    />
+  </div>
+  <div class="mt10 col-sm-1">
+    <i [ngClass]="bouquetPortIconText" aria-hidden="true"
+       class="fa fa-check-circle ">
+    </i>
+  </div>
+</div>
+<app-modal-outputs-select-transport-type
+  [output]="atsc3TranslatorOutput"
+  [selectedTransport]="selectedTransport">
+</app-modal-outputs-select-transport-type>
+<br/>
+<h4 class="card-header">Translated Routes</h4>
+<div class="tab-content tabcontent-border triveniBorder">
+  <div class="card-body-small">
+    <app-modal-dynamic-tb-translate
+      [objectTableType]="'add-translated-route'"
+      [tableData]="localTranslatedRoutes"
+      [translateTableData]="translatedRoutes"
+      [tableHeaders]="tableHeaders"
+      [buttonList]="buttonList"
+      [enableScroll]="true"
+      [enableSearch]="true"
+      [multiSelect]="true"
+      [modalName]=modalName
+      (buttonClicked)="onButtonClicked($event)"
+      (rowClicked)="onRowClicked($event)">
+    </app-modal-dynamic-tb-translate>
+  </div>
+</div>
+<app-modal-outputs-atsc3-translated-routes
+  [selectedOutput]="atsc3TranslatorOutput"
+  [serverATSC3Transports]="serverATSC3TranslatedTransports"
+  [selectedTranslatedTransport]="selectedTranslatedTransport"
+  [currentRoute]="currentRoute"
+  [editMode]="editMode"
+  (routeRecordChanged)="routeRecordHandler($event)">
+</app-modal-outputs-atsc3-translated-routes>
+

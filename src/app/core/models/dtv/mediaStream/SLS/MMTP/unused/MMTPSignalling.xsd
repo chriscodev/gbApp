@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   xmlns="urn:mpeg:MMT:schema: Signalling:2013"
+   targetNamespace="urn:mpeg:MMT:schema:Signalling:2013">
+
+   <xs:element name="Message">
+      <xs:complexType>
+         <xs:choice>
+
+            <xs:element name="PA_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="table" type="Table" maxOccurs="unbounded"/>
+                     <xs:any namespace="##other" processContents="skip"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="MPI_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="MPI_table" type="MPIT"/>
+                     <xs:element name="MP_table" type="MPT" minOccurs="0"/>
+                     <xs:any namespace="##other" processContents="skip"/>
+                  </xs:sequence>
+                  <xs:attribute name="associated_MP_table" type="xs:boolean" default="false"/>
+                  <xs:anyAttribute namespace="##other" processContents="skip"/>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="MPT_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="MP_table" type="MPT"/>
+                     <xs:any namespace="##other" processContents="skip"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="CRI_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="CRI_table" type="CRIT"/>
+                     <xs:any namespace="##other" processContents="skip"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="DCI_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="DCI_table" type="DCIT"/>
+                     <xs:any namespace="##other" processContents="skip"/>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="AL_FEC_message">
+               <xs:complexType>
+                  <xs:sequence>
+                     <xs:element name="fec_flow">
+                        <xs:complexType>
+                           <xs:sequence>
+                              <xs:element name="FECConfiguration">
+                                 <xs:complexType>
+                                    <xs:attribute name="repair_flow_id" type="xs:integer"/>
+                                    <xs:attribute name="maximum_k_for_repair_flow" type="xs:integer"/>
+                                    <xs:attribute name="maximum_p_for_repair_flow" type="xs:integer"/>
+                                    <xs:attribute name="protection_window_time" type="xs:integer"/>
+                                    <xs:attribute name="protection_window_size" type="xs:integer"/>
+                                    <xs:attribute name="num_of_layer_for_LAFEC" type="xs:integer"/>
+                                    <xs:attribute name="fec_code_id_for_repair_flow" type="xs:integer"/>
+                                    <xs:any namespace="##other" processContents="skip"/>
+                                 </xs:complexType>
+                              </xs:element>
+                              <xs:any namespace="##other" processContents="skip"/>
+                           </xs:sequence>
+                           <xs:attribute name="fec_flow_id" type="xs:integer"/>
+                           <xs:attribute name="source_flow_id" type="xs:integer"/>
+                           <xs:attribute name="packet_ids" type="ListT" />
+                           <xs:attribute name="fec_coding_structure" type="xs:integer"/>
+                           <xs:attribute name="ssbg_mode" type="xs:integer"/>
+                           <xs:attribute name="ffsrpts_flag" type="xs:boolean"/>
+                           <xs:attribute name="length_of_repair_symbol" type="xs:integer"/>
+                           <xs:anyAttribute namespace="##other" processContents="skip"/>
+                        </xs:complexType>
+                     </xs:element>
+                  </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="HRBM_message">
+               <xs:complexType>
+                  <xs:attribute name="max_buffer_size" type="xs:integer"/>
+                  <xs:attribute name="fixed_end_to_end_delay" type="xs:integer"/>
+                  <xs:attribute name="max_transmission_delay" type="xs:integer"/>
+                  <xs:anyAttribute namespace="##other" processContents="skip"/>
+               </xs:complexType>
+            </xs:element>
+
+            <xs:element name="ADC_message">
+               <xs:complexType>
+                  <xs:attribute name="ADC_level_flag" type="xs:boolean"/>
+                  <xs:attribute name="MPU_sequence_number" type="xs:integer"/>
+                  <xs:attribute name="packet_id" type="xs:integer"/>
+                  <xs:attribute name="loss_tolerance" type="xs:integer"/>
+                  <xs:attribute name="jitter_sensitivity" type="xs:integer"/>
+                  <xs:attribute name="class_of_service" type="xs:boolean"/>
+                  <xs:attribute name="bidirection_indicator" type="xs:boolean"/>
+                  <xs:attribute name="flow_label" type="xs:integer"/>
+                  <xs:attribute name="sustainable_rate" type="xs:integer"/>
+                  <xs:attribute name="buffer_size" type="xs:integer"/>
+                  <xs:attribute name="peak_rate" type="xs:integer"/>
+                  <xs:attribute name="max_MFU_size" type="xs:integer"/>
+                  <xs:attribute name="mfu_period" type="xs:integer"/>
+                  <xs:complexType name="mmt:OperationPointCharacteristics">
+                     <xs:attribute name="sample_group_index" type="xs:integer"/>
+                     <xs:attribute name="operationPointSpatialQuality" type="xs:integer"/>
+                     <xs:attribute name="operationPointTemporalQuality" type="xs:integer"/>
+                     <xs:attribute name="operationPointBitrate" type="xs:integer"/>
+                     <xs:anyAttribute processContents="lax"/>
+                  </xs:complexType>
+                  <xs:anyAttribute namespace="##other" processContents="skip"/>
+               </xs:complexType>
+            </xs:element>
+
+         </xs:choice>
+         <xs:attribute name="message_id" type="xs:integer"/>
+         <xs:attribute name="version" type="xs:integer"/>
+         <xs:anyAttribute namespace="##other" processContents="skip"/>
+      </xs:complexType>
+   </xs:element>
+
+   <xs:complexType name="Table">
+      <xs:attribute name="table_id" type="xs:integer"/>
+      <xs:attribute name="version" type="xs:integer"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
+   </xs:complexType>
+
+   <xs:complexType name="PAT">
+      <xs:complexContent>
+         <xs:extension base="Table">
+            <xs:sequence>
+               <xs:element name="location" maxOccurs="unbounded">
+                  <xs:complexType>
+                     <xs:sequence>
+                        <xs:element name="MMT_general_location_info" type="MMT_general_location_info_type" maxOccurs="2"/>
+                        <xs:any namespace="##other" processContents="skip"/>
+                     </xs:sequence>
+                     <xs:attribute name="alternative_location_flag" type="xs:boolean"/>
+                     <xs:attribute name="signalling_information_table_id" type="xs:integer"/>
+                     <xs:attribute name="signalling_information_table_version" type="xs:integer"/>
+                     <xs:anyAttribute namespace="##other" processContents="skip"/>
+                  </xs:complexType>
+               </xs:element>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="MMT_general_location_info_type">
+      <xs:choice>
+
+         <xs:element name="asset">
+            <xs:complexType>
+               <xs:attribute name="packet_id" type="xs:integer"/>
+            </xs:complexType>
+         </xs:element>
+
+         <xs:element name="flow">
+            <xs:complexType>
+               <xs:attribute name="ipv4_src_addr" type="xs:string"/>
+               <xs:attribute name="ipv4_dst_addr" type="xs:string"/>
+               <xs:attribute name="dst_port" type="xs:integer"/>
+               <xs:attribute name="packet_id" type="xs:integer"/>
+               <xs:anyAttribute namespace="##other" processContents="skip"/>
+            </xs:complexType>
+         </xs:element>
+
+         <xs:element name="flow_ipv6">
+            <xs:complexType>
+               <xs:attribute name="ipv6_src_addr" type="xs:string"/>
+               <xs:attribute name="ipv6_dst_addr" type="xs:string"/>
+               <xs:attribute name="dst_port" type="xs:integer"/>
+               <xs:attribute name="packet_id" type="xs:integer"/>
+               <xs:anyAttribute namespace="##other" processContents="skip"/>
+            </xs:complexType>
+         </xs:element>
+
+         <xs:element name="M2TS">
+            <xs:complexType>
+               <xs:attribute name="network_id" type="xs:integer"/>
+               <xs:attribute name="MPEG_2_transport_stream_id" type="xs:integer"/>
+               <xs:attribute name="MPEG_2_PID" type="xs:integer"/>
+               <xs:anyAttribute namespace="##other" processContents="skip"/>
+            </xs:complexType>
+         </xs:element>
+
+         <xs:element name="M2ES">
+            <xs:complexType>
+               <xs:attribute name="ipv6_src_addr" type="xs:string"/>
+               <xs:attribute name="ipv6_dst_addr" type="xs:string"/>
+               <xs:attribute name="dst_port" type="xs:integer"/>
+               <xs:attribute name="MPEG_2_PID" type="xs:integer"/>
+               <xs:anyAttribute namespace="##other" processContents="skip"/>
+            </xs:complexType>
+         </xs:element>
+
+      </xs:choice>
+   </xs:complexType>
+
+   <xs:complexType name="MPIT">
+      <xs:complexContent>
+         <xs:extension base="Table">
+            <xs:sequence>
+               <xs:element name="PI_fragment">
+                  <xs:complexType>
+                     <xs:sequence>
+                        <xs:element name="fragment">
+                           <xs:complexType>
+                              <xs:simpleContent>
+                                 <xs:extension base="xs:string">
+                                    <xs:attribute name="mime_type" type="xs:string"/>
+                                 </xs:extension>
+                              </xs:simpleContent>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:any namespace="##other" processContents="skip"/>
+                     </xs:sequence>
+                  </xs:complexType>
+               </xs:element>
+               <xs:any namespace="##other" processContents="skip"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="MPT">
+      <xs:complexContent>
+         <xs:extension base="Table">
+            <xs:sequence>
+               <xs:element name="asset" type="AssetT"/>
+               <xs:element name="descriptor" type="DescriptorT"/>
+               <xs:any namespace="##other" processContents="skip"/>
+            </xs:sequence>
+            <xs:attribute name="MP_table_mode" type="xs:integer"/>
+            <xs:attribute name="MMT_package_id" type="xs:string"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="CRIT">
+      <xs:complexContent>
+         <xs:extension base="Table">
+            <xs:sequence>
+               <xs:element name="CRI_descriptor" type="CRIDT"/>
+               <xs:any namespace="##other" processContents="skip"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="DCIT">
+      <xs:complexContent>
+         <xs:extension base="Table">
+            <xs:sequence>
+               <xs:element name="asset">
+                  <xs:complexType>
+                     <xs:choice>
+                        <xs:element name="video">
+                           <xs:complexType>
+                              <xs:attribute name="video_average_bitrate" type="xs:integer"/>
+                              <xs:attribute name="video_maximum_bitrate" type="xs:integer"/>
+                              <xs:attribute name="horizontal_resolution" type="xs:integer"/>
+                              <xs:attribute name="vertical_resolution" type="xs:integer"/>
+                              <xs:attribute name="temporal_resolution" type="xs:integer"/>
+                              <xs:attribute name="video_minimum_buffer_size" type="xs:integer"/>
+                              <xs:anyAttribute namespace="##other" processContents="skip"/>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="audio">
+                           <xs:complexType>
+                              <xs:attribute name="audio_average_bitrate" type="xs:integer"/>
+                              <xs:attribute name="audio_maximum_bitrate" type="xs:integer"/>
+                              <xs:attribute name="audio_minimum_buffer_size" type="xs:integer"/>
+                              <xs:anyAttribute namespace="##other" processContents="skip"/>
+                           </xs:complexType>
+                        </xs:element>
+                        <xs:element name="download">
+                           <xs:complexType>
+                              <xs:attribute name="required_storage" type="xs:integer"/> <xs:anyAttribute
+                              namespace="##other"/>
+                           </xs:complexType>
+                        </xs:element>
+                     </xs:choice>
+                     <xs:attribute name="mime_type" type="xs:string"/>
+                     <xs:anyAttribute namespace="##other" processContents="skip"/>
+                  </xs:complexType>
+               </xs:element>
+               <xs:any namespace="##other" processContents="skip"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="AssetT">
+      <xs:sequence>
+         <xs:element name="asset_clock_relation">
+            <xs:complexType>
+               <xs:attribute name="asset_clock_relation_id"/>
+               <xs:attribute name="asset_timescale"/>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="MMT_general_location_info" type="MMT_general_location_info_type"/>
+         <xs:element name="asset_id" type="asset_id_T"/>
+         <xs:any namespace="##other" processContents="skip"/>
+      </xs:sequence>
+      <xs:attribute name="mime_type" type="xs:string"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
+   </xs:complexType>
+
+   <xs:complexType name="DescriptorT">
+      <xs:attribute name="descriptor_tag" type="xs:integer"/>
+   </xs:complexType>
+
+   <xs:complexType name="CRIDT">
+      <xs:complexContent>
+         <xs:extension base="DescriptorT">
+            <xs:attribute name="clock_relation_id" type="xs:integer"/>
+            <xs:attribute name="STC_sample" type="xs:integer"/>
+            <xs:attribute name="NTP_timestamp_sample" type="xs:dateTime"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="MPUTSD">
+      <xs:complexContent>
+         <xs:extension base="DescriptorT">
+            <xs:attribute name="mpu_sequence_number" type="xs:integer"/>
+            <xs:attribute name="mpu_presentation_time" type="xs:dateTime"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:simpleType name="ListT">
+      <xs:list itemType="xs:integer"/>
+   </xs:simpleType>
+
+   <xs:complexType name="asset_id_T">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="asset_id_scheme" type="xs:string"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+
+   <xs:complexType name="Identifier_mapping">
+      <xs:choice>
+         <xs:element name="asset_id" type="asset_id_T"/>
+         <xs:element name="URL" type="xs:anyURI"/>
+         <xs:element name="RegEx" type="xs:string"/>
+         <xs:element name="RepresentationId" type="xs:string"/>
+      </xs:choice>
+      <xs:attribute name="identifier_type" type="xs:integer" default="0"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
+   </xs:complexType>
+
+</xs:schema>

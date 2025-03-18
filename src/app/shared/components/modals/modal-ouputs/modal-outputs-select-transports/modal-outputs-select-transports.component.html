@@ -1,0 +1,60 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<div
+        class="modal fade"
+        id="selectTransportModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="selectTransportModal"
+        aria-hidden="true"
+        data-backdrop="static"
+        data-keyboard="false"
+>
+    <!-- view status, test connection, select transport modal -->
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Select a Transport</h5>
+                <button type="button"
+                        class="close"
+                        aria-label="Close"
+                        (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!--DYNAMIC TABLE COMPONENT -->
+                <div class="col-md-12">
+                    <div class="clearfix"></div>
+                    <div class="tab-content tabcontent-border triveniBorder">
+                        <div class="content-table">
+                            <app-modal-dynamic-tb-translate
+                                    [tableHeaders]="tableHeaders"
+                                    [tableData]="unusedTransports"
+                                    [buttonList]="buttonList"
+                                    [modalName]="'Select Transport'"
+                                    [enableSearch]="true"
+                                    [objectTableType]="'OutputSelectTransports'">
+                            </app-modal-dynamic-tb-translate>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        id="selectTransportButton"
+                        class="btn btn-default"
+                        (click)="selectTransport()">
+                    Select
+                </button>
+                <button type="button"
+                        class="btn btn-default"
+                        (click)="closeModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

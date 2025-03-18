@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+  -->
+
+<div class="form-group row ">
+  <label class="col-md-2 col-form-label" for="slotIdField">Slot ID</label>
+  <div class="col-md-3">
+    <select [(ngModel)]="asiOutput.cardId" class="form-control"
+            id="slotIdField">
+      <option *ngFor="let cardId of cardIds" [ngValue]="cardId"> {{ cardId }}
+      </option>
+    </select>
+  </div>
+</div>
+<div class=" form-group row">
+  <label class="col-md-2 col-form-label" for="bitrateField">Bitrate (b/s)</label>
+  <div class="col-md-3">
+    <input (input)="inputSettings()"
+           [(ngModel)]="asiOutput.bitrate"
+           class="form-control l"
+           id="bitrateField"
+           type="number"/>
+  </div>
+  <div class="col-md-1 validImage ">
+    <span><i [ngClass]="bitrateIconText" aria-hidden="true" class="fa fa-check-circle "></i></span>
+  </div>
+</div>
+<div class="form-group row">
+  <label class="col-md-2 col-form-label" for="a110Field">Transmit A110 Packet</label>
+  <div class="col-md-2">
+    <input [(ngModel)]="asiOutput.a110Enabled" class="mt10 custom-control custom-checkbox"
+           id="a110Field" type="checkbox"/>
+  </div>
+</div>
+<app-modal-outputs-transport-select
+  [output]="output"
+  [selectedTransport]="selectedTransport">
+</app-modal-outputs-transport-select>

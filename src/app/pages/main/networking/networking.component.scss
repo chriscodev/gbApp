@@ -1,0 +1,28 @@
+// Copyright (c) 2025 Triveni Digital, Inc. All rights reserved.
+
+input[disabled],span[disabled] {
+    //background-color: #CCC;
+ }
+
+ .errspan {
+    float: right;
+    margin-right: 6px;
+    margin-top: -20px;
+    position: relative;
+    z-index: 2;
+}
+
+.was-validated .form-control:valid, .was-validated .form-control:valid:focus {
+    border-color: #e9ecef;
+    box-shadow: none;
+  }
+
+  .form-hostname {
+      margin-top: 30px;
+      .hostname-label {
+          font-size: 18px;
+        padding-left:15px;
+          font-weight: bold;
+      }
+  }
+

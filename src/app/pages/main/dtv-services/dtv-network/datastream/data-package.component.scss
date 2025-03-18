@@ -1,0 +1,100 @@
+.form-group {
+  margin-bottom: 10px;
+}
+.btnFormat{
+  margin:0 2px!important;
+}
+
+.form-body{
+  padding:10px;
+}
+
+#dataStreamModal{
+  overflow-y: auto;
+}
+.retype {
+  font-size: 12px;
+  color: red;
+}
+.media-legend{
+  font-size: 1rem;
+}
+.modal-body{
+  font-size:12px;
+}
+label.disabledLabel{
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
+  opacity: .65;
+}
+:host ::ng-deep.mat-tab-label {
+  font-weight: bold;
+  opacity:1;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:20%;
+  //transition: background-color 0.2s ease-in-out;
+}
+
+.modal-footer{
+  margin-top:10px;
+}
+:host ::ng-deep .mat-tab-label-active {
+  font-weight: bold;
+  border-radius: 5px 5px 0 0;
+  padding: 10px;
+  opacity:1;
+  width:20%;
+  justify-content: center;
+  align-items: center;
+  background-color: #01c0c8;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+.mat-tab-group {
+  animation-duration:0ms;
+}
+.row{
+  margin-left:10px;
+}
+.errorImageClass{
+  margin-top:12px;
+  padding-left:0;
+}
+#ingressURL{
+  padding-top:5px;
+}
+:host ::ng-deep.mat-tab-body-content-active {
+  padding-top:10px;
+  padding-left:20px;
+  height: 100%;
+  overflow: hidden;
+  border:solid 1px #01c0c8;
+}
+
+:host ::ng-deep.mat-tab-body-content {
+  padding-top:10px;
+  height: 100%;
+  overflow: hidden;
+  border:solid 1px #01c0c8;
+}
+
+::ng-deep.mat-tab-label {
+  width:120px!important;
+}
+
+.checkBoxPadding{
+  padding-left:5px;
+  padding-right:10px;
+}
+.calculatedFields{
+  padding-left:10px;
+  color:#00ffff;
+}
+.calculatedFields span {
+  color:mediumseagreen;
+}
+

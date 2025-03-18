@@ -1,0 +1,147 @@
+<div
+  class="modal fade"
+  id="modalViewTransport"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">{{ modalTitle }}</h5>
+        <button
+          (click)="closeModalViewStream()"
+          type="button"
+          class="close"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <br />
+        <div class="card nopad-top">
+          <div class="form-group row">
+            <div class="col-md-3">
+              <label class="col-form-label" >
+                <span *ngIf="isNotATSC3type">TSID</span>
+                <span *ngIf="!isNotATSC3type">BSID</span>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <input
+                name="form-first-name"
+                class="form-control l"
+                type="text"
+                [(ngModel)]="viewTransportObj.tsid"
+                disabled
+              />
+            </div>
+            <div class="col-md-3">
+              <span class="mt10"> {{ hexValue }} </span>
+              <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-3">
+              <label class="col-form-label" >Name</label>
+            </div>
+            <div class="col-md-4">
+              <input
+                name="form-first-name"
+                class="form-control l"
+                type="text"
+                [(ngModel)]="viewTransportObj.name"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="tableView">
+            <ejs-treegrid
+              *ngIf="show"
+              #treegrid
+              [dataSource]="transStreamArray"
+              [treeColumnIndex]="0"
+              class="table basic table-hover table-striped"
+              gridLines="Both"
+              childMapping="subtasks"
+              (rowDataBound)="rowDataBound($event)"
+              (queryCellInfo)="queryCellInfo($event)"
+            >
+              <e-columns>
+                <e-column
+                  field="column1"
+                  headerText="Type"
+                  textAlign="left"
+                  width="45%"
+                  *ngIf="!isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column1"
+                  headerText="Type"
+                  textAlign="left"
+                  width="30%"
+                  *ngIf="isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column2"
+                  headerText="PLP ID"
+                  textAlign="left"
+                  width="15%"
+                  *ngIf="!isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column2"
+                  headerText="Program"
+                  textAlign="left"
+                  width="15%"
+                  *ngIf="isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column3"
+                  headerText="IP Stream Type"
+                  textAlign="left"
+                  width="15%"
+                  *ngIf="!isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column3"
+                  headerText="PID"
+                  textAlign="left"
+                  width="20%"
+                  *ngIf="isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column4"
+                  headerText="IP Stream Name"
+                  textAlign="left"
+                  width="25%"
+                  *ngIf="!isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column4"
+                  headerText="Stream Type"
+                  textAlign="left"
+                  width="35%"
+                  *ngIf="isNotATSC3type"
+                ></e-column>
+                <e-column
+                  field="column5"
+                  headerText="IP Flow"
+                  textAlign="left"
+                  width="25%"
+                  *ngIf="!isNotATSC3type"
+                ></e-column>
+              </e-columns>
+            </ejs-treegrid>
+            <div class="clearfix"></div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

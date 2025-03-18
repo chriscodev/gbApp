@@ -1,0 +1,20 @@
+<nav class="nav js-mod-nav d-flex" style="width: auto">
+  <ul class="nav nav__list" role="tablist">
+    <ng-container *ngFor="let tabItem of activeTabs; let i = index;">
+      <li class="nav__item" *ngIf="tabItem.toShow" (click)="clickNav($event, i)">
+        <a
+          class="nav__link"
+          data-toggle="tab"
+          href="{{tabItem.hrefVal}}"
+          role="tab"
+          aria-selected="true"
+          (click)="clickTab(tabItem.tabIdentifier)">
+          {{tabItem.tabName}}
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+  <div class="nav__slider">
+    <div class="nav__slider-rect"></div>
+  </div>
+</nav>

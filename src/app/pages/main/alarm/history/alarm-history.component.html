@@ -1,0 +1,32 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="row">
+  <div class="header-container">
+    <h4 class="card-title">Alarm History</h4>
+  </div>
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder" style="height:600px;padding:20px;">
+      <div class="form-group row">
+        <button (click)="clearAlarmHistory()"
+                class="col-md-2 btn btn-info btn-rounded btn-primary btnAdd btn-dark btnFormat">
+          <i class="fa fa-eraser"></i> Clear
+        </button>
+      </div>
+      <div class="form-group row">
+        <div class="content-table">
+          <app-modal-dynamic-tb-translate
+            [buttonList]="buttonList"
+            [enableSearch]="true"
+            [objectTableType]="'Alarm-Events'"
+            [objectTitle]="'Alarm Events'"
+            [tableData]="alarmHistory"
+            [multiSelect]="false"
+            [tableMaxHeight]="'400px'"
+            [tableHeaders]="tableHeaders">
+          </app-modal-dynamic-tb-translate>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

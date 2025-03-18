@@ -1,0 +1,153 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="row">
+  <div class="header-container">
+    <div class="col-sm-2">
+      <h4 class="card-title">Alarms Settings</h4>
+    </div>
+
+    <div class="row singleLayout">
+      <app-modal-commit-revert-dialog
+        (parentCommit)=onCommit()
+        (parentRevert)=onRevert()
+        [dirty]=dirty></app-modal-commit-revert-dialog>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="tab-content tabcontent-border triveniBorder" style="height:600px;padding:20px;">
+      <div class="form-group row">
+        <button (click)="onResetToDefaults()"
+                class="col-md-2 btn btn-info btn-rounded btn-primary btnAdd btn-dark btnFormat">
+          <i></i> Defaults
+        </button>
+      </div>
+      <div class="form-group row">
+        <div class="content-table alarmsSettings">
+          <app-modal-simple-table
+            (buttonClicked)="onButtonClicked($event)"
+            [buttonList]="buttonList"
+            [columnIdentifier]="'type'"
+            [enableScroll]="true"
+            [enableSearch]="true"
+            [modalName]="modalName"
+            [objectTableType]="objectTypeTitle"
+            [objectTitle]="'Alarm Configurations'"
+            [tableData]="localAlarmConfigurations"
+            [tableHeaders]="tableHeaders"
+            [tableMaxHeight]="'440px'"
+            [tableSortDisabled]="false">
+          </app-modal-simple-table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!--MODAL -->
+<div
+  aria-hidden="true"
+  aria-labelledby="myModalLabel"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="AlarmConfigurationModal"
+  role="dialog"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">
+          Alarm Settings
+        </h5>
+        <button aria-label="Close"
+                class="close"
+                data-dismiss="modal"
+                type="button"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="boxAlarmConfigSetting">
+          <div class="row">
+            <div class="w-100 p-3">
+              <div class="row">
+                <h4 class="m-b-0 text-white">
+                  <strong>{{ currentAlarmConfiguration.description }}</strong>
+                </h4>
+              </div>
+              <div class="content-table">
+                <br/>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="enabledField">Enabled</label>
+                  <div class="col-md-5">
+                    <input
+                      [(ngModel)]="currentAlarmConfiguration.enabled"
+                      class="mt10 custom-control custom-checkbox"
+                      id="enabledField"
+                      type="checkbox"/>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="levelField">Level</label>
+                  <div class="col-md-5">
+                    <select
+                      [(ngModel)]="currentAlarmConfiguration.level"
+                      class="form-control"
+                      id="levelField">
+                      <option *ngFor="let alarmLevel of alarmLevels"
+                              [ngValue]="alarmLevel"> {{ ALARM_LEVELS[alarmLevel].displayName }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="timeoutField">Timeout</label>
+                  <div class="col-md-5">
+                    <input
+                      (keypress)="numberOnly($event)"
+                      [(ngModel)]="currentAlarmConfiguration.timeOutSeconds"
+                      [disabled]="!editableTimeout"
+                      (input)="inputSettings()"
+                      aria-describedby="basic-addon3"
+                      class="form-control"
+                      id="timeoutField"
+                    />
+                  </div>
+                  <span class="col-md-3 text-center">(in seconds)</span>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-3 col-form-label" for="sendEmailField">Send Email</label>
+                  <div class="col-md-5">
+                    <input
+                      [(ngModel)]="currentAlarmConfiguration.sendEmailEnabled"
+                      class="mt10 custom-control custom-checkbox"
+                      id="sendEmailField"
+                      type="checkbox"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          [disabled]="!okEnabled"
+          (click)="updateAlarmConfiguration()"
+          class="btn btn-default"
+          data-dismiss="modal"
+          id="selectTransportButton"
+          type="button"
+        >
+          Update
+        </button>
+        <button class="btn btn-default" data-dismiss="modal" type="button">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

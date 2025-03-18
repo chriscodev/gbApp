@@ -1,0 +1,378 @@
+<!-- Copyright (c) 2023-2025 Triveni Digital, Inc. All rights reserved. -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" class="modal hide fade" id="modalAddService" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel"> {{ modalTitle }} </h5>
+        <button (click)="closeModalNew()" aria-label="Close" class="close" type="button"><span
+          aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h4 class="card-title">Service Settings</h4>
+        <div class="tab-content tabcontent-border triveniBorder">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Name</label>
+            <div class="col-md-6">
+              <input (input)="inputSettings()" [(ngModel)]="localService.name" class=" form-control l" maxlength="7"
+                     type="text">
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i [ngClass]="nameIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label *ngIf="localService.serviceType !== ServiceType.ATSC_3" class="col-md-3 col-form-label">Virtual
+              Channel</label>
+            <label *ngIf="localService.serviceType === ServiceType.ATSC_3"
+                   class="col-md-3 col-form-label">Major-Minor</label>
+            <div class="col-md-6">
+              <input #virtual (blur)="checkDash(virtual.value)" (input)="inputSettings()"
+                     (keydown)="checkBackspace($event)"
+                     (keypress)="checkNumberWithDash($event)" (keyup)="validateEntireVirtualChannelValue()"
+                     *ngIf="localService.serviceType !== ServiceType.ATSC_3" [(ngModel)]="localServiceVirtualChannel"
+                     autocomplete="off"
+                     class=" form-control l"
+                     maxlength="7"
+                     placeholder="major-minor" title="major-minor"
+                     type="text">
+              <input #virtual (blur)="checkDash(virtual.value)" (input)="inputSettings()"
+                     (keydown)="checkBackspace($event)"
+                     (keypress)="checkNumberWithDash($event)" (keyup)="validateEntireVirtualChannelValue()"
+                     *ngIf="localService.serviceType === ServiceType.ATSC_3" [(ngModel)]="localServiceVirtualChannel"
+                     autocomplete="off"
+                     class=" form-control l"
+                     maxlength="7"
+                     placeholder="Major-Minor" title="Major-Minor"
+                     type="text">
+            </div>
+            <div class="mt10 col-sm-1 text-center">
+              <span><i [ngClass]="channelNumberIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+            </div>
+          </div>
+          <div *ngIf="localService.serviceType === ServiceType.ATSC_3" class="form-group row">
+            <label class="col-md-3 col-form-label">Global Service ID</label>
+            <div class="col-md-6">
+              <input (input)="inputSettings()" [(ngModel)]="localATSC3Service.globalServiceId" class=" form-control l"
+                     type="text" [placeholder]="globalServiceIdPlaceholder" style="font-style: italic">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Description</label>
+            <div class="col-md-6">
+                <textarea [(ngModel)]="localService.description" class="form-control" cols="10" id="desc" name=""
+                          rows="2"
+                          type="number"></textarea>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Service Type</label>
+            <div class="col-md-6">
+              <select (change)="inputSettings()" *ngIf="localService.serviceType !== ServiceType.ATSC_3"
+                      [(ngModel)]="localService.atscServiceType" class="form-control">
+                <option *ngFor="let serviceType of serviceTypes"
+                        [ngValue]="serviceType">
+                  {{ SERVICE_TYPES[serviceType].displayName }}
+                </option>
+              </select>
+              <select (change)="inputSettings()" *ngIf="localService.serviceType === ServiceType.ATSC_3"
+                      [(ngModel)]="localATSC3Service.serviceCategory" class="form-control">
+                <option *ngFor="let atsc3ServiceCategory of atsc3ServiceCategories"
+                        [ngValue]="atsc3ServiceCategory">
+                  {{ ATSC3_SERVICE_CATEGORIES[atsc3ServiceCategory].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <ng-container *ngIf="localService.serviceType === ServiceType.ATSC_3">
+              <label class="col-md-3 col-form-label">Active</label>
+              <div class="col-md-1  fL col-form-label check-box-inputs">
+                <input [(ngModel)]="active" type="checkbox">
+              </div>
+            </ng-container>
+            <label *ngIf="localService.serviceType !== ServiceType.ATSC_3"
+                   class="col-md-3 col-form-label">Hidden</label>
+            <label *ngIf="localService.serviceType === ServiceType.ATSC_3"
+                   class="col-md-2 col-form-label">Hidden</label>
+            <div *ngIf="localService.serviceType !== ServiceType.ATSC_3"
+                 class="col-md-1  fL col-form-label check-box-inputs">
+              <input [(ngModel)]="localService.hidden" type="checkbox">
+            </div>
+            <div *ngIf="localService.serviceType === ServiceType.ATSC_3"
+                 class="col-md-1  fL col-form-label check-box-inputs">
+              <input (change)="updateHideInGuide()" [(ngModel)]="localService.hidden" type="checkbox">
+            </div>
+            <ng-container *ngIf="localService.serviceType === ServiceType.ATSC_3">
+              <label class="col-md-3 col-form-label">Hide in Guide</label>
+              <div class="col-md-1  fL col-form-label check-box-inputs">
+                <input (change)="updateHideInGuideValue()" *ngIf="localService.hidden" [(ngModel)]="hideInGuide"
+                       type="checkbox">
+                <input *ngIf="!localService.hidden" [(ngModel)]="hideInGuide" [disabled]="true"
+                       type="checkbox">
+              </div>
+            </ng-container>
+            <ng-container *ngIf="localService.serviceType !== ServiceType.ATSC_3">
+              <label class="col-md-3 col-form-label">Hide Guide</label>
+              <div class="col-md-1  fL col-form-label check-box-inputs">
+                <input [(ngModel)]="hideGuide" type="checkbox">
+              </div>
+            </ng-container>
+            <ng-container *ngIf="localService.serviceType === ServiceType.ATSC_CABLE">
+              <div class="col-md-12"></div>
+              <label class="col-md-3 col-form-label">Path Select</label>
+              <div class="col-md-1  fL col-form-label check-box-inputs">
+                <input [(ngModel)]="localCableService.pathSelect" type="checkbox">
+              </div>
+              <label class="col-md-3 col-form-label">Out of Band</label>
+              <div class="col-md-1  fL col-form-label check-box-inputs">
+                <input [(ngModel)]="localCableService.outOfBand" type="checkbox">
+              </div>
+            </ng-container>
+          </div>
+          <div *ngIf="localService.serviceType === ServiceType.ATSC_3" class="form-group row">
+            <label class="col-md-3 col-form-label">Broadband Access</label>
+            <div class="col-md-2">
+              <select [(ngModel)]="localATSC3Service.broadbandAccess" class="form-control">
+                <option *ngFor="let broadband of broadbandAccessTypes"
+                        [ngValue]="broadband">
+                  {{ BROADBAND_ACCESS_TYPES[broadband].displayName }}
+                </option>
+              </select>
+            </div>
+            <label class="col-md-2 col-form-label">Protection</label>
+            <div class="col-md-2 protection-dropdown">
+              <select [(ngModel)]="localATSC3Service.serviceProtection" class="form-control"
+                      style="width:75%;">
+                <option *ngFor="let protection of protectionTypes"
+                        [ngValue]="protection">
+                  {{ PROTECTION_TYPES[protection].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Linked Transport</label>
+            <div class="col-md-6">
+              <input value="{{selectedTransport?.name}}" [disabled]="true" class=" form-control l"
+                     placeholder="Unlinked"
+                     type="text">
+            </div>
+          </div>
+          <div *ngIf="localService.serviceType !== ServiceType.ATSC_3" class="form-group row">
+            <label class="col-md-3 col-form-label">Linked Program</label>
+            <div class="col-md-6">
+              <input value="{{selectedProgram?.programNumber}}" [disabled]="true" class=" form-control l"
+                     placeholder="Unlinked"
+                     type="text">
+            </div>
+            <div class="button-group col-md-3">
+              <button (click)="linkTransportProgram()"
+                      [disabled]="selectedTransport ===null || selectedProgram !== null  "
+                      class="btn btn-default btnWidth btn-rounded linkButton"
+                      data-backdrop="static" data-keyboard="false"
+                      data-target="#modalTransportProgramLink"
+                      data-toggle="modal"
+                      type="button"> Link
+              </button>
+              <button (click)="unlinkTransportProgram()"
+                      [disabled]="selectedProgram === null"
+                      class="btn btn-default btnWidth btn-rounded linkButton"
+                      type="button"> Unlink
+              </button>
+            </div>
+          </div>
+          <ng-container *ngIf="localService.serviceType === ServiceType.ATSC_3">
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label">Linked IP Stream</label>
+              <div class="col-md-6">
+                <input value="{{selectedIPStream?.name}}" [disabled]="true" class=" form-control l"
+                       placeholder="Unlinked"
+                       type="text">
+              </div>
+              <div class="button-group col-md-3">
+                <button (click)="linkTransportIPStream()"
+                        [disabled]="selectedTransport ===null || selectedIPStream !== null  "
+                        class="btn btn-default btnWidth btn-rounded linkButton"
+                        data-backdrop="static" data-keyboard="false"
+                        data-target="#modalTransportProgramLink"
+                        id="linkTransport"
+                        data-toggle="modal"
+                        type="button">Link
+                </button>
+                <button (click)="unlinkTransportIPStream()"
+                        [disabled]="selectedIPStream === null"
+                        class="btn btn-default btnWidth btn-rounded linkButton"
+                        id="unlinkTransport"
+                        type="button"> Unlink
+                </button>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-3 col-form-label">Linked Recovery</label>
+              <div class="col-md-6">
+                <input value="{{selectedRecoveryStream?.name}}" [disabled]="true" class=" form-control l"
+                       placeholder="Unlinked"
+                       type="text">
+              </div>
+              <div class="button-group col-md-3">
+                <button (click)="linkTransportRecovery()"
+                        [disabled]="selectedTransport ===null || selectedRecoveryStream !== null"
+                        class="btn btn-default btnWidth btn-rounded linkButton"
+                        data-backdrop="static" data-keyboard="false"
+                        data-target="#modalTransportRecoveryLink"
+                        data-toggle="modal"
+                        type="button"> Link
+                </button>
+                <button (click)="unlinkTransportRecovery()"
+                        [disabled]="selectedRecoveryStream === null"
+                        class="btn btn-default btnWidth btn-rounded linkButton"
+                        type="button"> Unlink
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <br/>
+        <!-- start nav slider -->
+        <app-nav-slider
+          (activeIdChanged)=activeIdChangedHandler($event)
+          [activeId]=activeId
+          [headerTabs]=headerTabs
+        >
+        </app-nav-slider>
+        <div class="tab-content tabcontent-border">
+          <div [hidden]="activeId !== 1" class="content-table table-responsive">
+            <app-modal-dynamic-tb-translate
+              #scheduleTable
+              (buttonClicked)=onButtonClickedSchedule($event)
+              (rowClicked)="rowClickedSchedule($event)"
+              *ngIf="!isHiddenSched"
+              [buttonList]=buttonListSchedule
+              [enableSearch]=true
+              [modalName]=modalScheduleName
+              [objectTableType]="'Service-Schedule'"
+              [tableData]=clonedSchedule
+              [showMoveRowSelection]="true"
+              [tableHeaders]=tableHeadersSchedule>
+            </app-modal-dynamic-tb-translate>
+          </div>
+
+          <div [hidden]="activeId !== 2" class="content-table table-responsive">
+            <span>Default Service Caption Settings</span>
+            <div class="content-table table-responsive">
+              <app-modal-dynamic-tb-translate
+                (buttonClicked)=onButtonClickedDefaultCaption($event)
+                (rowClicked)="rowClicked($event)"
+                *ngIf="!isHiddenCaption"
+                [buttonList]=buttonListDefault
+                [enableSearch]=true
+                [modalName]=modalCaptionName
+                [objectTableType]="'Service Default Caption'"
+                [tableData]=clonedDefault
+                [tableHeaders]=tableHeadersCaption>
+              </app-modal-dynamic-tb-translate>
+            </div>
+            <span>Linked Schedule Caption Settings</span>
+            <div [hidden]="activeId !== 2" class="content-table table-responsive">
+              <app-modal-dynamic-tb-translate
+                (buttonClicked)=onButtonClickedLinkedCaption($event)
+                *ngIf="!isHiddenCaption"
+                [buttonList]=buttonListLinked
+                [enableSearch]=true
+                [modalName]=modalCaptionName
+                [objectTableType]="'Service Linked Schedule Caption'"
+                [tableData]=clonedLinked
+                [tableHeaders]=tableHeadersCaption
+              >
+              </app-modal-dynamic-tb-translate>
+            </div>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <div [hidden]="activeId !== 3" class="content-table table-responsive">
+            <app-modal-dynamic-tb-translate
+              (buttonClicked)=onButtonClickedDescriptor($event)
+              (rowClicked)="rowClicked($event)"
+              *ngIf="!isHiddenDesc"
+              [buttonList]=buttonList
+              [enableSearch]=true
+              [modalName]=modalDescriptorName
+              [multiSelect]=false
+              [objectTableType]="'Service Descriptor'"
+              [tableData]=clonedDescriptorExtension
+              [tableHeaders]=tableHeadersDescriptor>
+            </app-modal-dynamic-tb-translate>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <!-- end nav slider -->
+      </div>
+      <div class="modal-footer">
+        <button (click)="clickAddEditService()"
+                [disabled]="!okEnabled"
+                class="btn btn-default btn-next"
+                type="button"><i class="fa fas fa-check"></i> OK
+        </button>
+        <button (click)="closeModalNew()" class="btn btn-default" type="button"><i class="fa fas  fa-times"></i>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-modal-networks-descriptor (descriptorChanged)="descriptorChangeHandler($event)"
+                                 *ngIf="!isHiddenDesc && localService.serviceType !== ServiceType.ATSC_3"
+                                 [descriptorEditMode]="descriptorEditMode"
+                                 [descriptor]="currentDescriptor"
+                                 [descriptors]="localATSCServiceDescriptors"
+                                 [sourceData]="'DescCallFromService'">
+  </app-modal-networks-descriptor>
+  <app-modal-networks-descriptor (extensionChanged)="extensionChangeHandler($event)"
+                                 *ngIf="!isHiddenDesc && localService.serviceType === ServiceType.ATSC_3"
+                                 [extensionEditMode]="extensionEditMode"
+                                 [extension]="currentExtension"
+                                 [extensions]="localATSCServiceExtensions"
+                                 [sourceData]="'DescCallFromServiceExt'">
+  </app-modal-networks-descriptor>
+  <app-modal-networks-schedule (scheduleChanged)="scheduleChangeHandler($event)"
+                               *ngIf="!isHiddenSched"
+                               [schedule]="currentSchedule"
+                               [service]="localService">
+  </app-modal-networks-schedule>
+  <app-modal-networks-caption (captionChanged)="defaultChangeHandler($event)"
+                              *ngIf="!isHiddenCaption && captionType === 'default'"
+                              [captionEditMode]="defaultEditMode"
+                              [caption]="currentDefault"
+                              [source]=captionType>
+  </app-modal-networks-caption>
+  <app-modal-networks-caption (captionChanged)="linkedChangeHandler($event)"
+                              *ngIf="!isHiddenCaption && captionType === 'linked'"
+                              [captionEditMode]="linkedEditMode"
+                              [caption]="currentLinked"
+                              [source]=captionType>
+  </app-modal-networks-caption>
+  <app-modal-view-schedule *ngIf="openModalViewSchedule"
+                           [schedule]="selectedSchedule"
+  ></app-modal-view-schedule>
+  <app-modal-networks-transport-link-program (programLinkChanged)="programLinkChangeHandler($event)"
+                                             *ngIf="isFromService && programModalName==='ProgCallFromService'"
+                                             [linkProgramData]="linkProgramData"
+                                             [sourceData]="programModalName"
+                                             [transName]="selectedTransport?.name">
+  </app-modal-networks-transport-link-program>
+  <app-modal-networks-transport-link-program (programIPLinkChanged)="programIPLinkChangeHandler($event)"
+                                             *ngIf="isFromService && programModalName==='ProgCallFromServiceATSC3'"
+                                             [linkProgramIPData]="linkProgramIPData"
+                                             [sourceData]="programModalName"
+                                             [transName]="selectedTransport?.name">
+  </app-modal-networks-transport-link-program>
+  <app-modal-networks-transport-link-program (recoveryLinkChanged)="recoveryLinkChangeHandler($event)"
+                                             *ngIf="isFromService && programModalName==='RecCallFromServiceATSC3'"
+                                             [linkRecoveryData]="linkRecoveryData"
+                                             [sourceData]="programModalName"
+                                             [transName]="selectedTransport?.name">
+  </app-modal-networks-transport-link-program>
+</div>

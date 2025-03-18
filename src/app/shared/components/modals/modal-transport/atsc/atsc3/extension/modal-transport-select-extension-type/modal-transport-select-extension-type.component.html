@@ -1,0 +1,61 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+<div class="content-table">
+  <app-modal-dynamic-tb-translate
+    [tableHeaders]="tableHeaders"
+    [tableData]="localTableExtensions"
+    [translateTableData]="localBSIDExtensionTypes"
+    [objectTableType]="objectTableType"
+    [buttonList]="buttonList"
+    [enableSearch]="true"
+    [multiSelect]="false"
+    [enableScroll]="true"
+    (buttonClicked)="onButtonClicked($event)"
+    (rowClicked)="onRowClicked($event)">
+  </app-modal-dynamic-tb-translate>
+</div>
+<div class="modal fade" id="modalSelectExtensionType" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div>
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body mh-100">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Extension Type</label>
+            <div class="col-md-9">
+              <select
+                class="form-control"
+                [(ngModel)]="localBSIDExtension.type">
+                <option *ngFor="let extension of extensionTypes" [ngValue]="extension">
+                  {{ EXTENSION_TYPES[extension].displayName }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-outline-dark"
+            (click)="closeModal()">
+            <i class="fas fa fa-times"></i> Cancel
+          </button>
+          <button
+            class="btn btn-outline-dark"
+            (click)="addUpdateBondedBSID()">
+            <i class="fas fa fa-check"></i> Ok
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-transport-add-bonded-bsid
+  [editMode]="editMode"
+  [bondedBSIDsExtension]="localBSIDExtension"
+  (bondedBSIDsExtensionChanged)="bondedBSIDsExtensionChangedHandler($event)">
+</app-modal-transport-add-bonded-bsid>

@@ -1,0 +1,119 @@
+<!-- Copyright (c) 2024 Triveni Digital, Inc. All rights reserved. -->
+
+<h4 class="card-header">PMCP TCP Settings</h4>
+<div class="tab-content tabcontent-border triveniBorder" style="padding:20px;">
+  <br/>
+  <div class="form-bottom">
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="nicField">Network Interface</label>
+      <div class="col-md-6">
+        <select [(ngModel)]="localScheduleProvider.networkInterfaceName"
+                class="form-control"
+                id="nicField">
+          <option *ngFor="let nic of nics"
+                  [ngValue]="nic.interfaceName"> {{ nic.verboseName }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="portField">Port</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="localScheduleProvider.port"
+          autocomplete="disabled"
+          class="form-control l"
+          id="portField"
+          title="Value range 1-65535"
+          type="number"
+        />
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="portIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-md-3 col-form-label" for="daysAheadField">Days Ahead</label>
+      <div class="col-md-5">
+        <input
+          (input)="inputSettings()"
+          (keypress)="numberOnly($event)"
+          [(ngModel)]="localScheduleProvider.daysAheadToProcess"
+          autocomplete="disabled"
+          class="form-control l"
+          id="daysAheadField"
+          title="Value range 1-999"
+          type="number"
+        />
+      </div>
+      <div class="mt10 col-sm-1 text-center">
+        <span><i [ngClass]="daysAheadIconText" aria-hidden="true" class="fa fa-check-circle"></i></span>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-form-label" for="transformerField">Transformer</label>
+    <div class="col-md-5">
+      <input
+        [(ngModel)]="localScheduleProvider.transformer"
+        [disabled]="true"
+        class="form-control l"
+        id="transformerField"
+        type="text"
+      />
+    </div>
+    <div class="col-md-1 text-center">
+      <button
+        (click)="doChooseTransformer()"
+        class="btn btn-sm"
+        data-backdrop="static"
+        data-keyboard="false"
+        data-target="#selectXSLTModal"
+        data-toggle="modal"
+      >
+        Choose
+      </button>
+    </div>
+    <div class="col-md-1 text-center">
+      <button
+        (click)="chooseToEmptyTransformer()"
+        class="btn btn-sm marLeft20"
+      >
+        X
+      </button>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-md-3"></div>
+    <div class="col-md-5">
+      <button
+        (click)="doTestConnection()"
+        [disabled]="!okEnabled"
+        class="btn btn-sm"
+        data-backdrop="static"
+        data-keyboard="false"
+        data-target="#testConnectionModal"
+        data-toggle="modal"
+      >
+        Test Connection
+      </button>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+</div>
+
+<app-modal-sp-selectxslt (xlstSelected)="xlstSelectedHandler($event)"
+                         (xsltClosed)="xlstClosedHandler()"
+                         *ngIf="showSelectTransformer">
+</app-modal-sp-selectxslt>
+
+<app-modal-sp-testconnection (testConnectionClosed)="testConnectionClosedHandler($event)"
+                             *ngIf="showTestConnection"
+                             [nics]="nics"
+                             [scheduleProvider]="localScheduleProvider"
+                             [showTestConnection]="showTestConnection">
+</app-modal-sp-testconnection>
+

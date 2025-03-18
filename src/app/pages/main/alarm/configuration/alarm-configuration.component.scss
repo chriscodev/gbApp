@@ -1,0 +1,16 @@
+/*!
+ * Copyright (c) 2024 Triveni Digital, Inc. All rights reserved.
+ */
+
+.boxAlarmConfigSetting{
+    padding: 0 20px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+    .card-bg {
+        background-color: #2b2b2b;
+    }
+}
+

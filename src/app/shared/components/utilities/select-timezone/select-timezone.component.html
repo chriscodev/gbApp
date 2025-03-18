@@ -1,0 +1,82 @@
+<!-- Copyright (c) 2024-2025 Triveni Digital, Inc. All rights reserved. -->
+
+<div class="form-group row">
+  <label for="serverTimeZoneField" class="col-sm-2 col-form-label fL">Time Zone</label>
+  <div class="col-sm-4 fL">
+
+    <input type="text" value="{{ data }}"
+           class="form-control col-sm-4"
+           id="serverTimeZoneField"
+           readonly>
+  </div>
+  <div class="col-sm-1 text-center" *ngIf="required">
+            <span>
+              <i
+                aria-hidden="true"
+                class="mt10 fa fa-check-circle"
+                [ngClass]="isTimezone?'text-success':''"
+              ></i>
+            </span>
+
+  </div>
+  <div class="col-sm-4 fL serverButtons">
+    <button type="button" (click)="openSelectTimeZone()"
+            class="btn waves-effect waves-light btn-rounded btn-primary btnAdd btn-dark btnFormat actionButton"
+    >{{ btnLabel }}
+    </button>
+
+  </div>
+</div>
+<!-- MODAL for Timezone chooser -->
+
+<div class="modal fade modal-holder" id="timeZoneModal" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="timeZoneLabel">Select Time zone</h5>
+        <button type="button" (click)="closeSelectTimeZone( false )" class="close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body modal-container">
+        <div class="form-group row">
+          <label for="searchTimeZoneField" class="col-sm-2 col-form-label">Find</label>
+          <div class="col-sm-6">
+            <input type="text" id="searchTimeZoneField" class="form-control"
+                   [(ngModel)]="timeZoneSearchField"
+                   (keyup)="onSearchTimeZoneDropdownValue($event)"/>
+          </div>
+
+        </div>
+        <br/>
+        <div class="form-group row">
+          <select class="form-control col-sm-8"
+                  size="10"
+                  (change)="onChangeTimeZone($event)"
+                  [(ngModel)]="updatedTimeZone">
+            <option *ngFor="let timeZone of searchedTimeZones" [value]="timeZone"
+                    [ngClass]="updatedTimeZone === timeZone? 'selected':''">
+              {{ timeZone }}
+            </option>
+          </select>
+
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn waves-effect waves-light btn-rounded  btnFormat btnWidth"
+                (click)="closeSelectTimeZone( false )"
+
+        >Cancel
+        </button>
+        <button class="btn waves-effect waves-light btn-rounded btnFormat btnWidth"
+                (click)="closeSelectTimeZone( true )"
+
+                [disabled]="disableOK">Select
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

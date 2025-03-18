@@ -1,0 +1,21 @@
+<ng-template class="custom-modal modal-holder" #modalPendingRef >
+    <div class="modal-header">
+        <h5 class="modal-title">Confirmation</h5>
+    </div>
+    <div class="modal-body min100">
+        <div class="field">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h4>'WARNING'</h4>
+                    <p>You have unsaved changes. Press Cancel to go back and save these changes, or OK to lose these
+                        changes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+
+        <span class="btn btn-outline-dark" data-dismiss="modal" (click)='pendingOK()'>OK</span>
+        <span class="btn btn-outline-dark" data-dismiss="modal" (click)='pendingCancel()'>Cancel</span>
+    </div>
+</ng-template>
